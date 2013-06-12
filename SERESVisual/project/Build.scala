@@ -12,10 +12,13 @@ object ApplicationBuild extends Build {
     javaCore,
     javaJdbc,
     javaEbean,
-    "org.apache.jena" % "jena" % "2.10.1"
+    "org.apache.jena" % "apache-jena-libs" % "2.10.1"
+
   )
 
   val main = play.Project(appName, appVersion, appDependencies).settings(
+      resolvers += "Jena repo" at "https://repository.apache.org/content/repositories/releases/"
+         
     // Add your own project settings here      
   )
 
