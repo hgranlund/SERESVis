@@ -12,7 +12,8 @@ object ApplicationBuild extends Build {
     javaCore,
     javaJdbc,
     javaEbean,
-    "org.apache.jena" % "apache-jena-libs" % "2.10.1"
+    "org.apache.jena" % "apache-jena-libs" % "2.10.1",
+    "org.apache.jena" % "jena-fuseki" % "0.2.7"
 
   )
 
