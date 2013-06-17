@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!-- -->
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-	xmlns:seres="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+	xmlns:seres="http://www.seres.computas.com#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
 	version="1.0">
 	<xsl:strip-space elements="*" />
 	<xsl:output method="xml" indent="yes" />
@@ -38,7 +38,7 @@
 				<xsl:variable name="local_value" select="."></xsl:variable>
 				<xsl:element name="{$local_name}">
 					<xsl:choose>
-						<xsl:when test="$local_name = 'xmi.id'">
+						<xsl:when test="name() = 'xmi.id'">
 							<xsl:value-of select="." />
 						</xsl:when>
 						<xsl:when test="//@xmi.id = $local_value">
@@ -62,11 +62,11 @@
 			<xsl:value-of select="$BaseURI" />
 			<xsl:text>#</xsl:text>
 			<xsl:for-each select="//*[@xmi.id = $id]">
-				<xsl:value-of select="name()"/>
+				<xsl:value-of select="name()" />
 			</xsl:for-each>
 			<xsl:text>_</xsl:text>
 			<xsl:value-of select="$id" />
 		</xsl:element>
 	</xsl:template>
-	
+
 </xsl:stylesheet>
