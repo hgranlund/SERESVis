@@ -11,7 +11,8 @@ files = [
   JASMINE,
   JASMINE_ADAPTER,
   'public/js/*.js',
-  'test/*.js'
+  'public/js/vendor/*.js',
+  'test/*.js',
 ];
 
 
@@ -55,7 +56,7 @@ autoWatch = true;
 // - Safari (only Mac)
 // - PhantomJS
 // - IE (only Windows)
-browsers = ['Firefox'];
+browsers = ['Chrome'];
 
 
 // If browser does not capture in given timeout [ms], kill it
