@@ -1,16 +1,29 @@
 var http = require("http");
 var url = require("url");
+var express = require('express');
+var path = require('path');
+var cheerio = require('cheerio');
 
-function start(route, handle){
-	function onRequest(request, response) {
-		var pathname = url.parse(request.url).pathname;
-		console.log("Request for " + pathname + " received");
+var app = express();
 
-		route(handle, pathname, response);
-	}
+app.configure(function(){
+	app.set('port', process.env.PORT || 1337);
+	app.use(express.favicon());
+	app.use(express.logger('dev'));
+	app.use(express.bodyParser());
+	app.use(express.methodOverride());
+	app.use(app.router);
+	app.use(express.static(path.join(__dirname, 'public')));
+});
 
-	http.createServer(onRequest).listen(1337);
-	console.log("Server has started");
-}
+app.configure('development', function(){
+	app.use(express.errorHandler());
+});
 
-exports.start = start;
+app.get('/', function(req, res){
+	res.sendfile("index.html");
+})
+
+var server = http.createServer(app).listen(app.get('port'), function(){
+	console.log("Express server listening to port " + app.get('port'));
+});
