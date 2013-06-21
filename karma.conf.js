@@ -10,12 +10,23 @@ basePath = '';
 files = [
   JASMINE,
   JASMINE_ADAPTER,
+//   MOCHA,
+//   MOCHA_ADAPTER,
+//   REQUIRE,
+// REQUIRE_ADAPTER,
   'public/js/*.js',
   'public/js/vendor/*.js',
-  'test/*.js',
+  'test/*.js'
 ];
 
-
+preprocessors = {
+  '**/*.js': 'coverage'
+};
+reporters = ['coverage'];
+coverageReporter = {
+  type : 'html',
+  dir : 'coverage/'
+}
 // list of files to exclude
 exclude = [
   
