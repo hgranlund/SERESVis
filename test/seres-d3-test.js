@@ -1,28 +1,16 @@
-'use strict';
-var util = window.seres.app;
+var seres_d3 = window.seres.seres_d3;
 
-describe("A test suite for index methods", function(){
-	it("contains spec with an expectation", function(){
-		expect(true).toBe(true);
-	});
-});
-
-describe('renderNewPostForm', function(){
-
-	beforeEach(function(){
-		//Do something
-	});
+describe("update function from seres_d3", function(){
 
 	it('should be defined', function(){
-		expect(app.renderNewPostForm).toBeDefined();
+		expect(seres_d3.update).toBeDefined();
 	});
 
 });
 
-describe('render404', function(){
+describe("click function from seres_d3", function(){
 
 	it('should be defined', function(){
-		expect(app.render404).toBeDefined();
+		expect(seres_d3.click).toBeDefined();
 	});
-
 });
