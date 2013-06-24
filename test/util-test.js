@@ -1,4 +1,3 @@
-'use strict';
 var util = window.seres.util;
 
 describe("A suite", function() {
@@ -63,7 +62,7 @@ describe("the sparqlQueryParser", function() {
 
 describe('parseFusekiJson', function() {
     var fusekiJson = {};
-    var parsedJson = 
+    var parsedJson;
     beforeEach(function() {
         fusekiJson = $.getJSON("testFiles/fusekiJson.json", function(json) {});
         parsedJson = util.parseFusekiJson(fusekiJson);
@@ -89,12 +88,7 @@ describe('parseFusekiJson', function() {
 
 });
 
-describe('getElementNameFromUri', function() {
-    var 
-    beforeEach(function() {
-      
-    });
-})
+
 
 xdescribe("sparqlQuery function", function() {
     it("shuold return a json", function() {

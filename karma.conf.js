@@ -16,7 +16,8 @@ files = [
 // REQUIRE_ADAPTER,
   'public/js/*.js',
   'public/js/vendor/*.js',
-  'test/*.js'
+  'test/*.js',
+  '*.js'
 ];
 
 preprocessors = {

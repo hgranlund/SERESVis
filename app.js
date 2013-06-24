@@ -9,7 +9,7 @@ function renderNewPostForm(request, response) {
         'Content-type': 'text/html; charset=utf-8'
     });
     response.end(newPostFormHTML);
-}
+};
 
 function render404(request, response) {
     response.writeHead(404);
@@ -20,10 +20,10 @@ var server = http.createServer(function(request, response) {
     var newPostFormRegex = new RegExp('^/?$');
     var pathname = url.parse(request.url).pathname;
     if (newPostFormRegex.test(pathname)) {
-  renderNewPostForm(request, response);
-    } else {
-  render404(request, response);
-    } 
+      renderNewPostForm(request, response);
+  } else {
+      render404(request, response);
+  } 
 });
 
 server.listen(8000);
