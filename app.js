@@ -1,8 +1,10 @@
 var http = require('http');
-var url = require('url');
-var fs = require('fs');
+var express = require('express');
+var ecstatic = require('ecstatic');
 
-var newPostFormHTML = fs.readFileSync('index.html');
+var app = express();
+app.use(ecstatic({ root: __dirname + '/public' }));
+http.createServer(app).listen(8080);
 
 function renderNewPostForm(request, response) {
     response.writeHead(200, {
@@ -28,4 +30,4 @@ var server = http.createServer(function(request, response) {
 
 server.listen(8000);
 
-console.log('Listening on http://127.0.0.1:8000');
+console.log('Listening on :8080');
