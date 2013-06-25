@@ -20,10 +20,12 @@ files = [
   'test/*.js'
 ];
 
+frameworks = ["jasmine"];
 
 // list of files to exclude
 exclude = [
-  
+  'app.js',
+  'karma.conf.js'
 ];
 
 
