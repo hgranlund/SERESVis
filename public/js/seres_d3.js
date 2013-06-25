@@ -816,8 +816,7 @@ window.seres.seres_d3 = function(seres_d3) {
     .append("svg:g")
     .attr("transform", "translate(20,30)");
 
-  json.x0 = 0;
-  json.y0 = 0;
+
 
   seres_d3.update = function(source) {
 
