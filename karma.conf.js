@@ -20,6 +20,8 @@ files = [
   '*.js'
 ];
 
+frameworks = ["jasmine"];
+
 preprocessors = {
   '**/*.js': 'coverage'
 };
@@ -30,7 +32,8 @@ coverageReporter = {
 }
 // list of files to exclude
 exclude = [
-  
+  'app.js',
+  'karma.conf.js'
 ];
 
 
