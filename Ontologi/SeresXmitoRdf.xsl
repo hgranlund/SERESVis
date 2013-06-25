@@ -12,12 +12,8 @@
 
     <xsl:template match="/">
         <xsl:element name="rdf:RDF">
-            <xsl:element name="rdf:Description">
-                <xsl:attribute name="rdf:about">
-                    <xsl:value-of select="$BaseURI"/>
-                </xsl:attribute>
+
                 <xsl:apply-templates select="XMI/XMI.content/* "/>
-            </xsl:element>
         </xsl:element>
     </xsl:template>
 
@@ -47,7 +43,7 @@
 
     <xsl:template name="rdf_properties">
         <xsl:variable name="local_value" select="."/>
-        <xsl:element name="{name()}">
+        <xsl:element name="seres:{name()}">
             <xsl:choose>
                 <xsl:when test="name() = 'xmi.id'">
                     <xsl:value-of select="."/>
@@ -66,13 +62,13 @@
     
     <xsl:template name="rdf_resource">
         <xsl:param name="id"/>
-        <xsl:element name="rdf:resource">
+        <xsl:attribute name="rdf:resource">
             <xsl:value-of select="$BaseURI"/>
             <xsl:text>#</xsl:text>
             <xsl:value-of select="name(key('xmi.id', $id))"/>
             <xsl:text>_</xsl:text>
             <xsl:value-of select="fn:element_uuid(key('xmi.id', $id))"/>
-        </xsl:element>
+        </xsl:attribute>
     </xsl:template>
 
 <!-- get uuid to element -->
