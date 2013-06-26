@@ -41,7 +41,7 @@ window.seres.util = function() {
             return {};
         }
         var vars = fusekiJson.head.vars;
-        if (vars.length < 3) throw new Error("Should contain tripels");
+        if (vars.length < 3) throw new Error("Should contain triplejson");
         var elements = {};
         fusekiJson.results.bindings.map(function(triple) {
             elements[triple[vars[0]].value] = {'objects':{}, 'data':{}};
