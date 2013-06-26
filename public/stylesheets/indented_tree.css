@@ -1,8 +1,8 @@
 .node rect {
     cursor: pointer;
     fill: #fff;
-    fill-opacity: .5;
-    stroke: #3182bd;
+    fill-opacity: .6;
+    stroke: #3c3c3c;
     stroke-width: 1.5px;
   }
 
@@ -17,3 +17,16 @@
     stroke: #9ecae1;
     stroke-width: 1.5px;
   }
+
+  .link {
+  stroke: #999;
+  stroke-opacity: .3;
+}
+
+#legend {
+  column-count: 1;
+  column-gap: 20px;
+  width: 40%;
+  height: 75px;
+  border: solid 5px;
+}
