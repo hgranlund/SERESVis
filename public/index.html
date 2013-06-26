@@ -1,11 +1,12 @@
-<!DOCTYPE html>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html>
   <head>
-  <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+  <!-- <meta http-equiv="Content-Type" content="text/html;charset=utf-8"> -->
   <script type="text/javascript" src="js/vendor/jquery.js"></script>
   <script type="text/javascript" src="js/vendor/d3.v3.min.js" charset="utf-8"></script>
   <script type="text/javascript" src="js/init.js"></script>
-  <script type="text/javascript" src="js/util.js"></script>
+  <script type="text/javascript" src="js/seres-query.js"></script>
   <link rel="stylesheet" type="text/css" href="stylesheets/indented_tree.css">
   <link rel="stylesheet" type="text/css" href="stylesheets/button.css">
 
@@ -1017,7 +1018,7 @@ function update(source) {
           toggle(d);    }  
 
         }
-
+    var test = window.seres.query.execute('select * where {?a ?b ?c}');
         </script>
       </body>
       </html>
