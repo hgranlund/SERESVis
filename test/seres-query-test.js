@@ -58,27 +58,27 @@ describe("the sparqlQueryParser", function() {
 
 });
 
-describe('parseFusekiJson', function() {
+describe('parseSelectJson', function() {
     var fusekiJson = testValues.fusekiJson;
     var fusekiJson2 = testValues.fusekiJson2;
 
     it('should be defined', function() {
-        expect(query.parseFusekiJson).toBeDefined();
+        expect(query.parseSelectJson).toBeDefined();
     });
 
     it("should return json", function() {
-        expect(query.parseFusekiJson(fusekiJson)).toEqual(jasmine.any(Object));
+        expect(query.parseSelectJson(fusekiJson)).toEqual(jasmine.any(Object));
     });
 
     xit("should have the right format", function() {
-        var parsedJson = query.parseFusekiJson(fusekiJson);
+        var parsedJson = query.parseSelectJson(fusekiJson);
         expect(parsedJson.nodes).toBeDefined();
         expect(parsedJson.links).toBeDefined();
     });
 
     it("should contains right values for a triple", function() {
-        var parsedJson = query.parseFusekiJson(fusekiJson);
-        var parsedJson2 = query.parseFusekiJson(fusekiJson2);
+        var parsedJson = query.parseSelectJson(fusekiJson);
+        var parsedJson2 = query.parseSelectJson(fusekiJson2);
         var aSubject = 'Begrepsmodell';
         var aObjectProperty = "type";
         var aValue = "Class";
@@ -96,9 +96,36 @@ describe('parseFusekiJson', function() {
     it('should only accept triples', function() {
         var fusekiJsonNotTriple = testValues.fusekiJsonNotTriple;
         expect(function() {
-            query.parseFusekiJson(fusekiJsonNotTriple);
+            query.parseSelectJson(fusekiJsonNotTriple);
         }).toThrow(new Error("Should contain tripels"));
     });
+});
+
+describe('parseGraphJson', function() {
+    var graphJson = testValues.subClassOfJsonGraph;
+
+    it('should be defined', function() {
+        expect(query.parseGraphJson).toBeDefined();
+    });
+
+    it("should return json", function() {
+        expect(query.parseGraphJson(graphJson)).toEqual(jasmine.any(Object));
+    });
+
+    xit("should have the right format", function() {
+        var parsedJson = query.parseGraphJson(graphJson);
+        expect(parsedJson.nodes).toBeDefined();
+        expect(parsedJson.links).toBeDefined();
+    });
+
+    it("should contains right values for a triple", function() {
+        var parsedJson = query.parseGraphJson(graphJson);
+        var aSubject = 'Stukturnivå';
+        var aObjectProperty = "subClassOf";
+        var aValue = "Nivå";
+        expect(parsedJson[aSubject].object[aObjectProperty]).toEqual(aValue);
+    });
+
 });
 
 describe('getElementNameFromUri', function() {
@@ -125,7 +152,7 @@ describe('getElementNameFromUri', function() {
     });
 });
 
-describe('execute', function() {
+xdescribe('execute', function() {
     it("should  ", function() {
         query.execute('select * where {?a ?b ?c}');
     });

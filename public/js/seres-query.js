@@ -52,7 +52,7 @@ window.seres.query = function() {
         return url_split[url_split.length - 1];
     };
 
-    query.parseFusekiJson = function parseFusekiJson(fusekiJson) {
+    query.parseSelectJson = function(fusekiJson) {
         var elements = {};
         if (fusekiJson === null | typeof(fusekiJson.results) === 'undefined') {
             return elements;
@@ -80,9 +80,44 @@ window.seres.query = function() {
         return elements;
     };
 
+    query.parseGraphJson = function(json) {
+        var elements = {};
+        var subject, predicat, objectValue;
+        if (json === null | $.isEmptyObject(json)) {
+            return elements;
+        }
+
+        function getValue(index, key) {
+            return query.getElementNameFromUri(value);
+        }
+
+        for (var key1 in json) {
+            elements[query.getElementNameFromUri(key1)] = {
+                'object': {},
+                'data': {}
+            };
+        }
+        for (var key2 in json) {
+            subject = query.getElementNameFromUri(key2);
+            for (var value in json[key2]) {
+                predicat = query.getElementNameFromUri(value);
+                objectValue = query.getElementNameFromUri(json[key2][value][0].value);
+                if (json[key2][value][0].type === "uri") {
+                    elements[subject].object[predicat] = objectValue;
+                } else {
+                    elements[subject].data[predicat] = objectValue;
+                }
+            }
+            return elements;
+        }
+    };
     query.execute = function(queryString, host, output, stylesheet) {
-        if (queryString === null | queryString === "") return {};
-        return query.parseFusekiJson(query.getJsonFromUrl(query.sparqlQueryParser(queryString, host)));
+        if (queryString === null | queryString === "") return ;
+        var json = query.getJsonFromUrl(query.sparqlQueryParser(queryString, host));
+        if (queryString.toLowerCase().match("\bselect\b")) {
+            return query.parseSelectJson(json);
+        }
+        return query.parseGraphJson(json);
     };
     return query;
 }();
