@@ -108,11 +108,12 @@ window.seres.query = function() {
                     elements[subject].data[predicat] = objectValue;
                 }
             }
-            return elements;
         }
+        return elements;
     };
+
     query.execute = function(queryString, host, output, stylesheet) {
-        if (queryString === null | queryString === "") return ;
+        if (queryString === null | queryString === "") return;
         var json = query.getJsonFromUrl(query.sparqlQueryParser(queryString, host));
         if (queryString.toLowerCase().match("\bselect\b")) {
             return query.parseSelectJson(json);
