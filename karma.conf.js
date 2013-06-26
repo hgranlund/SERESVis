@@ -16,7 +16,7 @@ files = [
 // REQUIRE_ADAPTER,
   'public/js/*.js',
   'public/js/vendor/*.js',
-  'test/testFiles/*.js',
+  'test/testValues.js',
   'test/*.js'
 ];
 

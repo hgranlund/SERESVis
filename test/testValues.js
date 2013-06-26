@@ -1,31 +1,9 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html>
-<head>
-  <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
-  <script type="text/javascript" src="js/vendor/jquery.js"></script>
-  <script type="text/javascript" src="js/vendor/d3.v3.min.js" charset="utf-8"></script>
-  <script type="text/javascript" src="js/init.js"></script>
-  <script type="text/javascript" src="js/seres-query.js"></script>
-  <link rel="stylesheet" type="text/css" href="stylesheets/indented_tree.css">
-  <link rel="stylesheet" type="text/css" href="stylesheets/button.css">
+window.seres.testValues = function() {
+  // body...
+  var testValues = {};
 
-</head>
-<body>
-  <div style="float:right">
-    <button id="expand-all" class="first">
-      Expand All
-    </button><button id="collapse-all" class="active last">
-    Collapse All
-  </button>
-</div>
-
-<div id="indented_tree"; width:50%; height:100%; float: left; border-style: solid red></div>
-
-<script type="text/javascript">
-
-
-var json = {"head": {
+  testValues.fusekiJson = {
+    "head": {
       "vars": ["a", "b", "c"]
     },
     "results": {
@@ -2972,222 +2950,1054 @@ var json = {"head": {
     }
   };
 
-
-var w = 960,
-h = 5300,
-i = 0,
-barHeight = 20,
-barWidth = w * .3,
-duration = 400,
-root;
-
-var tree = d3.layout.tree()
-.size([h, 100]);
-
-var diagonal = d3.svg.diagonal()
-.projection(function(d) {
-  return [d.y, d.x];
-});
-
-var vis = d3.select("#indented_tree").append("svg:svg")
-.attr("width", w)
-.attr("height", h)
-.append("svg:g")
-.attr("transform", "translate(20,30)");  
-
-/////////////////////////////
-d3.select("#collapse-all").on("click", function() {
-  function collapse(d) {
-    if (d.children) {
-      d._children = d.children;
-      d._children.forEach(collapse);
-      d.children = null;
-    }
-  }
-
-  root.children.forEach(collapse);
-  d3.select("#collapse-all").classed("active", true);
-  d3.select("#expand-all").classed("active", false);
-  update(d);
-});
-
-d3.select("#expand-all").on("click", function() {
-  function expand(d) {
-    if (d.children) {
-      d._children = d.children;
-      d.children = null;
-    } else {
-      d.children = d._children;
-      d.children.forEach(expand);
-      d._children = null;
-    }
-  }
-
-  root.children.forEach(click);
-  d3.select("#expand-all").classed("active", true);
-  d3.select("#collapse-all").classed("active", false);
-  update(d);
-});
-
-//update(root);
-
-/////////////////////////////////////
-
-function update(source) {
-
-  var nodes = tree.nodes(root);
-
-    // Compute the "layout".
-    nodes.forEach(function(n, i) {
-      n.x = i * barHeight;
-    });
-
-    // Update the nodes…
-    var node = vis.selectAll("g.node")
-    .data(nodes, function(d) {
-      return d.id || (d.id = ++i);
-    });
-
-    var nodeEnter = node.enter().append("svg:g")
-    .attr("class", "node")
-    .attr("transform", function(d) {
-      return "translate(" + source.y0 + "," + source.x0 + ")";
-    })
-    .style("opacity", 1e-6);
-
-    // Enter any new nodes at the parent's previous position.
-    nodeEnter.append("svg:rect")
-    .attr("y", -barHeight / 2)
-    .attr("height", barHeight)
-    .attr("width", barWidth)
-    .style("fill", color)
-    .on("click", click);
-
-    nodeEnter.append("svg:text")
-    .attr("dy", 3.5)
-    .attr("dx", 5.5)
-    .text(function(d) {
-      return d.name;
-    });
-
-    // Transition nodes to their new position.
-    nodeEnter.transition()
-    .duration(duration)
-    .attr("transform", function(d) {
-      return "translate(" + d.y + "," + d.x + ")";
-    })
-    .style("opacity", 1);
-
-    node.transition()
-    .duration(duration)
-    .attr("transform", function(d) {
-      return "translate(" + d.y + "," + d.x + ")";
-    })
-    .style("opacity", 1)
-    .select("rect")
-    .style("fill", color);
-
-    // Transition exiting nodes to the parent's new position.
-    node.exit().transition()
-    .duration(duration)
-    .attr("transform", function(d) {
-      return "translate(" + source.y + "," + source.x + ")";
-    })
-    .style("opacity", 1e-6)
-    .remove();
-
-    // Update the links…
-    var link = vis.selectAll("path.link")
-    .data(tree.links(nodes), function(d) {
-      return d.target.id;
-    });
-
-    // Enter any new links at the parent's previous position.
-    link.enter().insert("svg:path", "g")
-    .attr("class", "link")
-    .attr("d", function(d) {
-      var o = {
-        x: source.x0,
-        y: source.y0
-      };
-      return diagonal({
-        source: o,
-        target: o
-      });
-    })
-    .transition()
-    .duration(duration)
-    .attr("d", diagonal);
-
-    // Transition links to their new position.
-    link.transition()
-    .duration(duration)
-    .attr("d", diagonal);
-
-    // Transition exiting nodes to the parent's new position.
-    link.exit().transition()
-    .duration(duration)
-    .attr("d", function(d) {
-      var o = {
-        x: source.x,
-        y: source.y
-      };
-      return diagonal({
-        source: o,
-        target: o
-      });
-    })
-    .remove();
-
-    // Stash the old positions for transition.
-    nodes.forEach(function(d) {
-      d.x0 = d.x;
-      d.y0 = d.y;
-    });
-  };
-  json = window.seres.util.parseFusekiJson(json);
-
-
-  update(root = json);
-
-  var keys = Object.keys(json);
-  var keydata = [];
-  for (var i = 0; i < keys.length; i++) {
-    keydata[i] = json[keys[i]].data;
-  };
-
-
-  function click(d) {
-    if (d.children) {
-      d._children = d.children;
-      d.children = null;
-    } else {
-      d.children = d._children;
-      d._children = null;
-    }
-    update(d);
-  };
-
-  function color(d) {
-    return d._children ? "#3182bd" : d.children ? "#c6dbef" : "#fd8d3c";
-  };
-
-  function toggle(d) {  
-    if (d.children) {    
-      d._children = d.children;    
-      d.children = null;  } 
-      else {    
-        d.children = d._children;    
-        d._children = null;  }
-      }
-
-      function toggleAll(d) {    
-        if (d.children) {      
-          d.children.forEach(toggleAll);      
-          toggle(d);    }  
-
+  testValues.fusekiJsonNotTriple = {
+    "head": {
+      "vars": ["a", "b"]
+    },
+    "results": {
+      "bindings": [{
+          "a": {
+            "type": "uri",
+            "value": "http://www.semanticweb.org/shgx/ontologies/2013/5/untitled-ontology-2#Begrepsmodell"
+          },
+          "b": {
+            "type": "uri",
+            "value": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
+          }
         }
-    var test = window.seres.query.execute('select * where {?a ?b ?c}');
-        </script>
-      </body>
-      </html>
+      ]
+    }
+  };
+
+  testValues.fusekiJson2 = {
+    "head": {
+      "vars": [ "a" , "b" , "c" ]
+    } ,
+    "results": {
+    "bindings": [
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrepsrelasjon_29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:802d" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#begrepsmodell" } ,
+        "c": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrepsmodell_29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:802e" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrepsrelasjon_29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:802d" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#gyldigTil" } ,
+        "c": { "type": "literal" , "value": "1900-01-01 00:00:00.000" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrepsrelasjon_29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:802d" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#xmi.uuid" } ,
+        "c": { "type": "literal" , "value": "29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:802d" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrepsrelasjon_29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:802d" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#xmi.label" } ,
+        "c": { "type": "literal" , "value": "" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrepsrelasjon_29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:802d" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#gyldigFra" } ,
+        "c": { "type": "literal" , "value": "1900-01-01 00:00:00.000" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrepsrelasjon_29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:802d" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#type" } ,
+        "c": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrepsrelasjonstype_29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:8030" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrepsrelasjon_29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:802d" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#fra" } ,
+        "c": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrep_29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:802a" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrepsrelasjon_29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:802d" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#guid" } ,
+        "c": { "type": "literal" , "value": "http://seres.no/guid/Akseptanse/Begrepsrelasjon//1172571" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrepsrelasjon_29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:802d" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#navn" } ,
+        "c": { "type": "literal" , "value": "" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrepsrelasjon_29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:802d" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#konfid" } ,
+        "c": { "type": "literal" , "value": "0" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrepsrelasjon_29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:802d" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#xmi.id" } ,
+        "c": { "type": "literal" , "value": "a3" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrepsrelasjon_29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:802d" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#til" } ,
+        "c": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrep_29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:8029" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrep_29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:802c" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#xmi.label" } ,
+        "c": { "type": "literal" , "value": "" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrep_29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:802c" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#xmi.id" } ,
+        "c": { "type": "literal" , "value": "a5" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrep_29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:802c" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#navn" } ,
+        "c": { "type": "literal" , "value": "Allergi" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrep_29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:802c" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#xmi.uuid" } ,
+        "c": { "type": "literal" , "value": "29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:802c" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrep_29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:802c" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#guid" } ,
+        "c": { "type": "literal" , "value": "http://seres.no/guid/Akseptanse/Begrep/Allergi/1172572" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrep_29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:802c" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#begrepsmodell" } ,
+        "c": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrepsmodell_29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:802e" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrep_29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:802c" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#definisjon" } ,
+        "c": { "type": "literal" , "value": "Allergi betyr forandring i kroppens reaksjonsmåte på de i våre omgivelsers naturlige og i utgangspunktet ufarlige stoffer." }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrep_29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:802c" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#gyldigFra" } ,
+        "c": { "type": "literal" , "value": "1900-01-01 00:00:00.000" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrep_29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:802c" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#gyldigTil" } ,
+        "c": { "type": "literal" , "value": "1900-01-01 00:00:00.000" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrep_29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:802c" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#konfid" } ,
+        "c": { "type": "literal" , "value": "0" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrepsrelasjonstype_29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:8033" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#navn" } ,
+        "c": { "type": "literal" , "value": "omfatter" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrepsrelasjonstype_29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:8033" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#guid" } ,
+        "c": { "type": "literal" , "value": "http://seres.no/guid/Akseptanse/Begrepsrelasjonstype/omfatter/1172569" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrepsrelasjonstype_29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:8033" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#definisjon" } ,
+        "c": { "type": "literal" , "value": "Aggregering mellom to begreper" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrepsrelasjonstype_29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:8033" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#begrepsnivå" } ,
+        "c": { "type": "uri" , "value": "http://computas.seres.begrep#seres.domeneKjerne.Begrepsnivå_29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:8034" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrepsrelasjonstype_29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:8033" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#konfid" } ,
+        "c": { "type": "literal" , "value": "0" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrepsrelasjonstype_29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:8033" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#xmi.label" } ,
+        "c": { "type": "literal" , "value": "" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrepsrelasjonstype_29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:8033" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#xmi.id" } ,
+        "c": { "type": "literal" , "value": "a17" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrepsrelasjonstype_29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:8033" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#xmi.uuid" } ,
+        "c": { "type": "literal" , "value": "29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:8033" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrepsrelasjonstype_29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:8033" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#gyldigFra" } ,
+        "c": { "type": "literal" , "value": "1900-01-01 00:00:00.000" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrepsrelasjonstype_29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:8033" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#gyldigTil" } ,
+        "c": { "type": "literal" , "value": "1900-01-01 00:00:00.000" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrepsrelasjonstype_3334453b782ba36a:21c0a718:0000013b75765a54:8076" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#konfid" } ,
+        "c": { "type": "literal" , "value": "0" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrepsrelasjonstype_3334453b782ba36a:21c0a718:0000013b75765a54:8076" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#xmi.id" } ,
+        "c": { "type": "literal" , "value": "a15" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrepsrelasjonstype_3334453b782ba36a:21c0a718:0000013b75765a54:8076" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#guid" } ,
+        "c": { "type": "literal" , "value": "http://seres.no/guid/Akseptanse/Begrepsrelasjonstype/er/1172570" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrepsrelasjonstype_3334453b782ba36a:21c0a718:0000013b75765a54:8076" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#xmi.label" } ,
+        "c": { "type": "literal" , "value": "" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrepsrelasjonstype_3334453b782ba36a:21c0a718:0000013b75765a54:8076" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#gyldigTil" } ,
+        "c": { "type": "literal" , "value": "1900-01-01 00:00:00.000" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrepsrelasjonstype_3334453b782ba36a:21c0a718:0000013b75765a54:8076" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#navn" } ,
+        "c": { "type": "literal" , "value": "er" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrepsrelasjonstype_3334453b782ba36a:21c0a718:0000013b75765a54:8076" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#begrepsrelasjon" } ,
+        "c": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrepsrelasjon_3334453b782ba36a:21c0a718:0000013b75765a54:8073" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrepsrelasjonstype_3334453b782ba36a:21c0a718:0000013b75765a54:8076" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#xmi.uuid" } ,
+        "c": { "type": "literal" , "value": "3334453b782ba36a:21c0a718:0000013b75765a54:8076" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrepsrelasjonstype_3334453b782ba36a:21c0a718:0000013b75765a54:8076" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#definisjon" } ,
+        "c": { "type": "literal" , "value": "Arv mellom to begreper" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrepsrelasjonstype_3334453b782ba36a:21c0a718:0000013b75765a54:8076" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#begrepsnivå" } ,
+        "c": { "type": "uri" , "value": "http://computas.seres.begrep#seres.domeneKjerne.Begrepsnivå_28e4453b782ba36a:21c0a718:0000013b75765a54:807a" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrepsrelasjonstype_3334453b782ba36a:21c0a718:0000013b75765a54:8076" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#gyldigFra" } ,
+        "c": { "type": "literal" , "value": "1900-01-01 00:00:00.000" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.domeneKjerne.Dokumentasjon_3334453b782ba36a:21c0a718:0000013b75765a54:8075" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#xmi.id" } ,
+        "c": { "type": "literal" , "value": "a20" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.domeneKjerne.Dokumentasjon_3334453b782ba36a:21c0a718:0000013b75765a54:8075" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#xmi.uuid" } ,
+        "c": { "type": "literal" , "value": "3334453b782ba36a:21c0a718:0000013b75765a54:8075" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.domeneKjerne.Dokumentasjon_3334453b782ba36a:21c0a718:0000013b75765a54:8075" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#xmi.label" } ,
+        "c": { "type": "literal" , "value": "" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.domeneKjerne.Dokumentasjon_3334453b782ba36a:21c0a718:0000013b75765a54:8075" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#type" } ,
+        "c": { "type": "literal" , "value": "beskrivelse" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.domeneKjerne.Dokumentasjon_3334453b782ba36a:21c0a718:0000013b75765a54:8075" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#språk" } ,
+        "c": { "type": "literal" , "value": "nb" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.domeneKjerne.Dokumentasjon_3334453b782ba36a:21c0a718:0000013b75765a54:8075" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#tekst" } ,
+        "c": { "type": "literal" , "value": "En er-relasjon angir at et begrep (fra) *ER* en subtype (subkonsept eller hyponym) av et annet begrep (til)." }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.domeneKjerne.Dokumentasjon_3334453b782ba36a:21c0a718:0000013b75765a54:8075" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#sereselement" } ,
+        "c": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrepsrelasjonstype_3334453b782ba36a:21c0a718:0000013b75765a54:8076" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrep_3331EQUUyEeKUvfdwf2k2vw" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#konfid" } ,
+        "c": { "type": "literal" , "value": "0" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrep_3331EQUUyEeKUvfdwf2k2vw" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#xmi.label" } ,
+        "c": { "type": "literal" , "value": "" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrep_3331EQUUyEeKUvfdwf2k2vw" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#xmi.id" } ,
+        "c": { "type": "literal" , "value": "a13" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrep_3331EQUUyEeKUvfdwf2k2vw" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#begrepsmodell" } ,
+        "c": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrepsmodell_3334453b782ba36a:21c0a718:0000013b75765a54:8074" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrep_3331EQUUyEeKUvfdwf2k2vw" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#xmi.uuid" } ,
+        "c": { "type": "literal" , "value": "3331EQUUyEeKUvfdwf2k2vw" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrep_3331EQUUyEeKUvfdwf2k2vw" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#definisjon" } ,
+        "c": { "type": "literal" , "value": "Allergi betyr forandring i kroppens reaksjonsmåte på de i våre omgivelsers naturlige og i utgangspunktet ufarlige stoffer." }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrep_3331EQUUyEeKUvfdwf2k2vw" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#gyldigFra" } ,
+        "c": { "type": "literal" , "value": "1900-01-01 00:00:00.000" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrep_3331EQUUyEeKUvfdwf2k2vw" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#gyldigTil" } ,
+        "c": { "type": "literal" , "value": "1900-01-01 00:00:00.000" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrep_3331EQUUyEeKUvfdwf2k2vw" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#guid" } ,
+        "c": { "type": "literal" , "value": "http://seres.no/guid/Akseptanse/Begrep/Allergi/1172572" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrep_3331EQUUyEeKUvfdwf2k2vw" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#navn" } ,
+        "c": { "type": "literal" , "value": "Allergi" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrepsmodell_29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:802e" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#xmi.id" } ,
+        "c": { "type": "literal" , "value": "a0" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrepsmodell_29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:802e" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#xmi.uuid" } ,
+        "c": { "type": "literal" , "value": "29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:802e" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrepsmodell_29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:802e" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#xmi.label" } ,
+        "c": { "type": "literal" , "value": "" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrepsmodell_29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:802e" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#navn" } ,
+        "c": { "type": "literal" , "value": "Begreper" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrepsmodell_29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:802e" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#guid" } ,
+        "c": { "type": "literal" , "value": "http://seres.no/guid/Akseptanse/Begrepsmodell/Begreper/1172575" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrepsmodell_29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:802e" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#konfid" } ,
+        "c": { "type": "literal" , "value": "0" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrepsmodell_29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:802e" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#gyldigFra" } ,
+        "c": { "type": "literal" , "value": "1900-01-01 00:00:00.000" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrepsmodell_29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:802e" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#gyldigTil" } ,
+        "c": { "type": "literal" , "value": "1900-01-01 00:00:00.000" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrepsmodell_29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:802e" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#begrepsnivå" } ,
+        "c": { "type": "uri" , "value": "http://computas.seres.begrep#seres.domeneKjerne.Begrepsnivå_29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:8034" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.domeneKjerne.Dokumentasjon_29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:802f" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#xmi.id" } ,
+        "c": { "type": "literal" , "value": "a16" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.domeneKjerne.Dokumentasjon_29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:802f" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#xmi.uuid" } ,
+        "c": { "type": "literal" , "value": "29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:802f" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.domeneKjerne.Dokumentasjon_29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:802f" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#xmi.label" } ,
+        "c": { "type": "literal" , "value": "" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.domeneKjerne.Dokumentasjon_29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:802f" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#type" } ,
+        "c": { "type": "literal" , "value": "beskrivelse" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.domeneKjerne.Dokumentasjon_29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:802f" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#språk" } ,
+        "c": { "type": "literal" , "value": "nb" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.domeneKjerne.Dokumentasjon_29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:802f" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#tekst" } ,
+        "c": { "type": "literal" , "value": "En er-relasjon angir at et begrep (fra) *ER* en subtype (subkonsept eller hyponym) av et annet begrep (til)." }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.domeneKjerne.Dokumentasjon_29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:802f" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#sereselement" } ,
+        "c": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrepsrelasjonstype_29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:8030" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrep_29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:802a" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#gyldigFra" } ,
+        "c": { "type": "literal" , "value": "1900-01-01 00:00:00.000" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrep_29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:802a" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#xmi.label" } ,
+        "c": { "type": "literal" , "value": "" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrep_29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:802a" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#konfid" } ,
+        "c": { "type": "literal" , "value": "0" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrep_29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:802a" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#guid" } ,
+        "c": { "type": "literal" , "value": "http://seres.no/guid/Akseptanse/Begrep/Navn/1172573" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrep_29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:802a" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#navn" } ,
+        "c": { "type": "literal" , "value": "Navn" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrep_29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:802a" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#xmi.uuid" } ,
+        "c": { "type": "literal" , "value": "29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:802a" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrep_29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:802a" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#begrepsmodell" } ,
+        "c": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrepsmodell_29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:802e" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrep_29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:802a" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#xmi.id" } ,
+        "c": { "type": "literal" , "value": "a4" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrep_29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:802a" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#erStartFor" } ,
+        "c": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrepsrelasjon_29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:802d" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrep_29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:802a" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#gyldigTil" } ,
+        "c": { "type": "literal" , "value": "1900-01-01 00:00:00.000" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.domeneKjerne.Dokumentasjon_3333VkUhCEeKYVYkXVtHdsQ" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#xmi.id" } ,
+        "c": { "type": "literal" , "value": "a14" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.domeneKjerne.Dokumentasjon_3333VkUhCEeKYVYkXVtHdsQ" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#xmi.uuid" } ,
+        "c": { "type": "literal" , "value": "3333VkUhCEeKYVYkXVtHdsQ" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.domeneKjerne.Dokumentasjon_3333VkUhCEeKYVYkXVtHdsQ" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#xmi.label" } ,
+        "c": { "type": "literal" , "value": "" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.domeneKjerne.Dokumentasjon_3333VkUhCEeKYVYkXVtHdsQ" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#type" } ,
+        "c": { "type": "literal" , "value": "kommentar" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.domeneKjerne.Dokumentasjon_3333VkUhCEeKYVYkXVtHdsQ" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#språk" } ,
+        "c": { "type": "literal" , "value": "bokmål" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.domeneKjerne.Dokumentasjon_3333VkUhCEeKYVYkXVtHdsQ" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#tekst" } ,
+        "c": { "type": "literal" , "value": "Allergi er definert i \"Definisjon\"-attributtet" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.domeneKjerne.Dokumentasjon_3333VkUhCEeKYVYkXVtHdsQ" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#sereselement" } ,
+        "c": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrep_3331EQUUyEeKUvfdwf2k2vw" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrepsrelasjonstype_29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:8030" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#konfid" } ,
+        "c": { "type": "literal" , "value": "0" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrepsrelasjonstype_29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:8030" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#xmi.uuid" } ,
+        "c": { "type": "literal" , "value": "29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:8030" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrepsrelasjonstype_29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:8030" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#definisjon" } ,
+        "c": { "type": "literal" , "value": "Arv mellom to begreper" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrepsrelasjonstype_29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:8030" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#gyldigTil" } ,
+        "c": { "type": "literal" , "value": "1900-01-01 00:00:00.000" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrepsrelasjonstype_29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:8030" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#guid" } ,
+        "c": { "type": "literal" , "value": "http://seres.no/guid/Akseptanse/Begrepsrelasjonstype/er/1172570" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrepsrelasjonstype_29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:8030" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#xmi.label" } ,
+        "c": { "type": "literal" , "value": "" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrepsrelasjonstype_29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:8030" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#navn" } ,
+        "c": { "type": "literal" , "value": "er" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrepsrelasjonstype_29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:8030" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#begrepsnivå" } ,
+        "c": { "type": "uri" , "value": "http://computas.seres.begrep#seres.domeneKjerne.Begrepsnivå_29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:8034" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrepsrelasjonstype_29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:8030" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#xmi.id" } ,
+        "c": { "type": "literal" , "value": "a7" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrepsrelasjonstype_29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:8030" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#gyldigFra" } ,
+        "c": { "type": "literal" , "value": "1900-01-01 00:00:00.000" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrepsrelasjonstype_29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:8030" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#begrepsrelasjon" } ,
+        "c": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrepsrelasjon_29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:802d" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrep_3334453b782ba36a:21c0a718:0000013b75765a54:8072" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#begrepsmodell" } ,
+        "c": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrepsmodell_3334453b782ba36a:21c0a718:0000013b75765a54:8074" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrep_3334453b782ba36a:21c0a718:0000013b75765a54:8072" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#xmi.id" } ,
+        "c": { "type": "literal" , "value": "a12" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrep_3334453b782ba36a:21c0a718:0000013b75765a54:8072" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#guid" } ,
+        "c": { "type": "literal" , "value": "http://seres.no/guid/Akseptanse/Begrep/Navn/1172573" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrep_3334453b782ba36a:21c0a718:0000013b75765a54:8072" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#erStartFor" } ,
+        "c": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrepsrelasjon_3334453b782ba36a:21c0a718:0000013b75765a54:8073" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrep_3334453b782ba36a:21c0a718:0000013b75765a54:8072" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#gyldigTil" } ,
+        "c": { "type": "literal" , "value": "1900-01-01 00:00:00.000" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrep_3334453b782ba36a:21c0a718:0000013b75765a54:8072" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#xmi.uuid" } ,
+        "c": { "type": "literal" , "value": "3334453b782ba36a:21c0a718:0000013b75765a54:8072" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrep_3334453b782ba36a:21c0a718:0000013b75765a54:8072" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#navn" } ,
+        "c": { "type": "literal" , "value": "Navn" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrep_3334453b782ba36a:21c0a718:0000013b75765a54:8072" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#xmi.label" } ,
+        "c": { "type": "literal" , "value": "" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrep_3334453b782ba36a:21c0a718:0000013b75765a54:8072" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#gyldigFra" } ,
+        "c": { "type": "literal" , "value": "1900-01-01 00:00:00.000" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrep_3334453b782ba36a:21c0a718:0000013b75765a54:8072" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#konfid" } ,
+        "c": { "type": "literal" , "value": "0" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrepsrelasjonstype_3334453b782ba36a:21c0a718:0000013b75765a54:8079" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#definisjon" } ,
+        "c": { "type": "literal" , "value": "Aggregering mellom to begreper" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrepsrelasjonstype_3334453b782ba36a:21c0a718:0000013b75765a54:8079" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#begrepsnivå" } ,
+        "c": { "type": "uri" , "value": "http://computas.seres.begrep#seres.domeneKjerne.Begrepsnivå_28e4453b782ba36a:21c0a718:0000013b75765a54:807a" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrepsrelasjonstype_3334453b782ba36a:21c0a718:0000013b75765a54:8079" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#xmi.label" } ,
+        "c": { "type": "literal" , "value": "" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrepsrelasjonstype_3334453b782ba36a:21c0a718:0000013b75765a54:8079" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#konfid" } ,
+        "c": { "type": "literal" , "value": "0" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrepsrelasjonstype_3334453b782ba36a:21c0a718:0000013b75765a54:8079" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#xmi.uuid" } ,
+        "c": { "type": "literal" , "value": "3334453b782ba36a:21c0a718:0000013b75765a54:8079" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrepsrelasjonstype_3334453b782ba36a:21c0a718:0000013b75765a54:8079" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#guid" } ,
+        "c": { "type": "literal" , "value": "http://seres.no/guid/Akseptanse/Begrepsrelasjonstype/omfatter/1172569" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrepsrelasjonstype_3334453b782ba36a:21c0a718:0000013b75765a54:8079" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#navn" } ,
+        "c": { "type": "literal" , "value": "omfatter" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrepsrelasjonstype_3334453b782ba36a:21c0a718:0000013b75765a54:8079" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#gyldigFra" } ,
+        "c": { "type": "literal" , "value": "1900-01-01 00:00:00.000" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrepsrelasjonstype_3334453b782ba36a:21c0a718:0000013b75765a54:8079" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#xmi.id" } ,
+        "c": { "type": "literal" , "value": "a21" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrepsrelasjonstype_3334453b782ba36a:21c0a718:0000013b75765a54:8079" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#gyldigTil" } ,
+        "c": { "type": "literal" , "value": "1900-01-01 00:00:00.000" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.domeneKjerne.Dokumentasjon_3334453b782ba36a:21c0a718:0000013b75765a54:8078" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#xmi.id" } ,
+        "c": { "type": "literal" , "value": "a23" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.domeneKjerne.Dokumentasjon_3334453b782ba36a:21c0a718:0000013b75765a54:8078" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#xmi.uuid" } ,
+        "c": { "type": "literal" , "value": "3334453b782ba36a:21c0a718:0000013b75765a54:8078" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.domeneKjerne.Dokumentasjon_3334453b782ba36a:21c0a718:0000013b75765a54:8078" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#xmi.label" } ,
+        "c": { "type": "literal" , "value": "" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.domeneKjerne.Dokumentasjon_3334453b782ba36a:21c0a718:0000013b75765a54:8078" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#type" } ,
+        "c": { "type": "literal" , "value": "beskrivelse" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.domeneKjerne.Dokumentasjon_3334453b782ba36a:21c0a718:0000013b75765a54:8078" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#språk" } ,
+        "c": { "type": "literal" , "value": "nb" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.domeneKjerne.Dokumentasjon_3334453b782ba36a:21c0a718:0000013b75765a54:8078" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#tekst" } ,
+        "c": { "type": "literal" , "value": "Omfatter baseres på UMLs aggregeringsrelasjon. Defineres mellom to begreper" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.domeneKjerne.Dokumentasjon_3334453b782ba36a:21c0a718:0000013b75765a54:8078" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#sereselement" } ,
+        "c": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrepsrelasjonstype_3334453b782ba36a:21c0a718:0000013b75765a54:8079" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.domeneKjerne.Begrepsnivå_28e4453b782ba36a:21c0a718:0000013b75765a54:807a" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#xmi.id" } ,
+        "c": { "type": "literal" , "value": "a9" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.domeneKjerne.Begrepsnivå_28e4453b782ba36a:21c0a718:0000013b75765a54:807a" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#href" } ,
+        "c": { "type": "literal" , "value": "localref://./com.adaptive.seres/Akseptanse-NIVAAER#seres.domeneKjerne.Begrepsnivå(Begrepsnivå)(28e4453b782ba36a:21c0a718:0000013b75765a54:807a)" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.domeneKjerne.Begrepsnivå_29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:8034" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#xmi.id" } ,
+        "c": { "type": "literal" , "value": "a1" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.domeneKjerne.Begrepsnivå_29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:8034" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#href" } ,
+        "c": { "type": "literal" , "value": "localref://./com.adaptive.seres/Akseptanse-NIVAAER#seres.domeneKjerne.Begrepsnivå(Begrepsnivå)(29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:8034)" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.domeneKjerne.Dokumentasjon_29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:8032" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#xmi.id" } ,
+        "c": { "type": "literal" , "value": "a19" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.domeneKjerne.Dokumentasjon_29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:8032" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#xmi.uuid" } ,
+        "c": { "type": "literal" , "value": "29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:8032" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.domeneKjerne.Dokumentasjon_29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:8032" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#xmi.label" } ,
+        "c": { "type": "literal" , "value": "" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.domeneKjerne.Dokumentasjon_29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:8032" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#type" } ,
+        "c": { "type": "literal" , "value": "beskrivelse" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.domeneKjerne.Dokumentasjon_29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:8032" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#språk" } ,
+        "c": { "type": "literal" , "value": "nb" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.domeneKjerne.Dokumentasjon_29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:8032" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#tekst" } ,
+        "c": { "type": "literal" , "value": "Omfatter baseres på UMLs aggregeringsrelasjon. Defineres mellom to begreper" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.domeneKjerne.Dokumentasjon_29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:8032" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#sereselement" } ,
+        "c": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrepsrelasjonstype_29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:8033" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrep_3334453b782ba36a:21c0a718:0000013b75765a54:8071" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#begrepsmodell" } ,
+        "c": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrepsmodell_3334453b782ba36a:21c0a718:0000013b75765a54:8074" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrep_3334453b782ba36a:21c0a718:0000013b75765a54:8071" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#guid" } ,
+        "c": { "type": "literal" , "value": "http://seres.no/guid/Akseptanse/Begrep/Tekst/1172574" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrep_3334453b782ba36a:21c0a718:0000013b75765a54:8071" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#xmi.label" } ,
+        "c": { "type": "literal" , "value": "" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrep_3334453b782ba36a:21c0a718:0000013b75765a54:8071" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#xmi.uuid" } ,
+        "c": { "type": "literal" , "value": "3334453b782ba36a:21c0a718:0000013b75765a54:8071" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrep_3334453b782ba36a:21c0a718:0000013b75765a54:8071" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#erSluttFor" } ,
+        "c": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrepsrelasjon_3334453b782ba36a:21c0a718:0000013b75765a54:8073" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrep_3334453b782ba36a:21c0a718:0000013b75765a54:8071" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#konfid" } ,
+        "c": { "type": "literal" , "value": "0" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrep_3334453b782ba36a:21c0a718:0000013b75765a54:8071" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#gyldigTil" } ,
+        "c": { "type": "literal" , "value": "1900-01-01 00:00:00.000" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrep_3334453b782ba36a:21c0a718:0000013b75765a54:8071" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#navn" } ,
+        "c": { "type": "literal" , "value": "Tekst" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrep_3334453b782ba36a:21c0a718:0000013b75765a54:8071" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#gyldigFra" } ,
+        "c": { "type": "literal" , "value": "1900-01-01 00:00:00.000" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrep_3334453b782ba36a:21c0a718:0000013b75765a54:8071" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#xmi.id" } ,
+        "c": { "type": "literal" , "value": "a10" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrepsmodell_3334453b782ba36a:21c0a718:0000013b75765a54:8074" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#xmi.id" } ,
+        "c": { "type": "literal" , "value": "a8" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrepsmodell_3334453b782ba36a:21c0a718:0000013b75765a54:8074" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#xmi.uuid" } ,
+        "c": { "type": "literal" , "value": "3334453b782ba36a:21c0a718:0000013b75765a54:8074" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrepsmodell_3334453b782ba36a:21c0a718:0000013b75765a54:8074" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#xmi.label" } ,
+        "c": { "type": "literal" , "value": "" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrepsmodell_3334453b782ba36a:21c0a718:0000013b75765a54:8074" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#navn" } ,
+        "c": { "type": "literal" , "value": "Begreper" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrepsmodell_3334453b782ba36a:21c0a718:0000013b75765a54:8074" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#guid" } ,
+        "c": { "type": "literal" , "value": "http://seres.no/guid/Akseptanse/Begrepsmodell/Begreper/1172575" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrepsmodell_3334453b782ba36a:21c0a718:0000013b75765a54:8074" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#konfid" } ,
+        "c": { "type": "literal" , "value": "0" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrepsmodell_3334453b782ba36a:21c0a718:0000013b75765a54:8074" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#gyldigFra" } ,
+        "c": { "type": "literal" , "value": "1900-01-01 00:00:00.000" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrepsmodell_3334453b782ba36a:21c0a718:0000013b75765a54:8074" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#gyldigTil" } ,
+        "c": { "type": "literal" , "value": "1900-01-01 00:00:00.000" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrepsmodell_3334453b782ba36a:21c0a718:0000013b75765a54:8074" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#begrepsnivå" } ,
+        "c": { "type": "uri" , "value": "http://computas.seres.begrep#seres.domeneKjerne.Begrepsnivå_28e4453b782ba36a:21c0a718:0000013b75765a54:807a" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.domeneKjerne.Dokumentasjon_3334453b782ba36a:21c0a718:0000013b75765a54:8077" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#xmi.id" } ,
+        "c": { "type": "literal" , "value": "a22" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.domeneKjerne.Dokumentasjon_3334453b782ba36a:21c0a718:0000013b75765a54:8077" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#xmi.uuid" } ,
+        "c": { "type": "literal" , "value": "3334453b782ba36a:21c0a718:0000013b75765a54:8077" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.domeneKjerne.Dokumentasjon_3334453b782ba36a:21c0a718:0000013b75765a54:8077" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#xmi.label" } ,
+        "c": { "type": "literal" , "value": "" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.domeneKjerne.Dokumentasjon_3334453b782ba36a:21c0a718:0000013b75765a54:8077" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#type" } ,
+        "c": { "type": "literal" , "value": "beskrivelse" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.domeneKjerne.Dokumentasjon_3334453b782ba36a:21c0a718:0000013b75765a54:8077" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#språk" } ,
+        "c": { "type": "literal" , "value": "nb" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.domeneKjerne.Dokumentasjon_3334453b782ba36a:21c0a718:0000013b75765a54:8077" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#tekst" } ,
+        "c": { "type": "literal" , "value": "En omfatter-relasjon angir at et begrep (fra) består av et annet begrep (til). Omvendt kan vi si at begrepet (til) er en del av et det andre begrepet (fra)." }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.domeneKjerne.Dokumentasjon_3334453b782ba36a:21c0a718:0000013b75765a54:8077" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#sereselement" } ,
+        "c": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrepsrelasjonstype_3334453b782ba36a:21c0a718:0000013b75765a54:8079" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrep_29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:8029" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#gyldigFra" } ,
+        "c": { "type": "literal" , "value": "1900-01-01 00:00:00.000" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrep_29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:8029" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#xmi.uuid" } ,
+        "c": { "type": "literal" , "value": "29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:8029" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrep_29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:8029" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#navn" } ,
+        "c": { "type": "literal" , "value": "Tekst" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrep_29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:8029" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#guid" } ,
+        "c": { "type": "literal" , "value": "http://seres.no/guid/Akseptanse/Begrep/Tekst/1172574" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrep_29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:8029" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#xmi.id" } ,
+        "c": { "type": "literal" , "value": "a2" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrep_29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:8029" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#xmi.label" } ,
+        "c": { "type": "literal" , "value": "" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrep_29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:8029" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#konfid" } ,
+        "c": { "type": "literal" , "value": "0" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrep_29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:8029" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#gyldigTil" } ,
+        "c": { "type": "literal" , "value": "1900-01-01 00:00:00.000" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrep_29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:8029" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#begrepsmodell" } ,
+        "c": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrepsmodell_29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:802e" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrep_29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:8029" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#erSluttFor" } ,
+        "c": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrepsrelasjon_29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:802d" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.domeneKjerne.Dokumentasjon_29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:8031" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#xmi.id" } ,
+        "c": { "type": "literal" , "value": "a18" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.domeneKjerne.Dokumentasjon_29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:8031" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#xmi.uuid" } ,
+        "c": { "type": "literal" , "value": "29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:8031" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.domeneKjerne.Dokumentasjon_29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:8031" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#xmi.label" } ,
+        "c": { "type": "literal" , "value": "" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.domeneKjerne.Dokumentasjon_29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:8031" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#type" } ,
+        "c": { "type": "literal" , "value": "beskrivelse" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.domeneKjerne.Dokumentasjon_29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:8031" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#språk" } ,
+        "c": { "type": "literal" , "value": "nb" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.domeneKjerne.Dokumentasjon_29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:8031" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#tekst" } ,
+        "c": { "type": "literal" , "value": "En omfatter-relasjon angir at et begrep (fra) består av et annet begrep (til). Omvendt kan vi si at begrepet (til) er en del av et det andre begrepet (fra)." }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.domeneKjerne.Dokumentasjon_29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:8031" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#sereselement" } ,
+        "c": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrepsrelasjonstype_29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:8033" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrepsrelasjon_3334453b782ba36a:21c0a718:0000013b75765a54:8073" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#gyldigTil" } ,
+        "c": { "type": "literal" , "value": "1900-01-01 00:00:00.000" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrepsrelasjon_3334453b782ba36a:21c0a718:0000013b75765a54:8073" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#konfid" } ,
+        "c": { "type": "literal" , "value": "0" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrepsrelasjon_3334453b782ba36a:21c0a718:0000013b75765a54:8073" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#type" } ,
+        "c": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrepsrelasjonstype_3334453b782ba36a:21c0a718:0000013b75765a54:8076" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrepsrelasjon_3334453b782ba36a:21c0a718:0000013b75765a54:8073" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#fra" } ,
+        "c": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrep_3334453b782ba36a:21c0a718:0000013b75765a54:8072" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrepsrelasjon_3334453b782ba36a:21c0a718:0000013b75765a54:8073" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#navn" } ,
+        "c": { "type": "literal" , "value": "" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrepsrelasjon_3334453b782ba36a:21c0a718:0000013b75765a54:8073" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#xmi.id" } ,
+        "c": { "type": "literal" , "value": "a11" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrepsrelasjon_3334453b782ba36a:21c0a718:0000013b75765a54:8073" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#gyldigFra" } ,
+        "c": { "type": "literal" , "value": "1900-01-01 00:00:00.000" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrepsrelasjon_3334453b782ba36a:21c0a718:0000013b75765a54:8073" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#guid" } ,
+        "c": { "type": "literal" , "value": "http://seres.no/guid/Akseptanse/Begrepsrelasjon//1172571" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrepsrelasjon_3334453b782ba36a:21c0a718:0000013b75765a54:8073" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#xmi.uuid" } ,
+        "c": { "type": "literal" , "value": "3334453b782ba36a:21c0a718:0000013b75765a54:8073" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrepsrelasjon_3334453b782ba36a:21c0a718:0000013b75765a54:8073" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#xmi.label" } ,
+        "c": { "type": "literal" , "value": "" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrepsrelasjon_3334453b782ba36a:21c0a718:0000013b75765a54:8073" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#begrepsmodell" } ,
+        "c": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrepsmodell_3334453b782ba36a:21c0a718:0000013b75765a54:8074" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrepsrelasjon_3334453b782ba36a:21c0a718:0000013b75765a54:8073" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#til" } ,
+        "c": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrep_3334453b782ba36a:21c0a718:0000013b75765a54:8071" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.domeneKjerne.Dokumentasjon_29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:802b" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#xmi.id" } ,
+        "c": { "type": "literal" , "value": "a6" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.domeneKjerne.Dokumentasjon_29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:802b" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#xmi.uuid" } ,
+        "c": { "type": "literal" , "value": "29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:802b" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.domeneKjerne.Dokumentasjon_29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:802b" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#xmi.label" } ,
+        "c": { "type": "literal" , "value": "" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.domeneKjerne.Dokumentasjon_29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:802b" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#type" } ,
+        "c": { "type": "literal" , "value": "kommentar" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.domeneKjerne.Dokumentasjon_29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:802b" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#språk" } ,
+        "c": { "type": "literal" , "value": "bokmål" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.domeneKjerne.Dokumentasjon_29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:802b" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#tekst" } ,
+        "c": { "type": "literal" , "value": "Allergi er definert i \"Definisjon\"-attributtet" }
+      } ,
+      {
+        "a": { "type": "uri" , "value": "http://computas.seres.begrep#seres.domeneKjerne.Dokumentasjon_29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:802b" } ,
+        "b": { "type": "uri" , "value": "http://www.seres.computas.com#sereselement" } ,
+        "c": { "type": "uri" , "value": "http://computas.seres.begrep#seres.begrep.Begrep_29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:802c" }
+      }
+    ]
+      }
+    };
+
+  return testValues;
+}();
