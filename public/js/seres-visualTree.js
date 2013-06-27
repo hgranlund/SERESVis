@@ -15,7 +15,7 @@ window.seres.visualTree = function(query, d3) {
         return elm;
     };
 
-    var toJsonTree = function(json) {
+    var toTreeObject = function(json) {
         parents = {};
         childs = {};
         treeJson = [];
@@ -219,7 +219,7 @@ window.seres.visualTree = function(query, d3) {
 
     return {
         'update': update,
-        'toJsonTree': toJsonTree,
+        'toTreeObject': toTreeObject,
         'startTree': startTree
     };
 }(window.seres.query, window.d3);
