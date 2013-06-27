@@ -236,7 +236,7 @@ window.seres.visual = function(query, d3) {
 	}
 
 	function color(d) {
-		return d._children ? "#3182bd" : d.children ? "#c6dbef" : "#fd8d3c";
+		return d._children ? "#3c3c3c" : d.children ? "#c2bcbc" : "#ffffff";
 	}
 
 	function toggle(d) {
