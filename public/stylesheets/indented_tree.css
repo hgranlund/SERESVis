@@ -14,7 +14,7 @@
 
   path.link {
     fill: none;
-    stroke: #9ecae1;
+    stroke: #3c3c3c;
     stroke-width: 1.5px;
   }
 
@@ -27,6 +27,6 @@
   column-count: 1;
   column-gap: 20px;
   width: 40%;
-  height: 75px;
+  height: 110px;
   border: solid 5px;
 }
