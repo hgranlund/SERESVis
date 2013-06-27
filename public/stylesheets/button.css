@@ -14,6 +14,7 @@ button {
   margin: 0;
   -moz-box-shadow: 0 1px 3px #999;
   -webkit-box-shadow: 0 1px 3px #999;
+  float: right;
 }
 
 button.first {
