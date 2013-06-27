@@ -1,63 +1,64 @@
 window.seres.visual = function(query, d3) {
 	var visual = {};
+  
 
-	var populateElement = function(parent, parents) {
-		var elm = {};
-		elm.name = parent;
-		elm.children = [];
-		if (parent in parents) {
-			parents[parent].map(function(child) {
-				elm.children.push(populateElement(child, parents));
-			});
+var populateElement = function(parent, parents) {
+	var elm = {};
+	elm.name = parent;
+	elm.children = [];
+	if (parent in parents) {
+		parents[parent].map(function(child) {
+			elm.children.push(populateElement(child, parents));
+		});
+	}
+	delete parents[parent];
+	if (elm.children.length === 0) delete elm.children;
+	return elm;
+};
+
+var toJsonTree = function(json) {
+	parents = {};
+	childs = {};
+	treeJson = [];
+	var parent;
+	for (var child in json) {
+		parent = json[child].object.subClassOf;
+		if (typeof(parent) !== 'undefined') {
+			if (!(parent in parents)) parents[parent] = [];
+			parents[parent].push(child);
+			childs[child] = parent;
 		}
-		delete parents[parent];
-		if (elm.children.length === 0) delete elm.children;
-		return elm;
-	};
-
-	var toJsonTree = function(json) {
-		parents = {};
-		childs = {};
-		treeJson = [];
-		var parent;
-		for (var child in json) {
-			parent = json[child].object.subClassOf;
-			if (typeof(parent) !== 'undefined') {
-				if (!(parent in parents)) parents[parent] = [];
-				parents[parent].push(child);
-				childs[child] = parent;
-			}
+	}
+	for (var root in parents) {
+		if (!(root in childs)) {
+			treeJson.push(populateElement(root, parents));
 		}
-		for (var root in parents) {
-			if (!(root in childs)) {
-				treeJson.push(populateElement(root, parents));
-			}
-		}
-		return treeJson;
-	};
+	}
+	return treeJson;
+};
 
 
-	var w = 960,
-		h = 5300,
-		i = 0,
-		barHeight = 20,
-		barWidth = w * .3,
-		duration = 400,
-		root;
+var w = 960,
+h = 1800,
+i = 0,
+barHeight = 20,
+barWidth = w * .3,
+duration = 400,
+root;
 
-	var tree = d3.layout.tree()
-		.size([h, 100]);
+var tree = d3.layout.tree()
+.size([h, 100]);
 
-	var diagonal = d3.svg.diagonal()
-		.projection(function(d) {
-		return [d.y, d.x];
-	});
+var diagonal = d3.svg.diagonal()
+.projection(function(d) {
+	return [d.y, d.x];
+});
 
-	var vis = d3.select("#indented_tree").append("svg:svg")
-		.attr("width", w)
-		.attr("height", h)
-		.append("svg:g")
-		.attr("transform", "translate(20,30)");
+var vis = d3.select("#indented_tree").append("svg:svg")
+.attr("width", w)
+.attr("height", h)
+.append("svg:g")
+.attr("transform", "translate(20,30)");
 
 	/////////////////////////////
 
@@ -92,68 +93,68 @@ window.seres.visual = function(query, d3) {
 
 		// Update the nodes…
 		var node = vis.selectAll("g.node")
-			.data(nodes, function(d) {
+		.data(nodes, function(d) {
 			return d.id || (d.id = ++i);
 		});
 
 		var nodeEnter = node.enter().append("svg:g")
-			.attr("class", "node")
-			.attr("transform", function(d) {
+		.attr("class", "node")
+		.attr("transform", function(d) {
 			return "translate(" + source.y0 + "," + source.x0 + ")";
 		})
-			.style("opacity", 1e-6);
+		.style("opacity", 1e-6);
 
 		// Enter any new nodes at the parent's previous position.
 		nodeEnter.append("svg:rect")
-			.attr("y", -barHeight / 2)
-			.attr("height", barHeight)
-			.attr("width", barWidth)
-			.style("fill", color)
-			.on("click", click);
+		.attr("y", -barHeight / 2)
+		.attr("height", barHeight)
+		.attr("width", barWidth)
+		.style("fill", coloring)
+		.on("click", click);
 
 		nodeEnter.append("svg:text")
-			.attr("dy", 3.5)
-			.attr("dx", 5.5)
-			.text(function(d) {
+		.attr("dy", 3.5)
+		.attr("dx", 5.5)
+		.text(function(d) {
 			return d.name;
 		});
 
 		// Transition nodes to their new position.
 		nodeEnter.transition()
-			.duration(duration)
-			.attr("transform", function(d) {
+		.duration(duration)
+		.attr("transform", function(d) {
 			return "translate(" + d.y + "," + d.x + ")";
 		})
-			.style("opacity", 1);
+		.style("opacity", 1);
 
 		node.transition()
-			.duration(duration)
-			.attr("transform", function(d) {
+		.duration(duration)
+		.attr("transform", function(d) {
 			return "translate(" + d.y + "," + d.x + ")";
 		})
-			.style("opacity", 1)
-			.select("rect")
-			.style("fill", color);
+		.style("opacity", 1)
+		.select("rect")
+		.style("fill", coloring);
 
 		// Transition exiting nodes to the parent's new position.
 		node.exit().transition()
-			.duration(duration)
-			.attr("transform", function(d) {
+		.duration(duration)
+		.attr("transform", function(d) {
 			return "translate(" + source.y + "," + source.x + ")";
 		})
-			.style("opacity", 1e-6)
-			.remove();
+		.style("opacity", 1e-6)
+		.remove();
 
 		// Update the links…
 		var link = vis.selectAll("path.link")
-			.data(tree.links(nodes), function(d) {
+		.data(tree.links(nodes), function(d) {
 			return d.target.id;
 		});
 
 		// Enter any new links at the parent's previous position.
 		link.enter().insert("svg:path", "g")
-			.attr("class", "link")
-			.attr("d", function(d) {
+		.attr("class", "link")
+		.attr("d", function(d) {
 			var o = {
 				x: source.x0,
 				y: source.y0
@@ -163,19 +164,20 @@ window.seres.visual = function(query, d3) {
 				target: o
 			});
 		})
-			.transition()
-			.duration(duration)
-			.attr("d", diagonal);
+		.transition()
+		.duration(duration)
+		.attr("d", diagonal);
 
 		// Transition links to their new position.
 		link.transition()
-			.duration(duration)
-			.attr("d", diagonal);
+		.duration(duration)
+		.attr("d", diagonal);
+
 
 		// Transition exiting nodes to the parent's new position.
 		link.exit().transition()
-			.duration(duration)
-			.attr("d", function(d) {
+		.duration(duration)
+		.attr("d", function(d) {
 			var o = {
 				x: source.x,
 				y: source.y
@@ -185,7 +187,7 @@ window.seres.visual = function(query, d3) {
 				target: o
 			});
 		})
-			.remove();
+		.remove();
 
 		// Stash the old positions for transition.
 		nodes.forEach(function(d) {
@@ -195,11 +197,11 @@ window.seres.visual = function(query, d3) {
 	};
 
 
-    json = query.execute('construct where {?a ?s ?b}');
-    json = toJsonTree(json)[0];
-    json.x0 = 0;
-    json.y0 = 0;
-    update(root = json);
+	json = query.execute('construct where {?a ?s ?b}');
+	json = toJsonTree(json)[0];
+	json.x0 = 0;
+	json.y0 = 0;
+	update(root = json);
 
 	var keys = Object.keys(json);
 	var keydata = [];
@@ -219,7 +221,7 @@ window.seres.visual = function(query, d3) {
 		update(d);
 	}
 
-	function color(d) {
+	function coloring(d) {
 		return d._children ? "#3c3c3c" : d.children ? "#c2bcbc" : "#ffffff";
 	}
 
@@ -241,7 +243,26 @@ window.seres.visual = function(query, d3) {
 
 	}
 
-	
+	var color_hash = ["#3c3c3c", "#ffffff", "#c2bcbc"];
+
+	var legend = vis.append("g")
+	.attr("class", "legend")
+	.attr("x", w - 65)
+	.attr("y", 25)
+	.attr("height", 100)
+	.attr("width", 100);
+
+	legend.append("rect")
+	.attr("x", w - 215)
+	.attr("y", 25)
+	.attr("width", 10)
+	.attr("height", 10)
+	.style("fill", "red");
+
+	legend.append("text")
+	.attr("x", w - 215)
+	.attr("y", 25)
+	.text(function(d) { "TEST" });
 
 
 	return {

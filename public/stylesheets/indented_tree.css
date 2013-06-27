@@ -23,10 +23,9 @@
   stroke-opacity: .3;
 }
 
-#legend {
-  column-count: 1;
-  column-gap: 20px;
-  width: 40%;
-  height: 110px;
-  border: solid 5px;
+.legend rect {
+  fill:white;
+  stroke:black;
+  opacity:0.8;
+  position: absolute: right;
 }
