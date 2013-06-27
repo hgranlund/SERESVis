@@ -123,7 +123,11 @@ describe('parseGraphJson', function() {
         var aSubject = 'Stukturnivå';
         var aObjectProperty = "subClassOf";
         var aValue = "Nivå";
+        var aSubject2 = "Implementasjonselement";
+        var aPredicat2 = "subClassOf";
+        var aObject2 = "SERESelement";
         expect(parsedJson[aSubject].object[aObjectProperty]).toEqual(aValue);
+        expect(parsedJson[aSubject2].object[aPredicat2]).toEqual(aObject2);
     });
 
 });
