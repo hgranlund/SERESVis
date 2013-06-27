@@ -60,20 +60,6 @@ window.seres.visual = function(query, d3) {
 		.attr("transform", "translate(20,30)");
 
 	/////////////////////////////
-	d3.select("#collapse-all").on("click", function() {
-		function collapse(d) {
-			if (d.children) {
-				d._children = d.children;
-				d._children.forEach(collapse);
-				d.children = null;
-			}
-		}
-
-		root.children.forEach(collapse);
-		d3.select("#collapse-all").classed("active", true);
-		d3.select("#expand-all").classed("active", false);
-		update(d);
-	});
 
 	d3.select("#expand-all").on("click", function() {
 		function expand(d) {
@@ -89,8 +75,6 @@ window.seres.visual = function(query, d3) {
 
 		root.children.forEach(click);
 		d3.select("#expand-all").classed("active", true);
-		d3.select("#collapse-all").classed("active", false);
-		update(d);
 	});
 
 	//update(root);
@@ -256,6 +240,8 @@ window.seres.visual = function(query, d3) {
 		}
 
 	}
+
+	
 
 
 	return {
