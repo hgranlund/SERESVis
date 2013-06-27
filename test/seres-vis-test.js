@@ -1,25 +1,25 @@
-var vis = window.seres.vis;
+var vis = window.seres.visual;
 var testValues = window.seres.testValues;
 describe('In seres-d3.js:', function() {
-	describe('The function tree', function() {
+	describe('The function toTreeJson()', function() {
 		var json = testValues.subClassOfJsonGraphParsed;
 
 		it('should be defined', function() {
-			expect(vis.tree).toBeDefined();
+			expect(vis.toTreeJson).toBeDefined();
 		});
 
 		it("should return json", function() {
-			expect(vis.tree(json)).toEqual(jasmine.any(Object));
+			expect(vis.toTreeJson(json)).toEqual(jasmine.any(Object));
 		});
 
 		it("should have the right format", function() {
-			var parsedJson = vis.tree(json);
+			var parsedJson = vis.toTreeJson(json);
 			expect(parsedJson[0].name).toBeDefined();
 			expect(parsedJson[0].subClass).toBeDefined();
 		});
 
 		it("should contains right values for a triple", function() {
-			var parsedJson = vis.tree(json);
+			var parsedJson = vis.toTreeJson(json);
 			var childOfRoot = 'Dokumentasjon';
 			var root = "Seres";
 			var aSubject2 = "Implementasjonselement";
@@ -33,3 +33,4 @@ describe('In seres-d3.js:', function() {
 
 	});
 });
+
