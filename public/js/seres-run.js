@@ -1,7 +1,7 @@
-var r= function(query, visual) {
+var r= function(query, visualTree) {
     json = query.execute('construct where {?a ?s ?b}');
-	json = visual.toJsonTree(json)[0];
+	json = visualTree.toJsonTree(json)[0];
 	$(document).ready(function() {
-		visual.startTree(json);
+		visualTree.startTree(json);
 	});
-}(window.seres.query, window.seres.visual);
+}(window.seres.query, window.seres.visualTree);

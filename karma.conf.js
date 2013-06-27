@@ -14,8 +14,8 @@ files = [
 //   MOCHA_ADAPTER,
 //   REQUIRE,
 // REQUIRE_ADAPTER,
-  'public/js/*.js',
   'public/js/vendor/*.js',
+  'public/js/*.js',
   'test/testValues.js',
   'test/*.js'
 ];
@@ -25,6 +25,8 @@ frameworks = ["jasmine"];
 // list of files to exclude
 exclude = [
   'app.js',
+  'public/js/seres-run.js',
+  'public/js/vendor/insight.js',
   'karma.conf.js'
 ];
 

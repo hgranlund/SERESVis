@@ -1,3 +1,6 @@
+*.orig
+
+
 ###Node###
  
 lib-cov
@@ -8,7 +11,7 @@ lib-cov
 *.out
 *.pid
 *.gz
-node_modules
+node_modules/
 
 pids
 logs

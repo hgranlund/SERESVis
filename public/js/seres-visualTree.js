@@ -1,4 +1,4 @@
-window.seres.visual = function(query, d3) {
+window.seres.visualTree = function(query, d3) {
     var json = {};
 
     var populateElement = function(parent, parents) {
