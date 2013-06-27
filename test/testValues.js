@@ -6081,5 +6081,266 @@ window.seres.testValues = function() {
       ]
     }
   };
+
+  testValues.subClassOfJsonGraphParsed = {
+    'Stukturnivå':
+      {'data':{},
+        'object' : {'subClassOf': 'Nivå'}
+        },
+    'Begrep':
+      {'data':{},
+        'object' : {'subClassOf': 'Semantikkelement'}
+        },
+    'Dokumentasjon':
+      {'data':{},
+        'object' : {'subClassOf': 'Seres'}
+        },
+    'Tjenestemodellkategori':
+      {'data':{},
+        'object' : {'subClassOf': 'Implementasjonselement'}
+        },
+    'Strukturmodellelement':
+      {'data':{},
+        'object' : {'subClassOf': 'Modellelement'}
+        },
+    'ImplementasjonsnivåKjerne':
+      {'data':{},
+        'object' : {'subClassOf': 'Implementasjonsnivå'}
+        },
+    'Begrepskategori':
+      {'data':{},
+        'object' : {'subClassOf': 'Semantikkelement'}
+        },
+    'Tegnrestriksjon':
+      {'data':{},
+        'object' : {'subClassOf': 'Verdirestriksjon'}
+        },
+    'Presentasjonsmodell':
+      {'data':{},
+        'object' : {'subClassOf': 'Presentasjonselement'}
+        },
+    'Typekategori':
+      {'data':{},
+        'object' : {'subClassOf': 'Strukturelement'}
+        },
+    'Presentasjonselement':
+      {'data':{},
+        'object' : {'subClassOf': 'Implementasjonselement'}
+        },
+    'Presentasjonsdel':
+      {'data':{},
+        'object' : {'subClassOf': 'Presentasjonselement'}
+        },
+    'Semantikkelement':
+      {'data':{},
+        'object' : {'subClassOf': 'SERESelement'}
+        },
+    'Type':
+      {'data':{},
+        'object' : {'subClassOf': 'Strukturmodellelement'}
+        },
+    'Meldingsdel':
+      {'data':{},
+        'object' : {'subClassOf': 'Dataobjekttype'}
+        },
+    'Forvaltingselement':
+      {'data':{},
+        'object' : {'subClassOf': 'Seres'}
+        },
+    'Dataobjektegenskap':
+      {'data':{},
+        'object' : {'subClassOf': 'Implementasjonselement'}
+        },
+    'Datamodell':
+      {'data':{},
+        'object' : {'subClassOf': 'Implementasjonselement'}
+        },
+    'Bergepsnivå':
+      {'data':{},
+        'object' : {'subClassOf': 'Nivå'}
+        },
+    'Nivå':
+      {'data':{},
+        'object' : {'subClassOf': 'SERESelement'}
+        },
+    'Assisiasjonsende':
+      {'data':{},
+        'object' : {'subClassOf': 'Strukturmodellelement'}
+        },
+    'Plattform':
+      {'data':{},
+        'object' : {'subClassOf': 'Implementasjonselement'}
+        },
+    'Datakomplekstype':
+      {'data':{},
+        'object' : {'subClassOf': 'Dataegenskapstype'}
+        },
+    'Kodeliste':
+      {'data':{},
+        'object' : {'subClassOf': 'Egenskapstype'}
+        },
+    'Relasjonsegenskap':
+      {'data':{},
+        'object' : {'subClassOf': 'Dataobjektegenskap'}
+        },
+    'Typeegenskap':
+      {'data':{},
+        'object' : {'subClassOf': 'Strukturelement'}
+        },
+    'Dataobjekttype':
+      {'data':{},
+        'object' : {'subClassOf': 'Implementasjonselement'}
+        },
+    'Egenskapstype':
+      {'data':{},
+        'object' : {'subClassOf': 'Type'}
+        },
+    'Begrepsmodell':
+      {'data':{},
+        'object' : {'subClassOf': 'Semantikkelement'}
+        },
+    'Datasimpeltype':
+      {'data':{},
+        'object' : {'subClassOf': 'Dataegenskapstype'}
+        },
+    'Strukturelement':
+      {'data':{},
+        'object' : {'subClassOf': 'SERESelement'}
+        },
+    'Dataegenskap':
+      {'data':{},
+        'object' : {'subClassOf': 'Dataobjektegenskap'}
+        },
+    'SERESelement':
+      {'data':{},
+        'object' : {'subClassOf': 'Seres'}
+        },
+    'Verdiområde':
+      {'data':{},
+        'object' : {'subClassOf': 'Implementasjonselement'}
+        },
+    'Datakodeliste':
+      {'data':{},
+        'object' : {'subClassOf': 'Datasimpeltype'}
+        },
+    'ORDatakodeliste':
+      {'data':{},
+        'object' : {'subClassOf': 'Datakodeliste'}
+        },
+    'Strukturmodell':
+      {'data':{},
+        'object' : {'subClassOf': 'Strukturelement'}
+        },
+    'SERESmodell':
+      {'data':{},
+        'object' : {'subClassOf': 'SERESelement'}
+        },
+    'Dataenkeltype':
+      {'data':{},
+        'object' : {'subClassOf': 'Datasimpeltype'}
+        },
+    'Dataegenskapstype':
+      {'data':{},
+        'object' : {'subClassOf': 'Implementasjonselement'}
+        },
+    'Primetivtype':
+      {'data':{},
+        'object' : {'subClassOf': 'Implementasjonselement'}
+        },
+    'Kjerne':
+      {'data':{},
+        'object' : {'subClassOf': 'SERESmodell'}
+        },
+    'Begrepsrelasjonstype':
+      {'data':{},
+        'object' : {'subClassOf': 'Semantikkelement'}
+        },
+    'Tallresktriksjon':
+      {'data':{},
+        'object' : {'subClassOf': 'Verdirestriksjon'}
+        },
+    'Komplekstype':
+      {'data':{},
+        'object' : {'subClassOf': 'Egenskapstype'}
+        },
+    'Tjenestemodell':
+      {'data':{},
+        'object' : {'subClassOf': 'Implementasjonselement'}
+        },
+    'Assosiasjon':
+      {'data':{},
+        'object' : {'subClassOf': 'Strukturmodellelement'}
+        },
+    'Modellelement':
+      {'data':{},
+        'object' : {'subClassOf': 'Strukturelement'}
+        },
+    'ORDataeneltype':
+      {'data':{},
+        'object' : {'subClassOf': 'Dataenkeltype'}
+        },
+    'Kodelisteelement':
+      {'data':{},
+        'object' : {'subClassOf': 'Strukturelement'}
+        },
+    'Begrepsrelasjon':
+      {'data':{},
+        'object' : {'subClassOf': 'Semantikkelement'}
+        },
+    'Datakodeelement':
+      {'data':{},
+        'object' : {'subClassOf': 'Implementasjonselement'}
+        },
+    'Objekttype':
+      {'data':{},
+        'object' : {'subClassOf': 'Type'}
+        },
+    'Domene':
+      {'data':{},
+        'object' : {'subClassOf': 'SERESmodell'}
+        },
+    'ImplementasjonsnivåDomene':
+      {'data':{},
+        'object' : {'subClassOf': 'Implementasjonsnivå'}
+        },
+    'EksternKodeliste':
+      {'data':{},
+        'object' : {'subClassOf': 'Dataegenskapstype'}
+        },
+    'Verdirestriksjon':
+      {'data':{},
+        'object' : {'subClassOf': 'Implementasjonselement'}
+        },
+    'Meldingsmodell':
+      {'data':{},
+        'object' : {'subClassOf': 'Implementasjonselement'}
+        },
+    'Enkeltype':
+      {'data':{},
+        'object' : {'subClassOf': 'Egenskapstype'}
+        },
+    'Presentasjonsfelt':
+      {'data':{},
+        'object' : {'subClassOf': 'Presentasjonselement'}
+        },
+    'Implementasjonsnivå':
+      {'data':{},
+        'object' : {'subClassOf': 'Nivå'}
+        },
+    'DataTypeegenskap':
+      {'data':{},
+        'object' : {'subClassOf': 'Implementasjonselement'}
+        },
+    'Egenskap':
+      {'data':{},
+        'object' : {'subClassOf': 'Modellelement'}
+        },
+    'Implementasjonselement':
+      {'data':{},
+        'object' : {'subClassOf': 'SERESelement'}
+        }
+    }
+
+
   return testValues;
 }();
