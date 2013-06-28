@@ -25,7 +25,8 @@ frameworks = ["jasmine"];
 // list of files to exclude
 exclude = [
   'app.js',
-  'karma.conf.js'
+  'karma.conf.js',
+  'public/js/seres-vis.js'
 ];
 
 

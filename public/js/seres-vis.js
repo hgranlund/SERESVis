@@ -243,27 +243,37 @@ var vis = d3.select("#indented_tree").append("svg:svg")
 
 	}
 
-	var color_hash = ["#3c3c3c", "#ffffff", "#c2bcbc"];
-
+	// add legend   
 	var legend = vis.append("g")
-	.attr("class", "legend")
-	.attr("x", w - 65)
-	.attr("y", 25)
-	.attr("height", 100)
-	.attr("width", 100);
-
-	legend.append("rect")
-	.attr("x", w - 215)
-	.attr("y", 25)
-	.attr("width", 10)
-	.attr("height", 10)
-	.style("fill", "red");
-
-	legend.append("text")
-	.attr("x", w - 215)
-	.attr("y", 25)
-	.text(function(d) { "TEST" });
-
+	  .attr("class", "legend")
+	  .attr("height", 100)
+	  .attr("width", 100)
+    .attr('transform', 'translate(-20,50)')    
+      
+    
+    legend.selectAll('rect')
+      .data(json)
+      .enter()
+      .append("rect")
+	  .attr("x", w - 65)
+      .attr("y", function(d, i){ return i *  20;})
+	  .attr("width", 10)
+	  .attr("height", 10)
+	  .style("fill", function(d) { 
+        var color = color_hash[json.indexOf(d)][1];
+        return color;
+      });
+      
+    legend.selectAll('text')
+      .data(json)
+      .enter()
+      .append("text")
+	  .attr("x", w - 52)
+      .attr("y", function(d, i){ return i *  20 + 9;})
+	  .text(function(d) {
+        var text = color_hash[json.indexOf(d)][0];
+        return text;
+	});
 
 	return {
 		'update' : update,

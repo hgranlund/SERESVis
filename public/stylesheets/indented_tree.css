@@ -29,3 +29,18 @@
   opacity:0.8;
   position: absolute: right;
 }
+
+#super
+{
+list-style-image:url("../images/super.png");
+}
+
+#sub
+{
+list-style-image:url("../images/sub.png");
+}
+
+#subsub
+{
+list-style-image:url("../images/subsub.png");
+}
