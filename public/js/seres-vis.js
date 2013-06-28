@@ -243,38 +243,6 @@ var vis = d3.select("#indented_tree").append("svg:svg")
 
 	}
 
-	// add legend   
-	var legend = vis.append("g")
-	  .attr("class", "legend")
-	  .attr("height", 100)
-	  .attr("width", 100)
-    .attr('transform', 'translate(-20,50)')    
-      
-    
-    legend.selectAll('rect')
-      .data(json)
-      .enter()
-      .append("rect")
-	  .attr("x", w - 65)
-      .attr("y", function(d, i){ return i *  20;})
-	  .attr("width", 10)
-	  .attr("height", 10)
-	  .style("fill", function(d) { 
-        var color = color_hash[json.indexOf(d)][1];
-        return color;
-      });
-      
-    legend.selectAll('text')
-      .data(json)
-      .enter()
-      .append("text")
-	  .attr("x", w - 52)
-      .attr("y", function(d, i){ return i *  20 + 9;})
-	  .text(function(d) {
-        var text = color_hash[json.indexOf(d)][0];
-        return text;
-	});
-
 	return {
 		'update' : update,
 		'toJsonTree' : toJsonTree
