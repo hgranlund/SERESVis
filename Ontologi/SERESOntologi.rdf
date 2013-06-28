@@ -1,0 +1,841 @@
+<?xml version="1.0"?>
+
+
+<!DOCTYPE rdf:RDF [
+    <!ENTITY owl "http://www.w3.org/2002/07/owl#" >
+    <!ENTITY xsd "http://www.w3.org/2001/XMLSchema#" >
+    <!ENTITY xml "http://www.w3.org/XML/1998/namespace" >
+    <!ENTITY rdfs "http://www.w3.org/2000/01/rdf-schema#" >
+    <!ENTITY rdf "http://www.w3.org/1999/02/22-rdf-syntax-ns#" >
+]>
+
+
+<rdf:RDF xmlns="http://www.semanticweb.org/shgx/ontologies/2013/5/untitled-ontology-2#"
+     xml:base="http://www.semanticweb.org/shgx/ontologies/2013/5/untitled-ontology-2"
+     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+     xmlns:owl="http://www.w3.org/2002/07/owl#"
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+     xmlns:xml="http://www.w3.org/XML/1998/namespace">
+    <owl:Ontology rdf:about="http://computas.seres.begrep"/>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Object Properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://computas.seres.begrep#annontering -->
+
+    <owl:ObjectProperty rdf:about="http://computas.seres.begrep#annontering">
+        <rdfs:range rdf:resource="http://computas.seres.begrep#Begrep"/>
+        <rdfs:domain rdf:resource="http://computas.seres.begrep#Begrepskategori"/>
+        <rdfs:domain rdf:resource="http://computas.seres.begrep#Begrepsmodell"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://computas.seres.begrep#begrep -->
+
+    <owl:ObjectProperty rdf:about="http://computas.seres.begrep#begrep">
+        <rdfs:range rdf:resource="http://computas.seres.begrep#Begrep"/>
+        <rdfs:domain rdf:resource="http://computas.seres.begrep#Begrepskategori"/>
+        <rdfs:domain rdf:resource="http://computas.seres.begrep#Begrepsmodell"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://computas.seres.begrep#begrepskategori -->
+
+    <owl:ObjectProperty rdf:about="http://computas.seres.begrep#begrepskategori">
+        <rdfs:domain rdf:resource="http://computas.seres.begrep#Begrep"/>
+        <rdfs:range rdf:resource="http://computas.seres.begrep#Begrepskategori"/>
+        <rdfs:domain rdf:resource="http://computas.seres.begrep#Begrepsmodell"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://computas.seres.begrep#begrepsmodell -->
+
+    <owl:ObjectProperty rdf:about="http://computas.seres.begrep#begrepsmodell">
+        <rdfs:domain rdf:resource="http://computas.seres.begrep#Begrep"/>
+        <rdfs:domain rdf:resource="http://computas.seres.begrep#Begrepskategori"/>
+        <rdfs:range rdf:resource="http://computas.seres.begrep#Begrepsmodell"/>
+        <rdfs:domain rdf:resource="http://computas.seres.begrep#Begrepsrelasjon"/>
+        <rdfs:domain rdf:resource="http://computas.seres.begrep#Bergepsnivå"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://computas.seres.begrep#begrepsnivå -->
+
+    <owl:ObjectProperty rdf:about="http://computas.seres.begrep#begrepsnivå">
+        <rdfs:domain rdf:resource="http://computas.seres.begrep#Begrepsmodell"/>
+        <rdfs:domain rdf:resource="http://computas.seres.begrep#Begrepsrelasjonstype"/>
+        <rdfs:range rdf:resource="http://computas.seres.begrep#Bergepsnivå"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://computas.seres.begrep#begrepsrelasjon -->
+
+    <owl:ObjectProperty rdf:about="http://computas.seres.begrep#begrepsrelasjon">
+        <rdfs:range rdf:resource="http://computas.seres.begrep#Begrepsrelasjon"/>
+        <rdfs:domain rdf:resource="http://computas.seres.begrep#Begrepsrelasjonstype"/>
+        <rdfs:subPropertyOf rdf:resource="&owl;topObjectProperty"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://computas.seres.begrep#begrepsrelasjonstype -->
+
+    <owl:ObjectProperty rdf:about="http://computas.seres.begrep#begrepsrelasjonstype">
+        <rdfs:range rdf:resource="http://computas.seres.begrep#Begrepsrelasjonstype"/>
+        <rdfs:domain rdf:resource="http://computas.seres.begrep#Bergepsnivå"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://computas.seres.begrep#dokumentasjon -->
+
+    <owl:ObjectProperty rdf:about="http://computas.seres.begrep#dokumentasjon">
+        <rdfs:range rdf:resource="http://computas.seres.begrep#Dokumentasjon"/>
+        <rdfs:domain rdf:resource="http://computas.seres.begrep#SERESelement"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://computas.seres.begrep#erSluttFor -->
+
+    <owl:ObjectProperty rdf:about="http://computas.seres.begrep#erSluttFor">
+        <rdfs:domain rdf:resource="http://computas.seres.begrep#Begrep"/>
+        <rdfs:range rdf:resource="http://computas.seres.begrep#Begrepsrelasjon"/>
+        <owl:inverseOf rdf:resource="http://computas.seres.begrep#til"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://computas.seres.begrep#erStartFor -->
+
+    <owl:ObjectProperty rdf:about="http://computas.seres.begrep#erStartFor">
+        <rdfs:domain rdf:resource="http://computas.seres.begrep#Begrep"/>
+        <rdfs:range rdf:resource="http://computas.seres.begrep#Begrepsrelasjon"/>
+        <owl:inverseOf rdf:resource="http://computas.seres.begrep#fra"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://computas.seres.begrep#forrigeversjon -->
+
+    <owl:ObjectProperty rdf:about="http://computas.seres.begrep#forrigeversjon">
+        <rdfs:range rdf:resource="http://computas.seres.begrep#SERESelement"/>
+        <rdfs:domain rdf:resource="http://computas.seres.begrep#SERESelement"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://computas.seres.begrep#forvaltingselement -->
+
+    <owl:ObjectProperty rdf:about="http://computas.seres.begrep#forvaltingselement">
+        <rdfs:range rdf:resource="http://computas.seres.begrep#Forvaltingselement"/>
+        <rdfs:domain rdf:resource="http://computas.seres.begrep#SERESelement"/>
+        <rdfs:subPropertyOf rdf:resource="&owl;topObjectProperty"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://computas.seres.begrep#fra -->
+
+    <owl:ObjectProperty rdf:about="http://computas.seres.begrep#fra">
+        <rdfs:range rdf:resource="http://computas.seres.begrep#Begrep"/>
+        <rdfs:domain rdf:resource="http://computas.seres.begrep#Begrepsrelasjon"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://computas.seres.begrep#nesteversjon -->
+
+    <owl:ObjectProperty rdf:about="http://computas.seres.begrep#nesteversjon">
+        <rdfs:domain rdf:resource="http://computas.seres.begrep#SERESelement"/>
+        <rdfs:range rdf:resource="http://computas.seres.begrep#SERESelement"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://computas.seres.begrep#sereselement -->
+
+    <owl:ObjectProperty rdf:about="http://computas.seres.begrep#sereselement">
+        <rdfs:domain rdf:resource="http://computas.seres.begrep#Dokumentasjon"/>
+        <rdfs:range rdf:resource="http://computas.seres.begrep#SERESelement"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://computas.seres.begrep#seresmodell -->
+
+    <owl:ObjectProperty rdf:about="http://computas.seres.begrep#seresmodell">
+        <rdfs:domain rdf:resource="http://computas.seres.begrep#Bergepsnivå"/>
+        <rdfs:range rdf:resource="http://computas.seres.begrep#SERESmodell"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://computas.seres.begrep#til -->
+
+    <owl:ObjectProperty rdf:about="http://computas.seres.begrep#til">
+        <rdfs:range rdf:resource="http://computas.seres.begrep#Begrep"/>
+        <rdfs:domain rdf:resource="http://computas.seres.begrep#Begrepsrelasjon"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://computas.seres.begrep#type -->
+
+    <owl:ObjectProperty rdf:about="http://computas.seres.begrep#type">
+        <rdfs:domain rdf:resource="http://computas.seres.begrep#Begrepsrelasjon"/>
+        <rdfs:range rdf:resource="http://computas.seres.begrep#Begrepsrelasjonstype"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Data properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://computas.seres.begrep#definisjon -->
+
+    <owl:DatatypeProperty rdf:about="http://computas.seres.begrep#definisjon">
+        <rdfs:domain rdf:resource="http://computas.seres.begrep#Begrep"/>
+        <rdfs:domain rdf:resource="http://computas.seres.begrep#Begrepskategori"/>
+        <rdfs:domain rdf:resource="http://computas.seres.begrep#Begrepsrelasjonstype"/>
+        <rdfs:range rdf:resource="&xsd;string"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://computas.seres.begrep#guid -->
+
+    <owl:DatatypeProperty rdf:about="http://computas.seres.begrep#guid">
+        <rdfs:domain rdf:resource="http://computas.seres.begrep#SERESelement"/>
+        <rdfs:range rdf:resource="&xsd;string"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://computas.seres.begrep#gyldigFra -->
+
+    <owl:DatatypeProperty rdf:about="http://computas.seres.begrep#gyldigFra">
+        <rdfs:domain rdf:resource="http://computas.seres.begrep#SERESelement"/>
+        <rdfs:range rdf:resource="&xsd;dateTime"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://computas.seres.begrep#gyldigTil -->
+
+    <owl:DatatypeProperty rdf:about="http://computas.seres.begrep#gyldigTil">
+        <rdfs:domain rdf:resource="http://computas.seres.begrep#SERESelement"/>
+        <rdfs:range rdf:resource="&xsd;dateTime"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://computas.seres.begrep#id -->
+
+    <owl:DatatypeProperty rdf:about="http://computas.seres.begrep#id">
+        <rdfs:range rdf:resource="&xsd;string"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://computas.seres.begrep#konfid -->
+
+    <owl:DatatypeProperty rdf:about="http://computas.seres.begrep#konfid">
+        <rdfs:domain rdf:resource="http://computas.seres.begrep#SERESelement"/>
+        <rdfs:range rdf:resource="&xsd;string"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://computas.seres.begrep#navn -->
+
+    <owl:DatatypeProperty rdf:about="http://computas.seres.begrep#navn">
+        <rdfs:domain rdf:resource="http://computas.seres.begrep#SERESelement"/>
+        <rdfs:range rdf:resource="&xsd;string"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://computas.seres.begrep#språk -->
+
+    <owl:DatatypeProperty rdf:about="http://computas.seres.begrep#språk">
+        <rdfs:domain rdf:resource="http://computas.seres.begrep#Dokumentasjon"/>
+        <rdfs:range rdf:resource="&xsd;string"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://computas.seres.begrep#tekst -->
+
+    <owl:DatatypeProperty rdf:about="http://computas.seres.begrep#tekst">
+        <rdfs:domain rdf:resource="http://computas.seres.begrep#Dokumentasjon"/>
+        <rdfs:range rdf:resource="&xsd;string"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://computas.seres.begrep#uuid -->
+
+    <owl:DatatypeProperty rdf:about="http://computas.seres.begrep#uuid">
+        <rdfs:domain rdf:resource="http://computas.seres.begrep#SERESelement"/>
+        <rdfs:range rdf:resource="&xsd;string"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Classes
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://computas.seres.begrep#Assisiasjonsende -->
+
+    <owl:Class rdf:about="http://computas.seres.begrep#Assisiasjonsende">
+        <rdfs:subClassOf rdf:resource="http://computas.seres.begrep#Strukturmodellelement"/>
+    </owl:Class>
+    
+
+
+    <!-- http://computas.seres.begrep#Assosiasjon -->
+
+    <owl:Class rdf:about="http://computas.seres.begrep#Assosiasjon">
+        <rdfs:subClassOf rdf:resource="http://computas.seres.begrep#Strukturmodellelement"/>
+    </owl:Class>
+    
+
+
+    <!-- http://computas.seres.begrep#Begrep -->
+
+    <owl:Class rdf:about="http://computas.seres.begrep#Begrep">
+        <rdfs:subClassOf rdf:resource="http://computas.seres.begrep#Semantikkelement"/>
+    </owl:Class>
+    
+
+
+    <!-- http://computas.seres.begrep#Begrepskategori -->
+
+    <owl:Class rdf:about="http://computas.seres.begrep#Begrepskategori">
+        <rdfs:subClassOf rdf:resource="http://computas.seres.begrep#Semantikkelement"/>
+    </owl:Class>
+    
+
+
+    <!-- http://computas.seres.begrep#Begrepsmodell -->
+
+    <owl:Class rdf:about="http://computas.seres.begrep#Begrepsmodell">
+        <rdfs:subClassOf rdf:resource="http://computas.seres.begrep#Semantikkelement"/>
+    </owl:Class>
+    
+
+
+    <!-- http://computas.seres.begrep#Begrepsrelasjon -->
+
+    <owl:Class rdf:about="http://computas.seres.begrep#Begrepsrelasjon">
+        <rdfs:subClassOf rdf:resource="http://computas.seres.begrep#Semantikkelement"/>
+    </owl:Class>
+    
+
+
+    <!-- http://computas.seres.begrep#Begrepsrelasjonstype -->
+
+    <owl:Class rdf:about="http://computas.seres.begrep#Begrepsrelasjonstype">
+        <rdfs:subClassOf rdf:resource="http://computas.seres.begrep#Semantikkelement"/>
+    </owl:Class>
+    
+
+
+    <!-- http://computas.seres.begrep#Bergepsnivå -->
+
+    <owl:Class rdf:about="http://computas.seres.begrep#Bergepsnivå">
+        <rdfs:subClassOf rdf:resource="http://computas.seres.begrep#Nivå"/>
+    </owl:Class>
+    
+
+
+    <!-- http://computas.seres.begrep#DataTypeegenskap -->
+
+    <owl:Class rdf:about="http://computas.seres.begrep#DataTypeegenskap">
+        <rdfs:subClassOf rdf:resource="http://computas.seres.begrep#Implementasjonselement"/>
+    </owl:Class>
+    
+
+
+    <!-- http://computas.seres.begrep#Dataegenskap -->
+
+    <owl:Class rdf:about="http://computas.seres.begrep#Dataegenskap">
+        <rdfs:subClassOf rdf:resource="http://computas.seres.begrep#Dataobjektegenskap"/>
+    </owl:Class>
+    
+
+
+    <!-- http://computas.seres.begrep#Dataegenskapstype -->
+
+    <owl:Class rdf:about="http://computas.seres.begrep#Dataegenskapstype">
+        <rdfs:subClassOf rdf:resource="http://computas.seres.begrep#Implementasjonselement"/>
+    </owl:Class>
+    
+
+
+    <!-- http://computas.seres.begrep#Dataenkeltype -->
+
+    <owl:Class rdf:about="http://computas.seres.begrep#Dataenkeltype">
+        <rdfs:subClassOf rdf:resource="http://computas.seres.begrep#Datasimpeltype"/>
+    </owl:Class>
+    
+
+
+    <!-- http://computas.seres.begrep#Datakodeelement -->
+
+    <owl:Class rdf:about="http://computas.seres.begrep#Datakodeelement">
+        <rdfs:subClassOf rdf:resource="http://computas.seres.begrep#Implementasjonselement"/>
+    </owl:Class>
+    
+
+
+    <!-- http://computas.seres.begrep#Datakodeliste -->
+
+    <owl:Class rdf:about="http://computas.seres.begrep#Datakodeliste">
+        <rdfs:subClassOf rdf:resource="http://computas.seres.begrep#Datasimpeltype"/>
+    </owl:Class>
+    
+
+
+    <!-- http://computas.seres.begrep#Datakomplekstype -->
+
+    <owl:Class rdf:about="http://computas.seres.begrep#Datakomplekstype">
+        <rdfs:subClassOf rdf:resource="http://computas.seres.begrep#Dataegenskapstype"/>
+    </owl:Class>
+    
+
+
+    <!-- http://computas.seres.begrep#Datamodell -->
+
+    <owl:Class rdf:about="http://computas.seres.begrep#Datamodell">
+        <rdfs:subClassOf rdf:resource="http://computas.seres.begrep#Implementasjonselement"/>
+    </owl:Class>
+    
+
+
+    <!-- http://computas.seres.begrep#Dataobjektegenskap -->
+
+    <owl:Class rdf:about="http://computas.seres.begrep#Dataobjektegenskap">
+        <rdfs:subClassOf rdf:resource="http://computas.seres.begrep#Implementasjonselement"/>
+    </owl:Class>
+    
+
+
+    <!-- http://computas.seres.begrep#Dataobjekttype -->
+
+    <owl:Class rdf:about="http://computas.seres.begrep#Dataobjekttype">
+        <rdfs:subClassOf rdf:resource="http://computas.seres.begrep#Implementasjonselement"/>
+    </owl:Class>
+    
+
+
+    <!-- http://computas.seres.begrep#Datasimpeltype -->
+
+    <owl:Class rdf:about="http://computas.seres.begrep#Datasimpeltype">
+        <rdfs:subClassOf rdf:resource="http://computas.seres.begrep#Dataegenskapstype"/>
+    </owl:Class>
+    
+
+
+    <!-- http://computas.seres.begrep#Dokumentasjon -->
+
+    <owl:Class rdf:about="http://computas.seres.begrep#Dokumentasjon">
+        <rdfs:subClassOf rdf:resource="http://computas.seres.begrep#Seres"/>
+    </owl:Class>
+    
+
+
+    <!-- http://computas.seres.begrep#Domene -->
+
+    <owl:Class rdf:about="http://computas.seres.begrep#Domene">
+        <rdfs:subClassOf rdf:resource="http://computas.seres.begrep#SERESmodell"/>
+    </owl:Class>
+    
+
+
+    <!-- http://computas.seres.begrep#Egenskap -->
+
+    <owl:Class rdf:about="http://computas.seres.begrep#Egenskap">
+        <rdfs:subClassOf rdf:resource="http://computas.seres.begrep#Modellelement"/>
+    </owl:Class>
+    
+
+
+    <!-- http://computas.seres.begrep#Egenskapstype -->
+
+    <owl:Class rdf:about="http://computas.seres.begrep#Egenskapstype">
+        <rdfs:subClassOf rdf:resource="http://computas.seres.begrep#Type"/>
+    </owl:Class>
+    
+
+
+    <!-- http://computas.seres.begrep#EksternKodeliste -->
+
+    <owl:Class rdf:about="http://computas.seres.begrep#EksternKodeliste">
+        <rdfs:subClassOf rdf:resource="http://computas.seres.begrep#Dataegenskapstype"/>
+    </owl:Class>
+    
+
+
+    <!-- http://computas.seres.begrep#Enkeltype -->
+
+    <owl:Class rdf:about="http://computas.seres.begrep#Enkeltype">
+        <rdfs:subClassOf rdf:resource="http://computas.seres.begrep#Egenskapstype"/>
+    </owl:Class>
+    
+
+
+    <!-- http://computas.seres.begrep#Forvaltingselement -->
+
+    <owl:Class rdf:about="http://computas.seres.begrep#Forvaltingselement">
+        <rdfs:subClassOf rdf:resource="http://computas.seres.begrep#Seres"/>
+    </owl:Class>
+    
+
+
+    <!-- http://computas.seres.begrep#Implementasjonselement -->
+
+    <owl:Class rdf:about="http://computas.seres.begrep#Implementasjonselement">
+        <rdfs:subClassOf rdf:resource="http://computas.seres.begrep#SERESelement"/>
+    </owl:Class>
+    
+
+
+    <!-- http://computas.seres.begrep#Implementasjonsnivå -->
+
+    <owl:Class rdf:about="http://computas.seres.begrep#Implementasjonsnivå">
+        <rdfs:subClassOf rdf:resource="http://computas.seres.begrep#Nivå"/>
+    </owl:Class>
+    
+
+
+    <!-- http://computas.seres.begrep#ImplementasjonsnivåDomene -->
+
+    <owl:Class rdf:about="http://computas.seres.begrep#ImplementasjonsnivåDomene">
+        <rdfs:subClassOf rdf:resource="http://computas.seres.begrep#Implementasjonsnivå"/>
+    </owl:Class>
+    
+
+
+    <!-- http://computas.seres.begrep#ImplementasjonsnivåKjerne -->
+
+    <owl:Class rdf:about="http://computas.seres.begrep#ImplementasjonsnivåKjerne">
+        <rdfs:subClassOf rdf:resource="http://computas.seres.begrep#Implementasjonsnivå"/>
+    </owl:Class>
+    
+
+
+    <!-- http://computas.seres.begrep#Kjerne -->
+
+    <owl:Class rdf:about="http://computas.seres.begrep#Kjerne">
+        <rdfs:subClassOf rdf:resource="http://computas.seres.begrep#SERESmodell"/>
+    </owl:Class>
+    
+
+
+    <!-- http://computas.seres.begrep#Kodeliste -->
+
+    <owl:Class rdf:about="http://computas.seres.begrep#Kodeliste">
+        <rdfs:subClassOf rdf:resource="http://computas.seres.begrep#Egenskapstype"/>
+    </owl:Class>
+    
+
+
+    <!-- http://computas.seres.begrep#Kodelisteelement -->
+
+    <owl:Class rdf:about="http://computas.seres.begrep#Kodelisteelement">
+        <rdfs:subClassOf rdf:resource="http://computas.seres.begrep#Strukturelement"/>
+    </owl:Class>
+    
+
+
+    <!-- http://computas.seres.begrep#Komplekstype -->
+
+    <owl:Class rdf:about="http://computas.seres.begrep#Komplekstype">
+        <rdfs:subClassOf rdf:resource="http://computas.seres.begrep#Egenskapstype"/>
+    </owl:Class>
+    
+
+
+    <!-- http://computas.seres.begrep#Meldingsdel -->
+
+    <owl:Class rdf:about="http://computas.seres.begrep#Meldingsdel">
+        <rdfs:subClassOf rdf:resource="http://computas.seres.begrep#Dataobjekttype"/>
+    </owl:Class>
+    
+
+
+    <!-- http://computas.seres.begrep#Meldingsmodell -->
+
+    <owl:Class rdf:about="http://computas.seres.begrep#Meldingsmodell">
+        <rdfs:subClassOf rdf:resource="http://computas.seres.begrep#Implementasjonselement"/>
+    </owl:Class>
+    
+
+
+    <!-- http://computas.seres.begrep#Modellelement -->
+
+    <owl:Class rdf:about="http://computas.seres.begrep#Modellelement">
+        <rdfs:subClassOf rdf:resource="http://computas.seres.begrep#Strukturelement"/>
+    </owl:Class>
+    
+
+
+    <!-- http://computas.seres.begrep#Nivå -->
+
+    <owl:Class rdf:about="http://computas.seres.begrep#Nivå">
+        <rdfs:subClassOf rdf:resource="http://computas.seres.begrep#SERESelement"/>
+    </owl:Class>
+    
+
+
+    <!-- http://computas.seres.begrep#ORDataeneltype -->
+
+    <owl:Class rdf:about="http://computas.seres.begrep#ORDataeneltype">
+        <rdfs:subClassOf rdf:resource="http://computas.seres.begrep#Dataenkeltype"/>
+    </owl:Class>
+    
+
+
+    <!-- http://computas.seres.begrep#ORDatakodeliste -->
+
+    <owl:Class rdf:about="http://computas.seres.begrep#ORDatakodeliste">
+        <rdfs:subClassOf rdf:resource="http://computas.seres.begrep#Datakodeliste"/>
+    </owl:Class>
+    
+
+
+    <!-- http://computas.seres.begrep#Objekttype -->
+
+    <owl:Class rdf:about="http://computas.seres.begrep#Objekttype">
+        <rdfs:subClassOf rdf:resource="http://computas.seres.begrep#Type"/>
+    </owl:Class>
+    
+
+
+    <!-- http://computas.seres.begrep#Plattform -->
+
+    <owl:Class rdf:about="http://computas.seres.begrep#Plattform">
+        <rdfs:subClassOf rdf:resource="http://computas.seres.begrep#Implementasjonselement"/>
+    </owl:Class>
+    
+
+
+    <!-- http://computas.seres.begrep#Presentasjonsdel -->
+
+    <owl:Class rdf:about="http://computas.seres.begrep#Presentasjonsdel">
+        <rdfs:subClassOf rdf:resource="http://computas.seres.begrep#Presentasjonselement"/>
+    </owl:Class>
+    
+
+
+    <!-- http://computas.seres.begrep#Presentasjonselement -->
+
+    <owl:Class rdf:about="http://computas.seres.begrep#Presentasjonselement">
+        <rdfs:subClassOf rdf:resource="http://computas.seres.begrep#Implementasjonselement"/>
+    </owl:Class>
+    
+
+
+    <!-- http://computas.seres.begrep#Presentasjonsfelt -->
+
+    <owl:Class rdf:about="http://computas.seres.begrep#Presentasjonsfelt">
+        <rdfs:subClassOf rdf:resource="http://computas.seres.begrep#Presentasjonselement"/>
+    </owl:Class>
+    
+
+
+    <!-- http://computas.seres.begrep#Presentasjonsmodell -->
+
+    <owl:Class rdf:about="http://computas.seres.begrep#Presentasjonsmodell">
+        <rdfs:subClassOf rdf:resource="http://computas.seres.begrep#Presentasjonselement"/>
+    </owl:Class>
+    
+
+
+    <!-- http://computas.seres.begrep#Primetivtype -->
+
+    <owl:Class rdf:about="http://computas.seres.begrep#Primetivtype">
+        <rdfs:subClassOf rdf:resource="http://computas.seres.begrep#Implementasjonselement"/>
+    </owl:Class>
+    
+
+
+    <!-- http://computas.seres.begrep#Relasjonsegenskap -->
+
+    <owl:Class rdf:about="http://computas.seres.begrep#Relasjonsegenskap">
+        <rdfs:subClassOf rdf:resource="http://computas.seres.begrep#Dataobjektegenskap"/>
+    </owl:Class>
+    
+
+
+    <!-- http://computas.seres.begrep#SERESelement -->
+
+    <owl:Class rdf:about="http://computas.seres.begrep#SERESelement">
+        <rdfs:subClassOf rdf:resource="http://computas.seres.begrep#Seres"/>
+    </owl:Class>
+    
+
+
+    <!-- http://computas.seres.begrep#SERESmodell -->
+
+    <owl:Class rdf:about="http://computas.seres.begrep#SERESmodell">
+        <rdfs:subClassOf rdf:resource="http://computas.seres.begrep#SERESelement"/>
+    </owl:Class>
+    
+
+
+    <!-- http://computas.seres.begrep#Semantikkelement -->
+
+    <owl:Class rdf:about="http://computas.seres.begrep#Semantikkelement">
+        <rdfs:subClassOf rdf:resource="http://computas.seres.begrep#SERESelement"/>
+    </owl:Class>
+    
+
+
+    <!-- http://computas.seres.begrep#Seres -->
+
+    <owl:Class rdf:about="http://computas.seres.begrep#Seres"/>
+    
+
+
+    <!-- http://computas.seres.begrep#Strukturelement -->
+
+    <owl:Class rdf:about="http://computas.seres.begrep#Strukturelement">
+        <rdfs:subClassOf rdf:resource="http://computas.seres.begrep#SERESelement"/>
+    </owl:Class>
+    
+
+
+    <!-- http://computas.seres.begrep#Strukturmodell -->
+
+    <owl:Class rdf:about="http://computas.seres.begrep#Strukturmodell">
+        <rdfs:subClassOf rdf:resource="http://computas.seres.begrep#Strukturelement"/>
+    </owl:Class>
+    
+
+
+    <!-- http://computas.seres.begrep#Strukturmodellelement -->
+
+    <owl:Class rdf:about="http://computas.seres.begrep#Strukturmodellelement">
+        <rdfs:subClassOf rdf:resource="http://computas.seres.begrep#Modellelement"/>
+    </owl:Class>
+    
+
+
+    <!-- http://computas.seres.begrep#Stukturnivå -->
+
+    <owl:Class rdf:about="http://computas.seres.begrep#Stukturnivå">
+        <rdfs:subClassOf rdf:resource="http://computas.seres.begrep#Nivå"/>
+    </owl:Class>
+    
+
+
+    <!-- http://computas.seres.begrep#Tallresktriksjon -->
+
+    <owl:Class rdf:about="http://computas.seres.begrep#Tallresktriksjon">
+        <rdfs:subClassOf rdf:resource="http://computas.seres.begrep#Verdirestriksjon"/>
+    </owl:Class>
+    
+
+
+    <!-- http://computas.seres.begrep#Tegnrestriksjon -->
+
+    <owl:Class rdf:about="http://computas.seres.begrep#Tegnrestriksjon">
+        <rdfs:subClassOf rdf:resource="http://computas.seres.begrep#Verdirestriksjon"/>
+    </owl:Class>
+    
+
+
+    <!-- http://computas.seres.begrep#Tjenestemodell -->
+
+    <owl:Class rdf:about="http://computas.seres.begrep#Tjenestemodell">
+        <rdfs:subClassOf rdf:resource="http://computas.seres.begrep#Implementasjonselement"/>
+    </owl:Class>
+    
+
+
+    <!-- http://computas.seres.begrep#Tjenestemodellkategori -->
+
+    <owl:Class rdf:about="http://computas.seres.begrep#Tjenestemodellkategori">
+        <rdfs:subClassOf rdf:resource="http://computas.seres.begrep#Implementasjonselement"/>
+    </owl:Class>
+    
+
+
+    <!-- http://computas.seres.begrep#Type -->
+
+    <owl:Class rdf:about="http://computas.seres.begrep#Type">
+        <rdfs:subClassOf rdf:resource="http://computas.seres.begrep#Strukturmodellelement"/>
+    </owl:Class>
+    
+
+
+    <!-- http://computas.seres.begrep#Typeegenskap -->
+
+    <owl:Class rdf:about="http://computas.seres.begrep#Typeegenskap">
+        <rdfs:subClassOf rdf:resource="http://computas.seres.begrep#Strukturelement"/>
+    </owl:Class>
+    
+
+
+    <!-- http://computas.seres.begrep#Typekategori -->
+
+    <owl:Class rdf:about="http://computas.seres.begrep#Typekategori">
+        <rdfs:subClassOf rdf:resource="http://computas.seres.begrep#Strukturelement"/>
+    </owl:Class>
+    
+
+
+    <!-- http://computas.seres.begrep#Verdiområde -->
+
+    <owl:Class rdf:about="http://computas.seres.begrep#Verdiområde">
+        <rdfs:subClassOf rdf:resource="http://computas.seres.begrep#Implementasjonselement"/>
+    </owl:Class>
+    
+
+
+    <!-- http://computas.seres.begrep#Verdirestriksjon -->
+
+    <owl:Class rdf:about="http://computas.seres.begrep#Verdirestriksjon">
+        <rdfs:subClassOf rdf:resource="http://computas.seres.begrep#Implementasjonselement"/>
+    </owl:Class>
+</rdf:RDF>
+
+
+
+<!-- Generated by the OWL API (version 3.4.2) http://owlapi.sourceforge.net -->
+

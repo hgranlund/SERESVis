@@ -1,0 +1,1153 @@
+<?xml version="1.0"?>
+
+
+<!DOCTYPE rdf:RDF [
+    <!ENTITY owl "http://www.w3.org/2002/07/owl#" >
+    <!ENTITY xsd "http://www.w3.org/2001/XMLSchema#" >
+    <!ENTITY xml "http://www.w3.org/XML/1998/namespace" >
+    <!ENTITY rdfs "http://www.w3.org/2000/01/rdf-schema#" >
+    <!ENTITY rdf "http://www.w3.org/1999/02/22-rdf-syntax-ns#" >
+]>
+
+
+<rdf:RDF xmlns="http://www.semanticweb.org/shgx/ontologies/2013/5/untitled-ontology-2#"
+     xml:base="http://www.semanticweb.org/shgx/ontologies/2013/5/untitled-ontology-2"
+     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+     xmlns:seres="http://www.seres.computas.com#"
+     xmlns:owl="http://www.w3.org/2002/07/owl#"
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+     xmlns:xml="http://www.w3.org/XML/1998/namespace">
+    <owl:Ontology rdf:about="http://computas.seres.begrep"/>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Object Properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://computas.seres.begrep#annontering -->
+
+    <owl:ObjectProperty rdf:about="http://computas.seres.begrep#annontering">
+        <rdfs:range rdf:resource="http://computas.seres.begrep#Begrep"/>
+        <rdfs:domain rdf:resource="http://computas.seres.begrep#Begrepskategori"/>
+        <rdfs:domain rdf:resource="http://computas.seres.begrep#Begrepsmodell"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://computas.seres.begrep#begrep -->
+
+    <owl:ObjectProperty rdf:about="http://computas.seres.begrep#begrep">
+        <rdfs:range rdf:resource="http://computas.seres.begrep#Begrep"/>
+        <rdfs:domain rdf:resource="http://computas.seres.begrep#Begrepskategori"/>
+        <rdfs:domain rdf:resource="http://computas.seres.begrep#Begrepsmodell"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://computas.seres.begrep#begrepskategori -->
+
+    <owl:ObjectProperty rdf:about="http://computas.seres.begrep#begrepskategori">
+        <rdfs:domain rdf:resource="http://computas.seres.begrep#Begrep"/>
+        <rdfs:range rdf:resource="http://computas.seres.begrep#Begrepskategori"/>
+        <rdfs:domain rdf:resource="http://computas.seres.begrep#Begrepsmodell"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://computas.seres.begrep#begrepsmodell -->
+
+    <owl:ObjectProperty rdf:about="http://computas.seres.begrep#begrepsmodell">
+        <rdfs:domain rdf:resource="http://computas.seres.begrep#Begrep"/>
+        <rdfs:domain rdf:resource="http://computas.seres.begrep#Begrepskategori"/>
+        <rdfs:range rdf:resource="http://computas.seres.begrep#Begrepsmodell"/>
+        <rdfs:domain rdf:resource="http://computas.seres.begrep#Begrepsrelasjon"/>
+        <rdfs:domain rdf:resource="http://computas.seres.begrep#Bergepsnivå"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://computas.seres.begrep#begrepsnivå -->
+
+    <owl:ObjectProperty rdf:about="http://computas.seres.begrep#begrepsnivå">
+        <rdfs:domain rdf:resource="http://computas.seres.begrep#Begrepsmodell"/>
+        <rdfs:domain rdf:resource="http://computas.seres.begrep#Begrepsrelasjonstype"/>
+        <rdfs:range rdf:resource="http://computas.seres.begrep#Bergepsnivå"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://computas.seres.begrep#begrepsrelasjon -->
+
+    <owl:ObjectProperty rdf:about="http://computas.seres.begrep#begrepsrelasjon">
+        <rdfs:range rdf:resource="http://computas.seres.begrep#Begrepsrelasjon"/>
+        <rdfs:domain rdf:resource="http://computas.seres.begrep#Begrepsrelasjonstype"/>
+        <rdfs:subPropertyOf rdf:resource="&owl;topObjectProperty"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://computas.seres.begrep#begrepsrelasjonstype -->
+
+    <owl:ObjectProperty rdf:about="http://computas.seres.begrep#begrepsrelasjonstype">
+        <rdfs:range rdf:resource="http://computas.seres.begrep#Begrepsrelasjonstype"/>
+        <rdfs:domain rdf:resource="http://computas.seres.begrep#Bergepsnivå"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://computas.seres.begrep#dokumentasjon -->
+
+    <owl:ObjectProperty rdf:about="http://computas.seres.begrep#dokumentasjon">
+        <rdfs:range rdf:resource="http://computas.seres.begrep#Dokumentasjon"/>
+        <rdfs:domain rdf:resource="http://computas.seres.begrep#SERESelement"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://computas.seres.begrep#erSluttFor -->
+
+    <owl:ObjectProperty rdf:about="http://computas.seres.begrep#erSluttFor">
+        <rdfs:domain rdf:resource="http://computas.seres.begrep#Begrep"/>
+        <rdfs:range rdf:resource="http://computas.seres.begrep#Begrepsrelasjon"/>
+        <owl:inverseOf rdf:resource="http://computas.seres.begrep#til"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://computas.seres.begrep#erStartFor -->
+
+    <owl:ObjectProperty rdf:about="http://computas.seres.begrep#erStartFor">
+        <rdfs:domain rdf:resource="http://computas.seres.begrep#Begrep"/>
+        <rdfs:range rdf:resource="http://computas.seres.begrep#Begrepsrelasjon"/>
+        <owl:inverseOf rdf:resource="http://computas.seres.begrep#fra"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://computas.seres.begrep#forrigeversjon -->
+
+    <owl:ObjectProperty rdf:about="http://computas.seres.begrep#forrigeversjon">
+        <rdfs:range rdf:resource="http://computas.seres.begrep#SERESelement"/>
+        <rdfs:domain rdf:resource="http://computas.seres.begrep#SERESelement"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://computas.seres.begrep#forvaltingselement -->
+
+    <owl:ObjectProperty rdf:about="http://computas.seres.begrep#forvaltingselement">
+        <rdfs:range rdf:resource="http://computas.seres.begrep#Forvaltingselement"/>
+        <rdfs:domain rdf:resource="http://computas.seres.begrep#SERESelement"/>
+        <rdfs:subPropertyOf rdf:resource="&owl;topObjectProperty"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://computas.seres.begrep#fra -->
+
+    <owl:ObjectProperty rdf:about="http://computas.seres.begrep#fra">
+        <rdfs:range rdf:resource="http://computas.seres.begrep#Begrep"/>
+        <rdfs:domain rdf:resource="http://computas.seres.begrep#Begrepsrelasjon"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://computas.seres.begrep#nesteversjon -->
+
+    <owl:ObjectProperty rdf:about="http://computas.seres.begrep#nesteversjon">
+        <rdfs:domain rdf:resource="http://computas.seres.begrep#SERESelement"/>
+        <rdfs:range rdf:resource="http://computas.seres.begrep#SERESelement"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://computas.seres.begrep#sereselement -->
+
+    <owl:ObjectProperty rdf:about="http://computas.seres.begrep#sereselement">
+        <rdfs:domain rdf:resource="http://computas.seres.begrep#Dokumentasjon"/>
+        <rdfs:range rdf:resource="http://computas.seres.begrep#SERESelement"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://computas.seres.begrep#seresmodell -->
+
+    <owl:ObjectProperty rdf:about="http://computas.seres.begrep#seresmodell">
+        <rdfs:domain rdf:resource="http://computas.seres.begrep#Bergepsnivå"/>
+        <rdfs:range rdf:resource="http://computas.seres.begrep#SERESmodell"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://computas.seres.begrep#til -->
+
+    <owl:ObjectProperty rdf:about="http://computas.seres.begrep#til">
+        <rdfs:range rdf:resource="http://computas.seres.begrep#Begrep"/>
+        <rdfs:domain rdf:resource="http://computas.seres.begrep#Begrepsrelasjon"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://computas.seres.begrep#type -->
+
+    <owl:ObjectProperty rdf:about="http://computas.seres.begrep#type">
+        <rdfs:domain rdf:resource="http://computas.seres.begrep#Begrepsrelasjon"/>
+        <rdfs:range rdf:resource="http://computas.seres.begrep#Begrepsrelasjonstype"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Data properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://computas.seres.begrep#definisjon -->
+
+    <owl:DatatypeProperty rdf:about="http://computas.seres.begrep#definisjon">
+        <rdfs:domain rdf:resource="http://computas.seres.begrep#Begrep"/>
+        <rdfs:domain rdf:resource="http://computas.seres.begrep#Begrepskategori"/>
+        <rdfs:domain rdf:resource="http://computas.seres.begrep#Begrepsrelasjonstype"/>
+        <rdfs:range rdf:resource="&xsd;string"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://computas.seres.begrep#guid -->
+
+    <owl:DatatypeProperty rdf:about="http://computas.seres.begrep#guid">
+        <rdfs:domain rdf:resource="http://computas.seres.begrep#SERESelement"/>
+        <rdfs:range rdf:resource="&xsd;string"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://computas.seres.begrep#gyldigFra -->
+
+    <owl:DatatypeProperty rdf:about="http://computas.seres.begrep#gyldigFra">
+        <rdfs:domain rdf:resource="http://computas.seres.begrep#SERESelement"/>
+        <rdfs:range rdf:resource="&xsd;dateTime"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://computas.seres.begrep#gyldigTil -->
+
+    <owl:DatatypeProperty rdf:about="http://computas.seres.begrep#gyldigTil">
+        <rdfs:domain rdf:resource="http://computas.seres.begrep#SERESelement"/>
+        <rdfs:range rdf:resource="&xsd;dateTime"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://computas.seres.begrep#id -->
+
+    <owl:DatatypeProperty rdf:about="http://computas.seres.begrep#id">
+        <rdfs:range rdf:resource="&xsd;string"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://computas.seres.begrep#konfid -->
+
+    <owl:DatatypeProperty rdf:about="http://computas.seres.begrep#konfid">
+        <rdfs:domain rdf:resource="http://computas.seres.begrep#SERESelement"/>
+        <rdfs:range rdf:resource="&xsd;string"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://computas.seres.begrep#navn -->
+
+    <owl:DatatypeProperty rdf:about="http://computas.seres.begrep#navn">
+        <rdfs:domain rdf:resource="http://computas.seres.begrep#SERESelement"/>
+        <rdfs:range rdf:resource="&xsd;string"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://computas.seres.begrep#språk -->
+
+    <owl:DatatypeProperty rdf:about="http://computas.seres.begrep#språk">
+        <rdfs:domain rdf:resource="http://computas.seres.begrep#Dokumentasjon"/>
+        <rdfs:range rdf:resource="&xsd;string"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://computas.seres.begrep#tekst -->
+
+    <owl:DatatypeProperty rdf:about="http://computas.seres.begrep#tekst">
+        <rdfs:domain rdf:resource="http://computas.seres.begrep#Dokumentasjon"/>
+        <rdfs:range rdf:resource="&xsd;string"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://computas.seres.begrep#uuid -->
+
+    <owl:DatatypeProperty rdf:about="http://computas.seres.begrep#uuid">
+        <rdfs:domain rdf:resource="http://computas.seres.begrep#SERESelement"/>
+        <rdfs:range rdf:resource="&xsd;string"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Classes
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://computas.seres.begrep#Assisiasjonsende -->
+
+    <owl:Class rdf:about="http://computas.seres.begrep#Assisiasjonsende">
+        <rdfs:subClassOf rdf:resource="http://computas.seres.begrep#Strukturmodellelement"/>
+    </owl:Class>
+    
+
+
+    <!-- http://computas.seres.begrep#Assosiasjon -->
+
+    <owl:Class rdf:about="http://computas.seres.begrep#Assosiasjon">
+        <rdfs:subClassOf rdf:resource="http://computas.seres.begrep#Strukturmodellelement"/>
+    </owl:Class>
+    
+
+
+    <!-- http://computas.seres.begrep#Begrep -->
+
+    <owl:Class rdf:about="http://computas.seres.begrep#Begrep">
+        <rdfs:subClassOf rdf:resource="http://computas.seres.begrep#Semantikkelement"/>
+    </owl:Class>
+    
+
+
+    <!-- http://computas.seres.begrep#Begrepskategori -->
+
+    <owl:Class rdf:about="http://computas.seres.begrep#Begrepskategori">
+        <rdfs:subClassOf rdf:resource="http://computas.seres.begrep#Semantikkelement"/>
+    </owl:Class>
+    
+
+
+    <!-- http://computas.seres.begrep#Begrepsmodell -->
+
+    <owl:Class rdf:about="http://computas.seres.begrep#Begrepsmodell">
+        <rdfs:subClassOf rdf:resource="http://computas.seres.begrep#Semantikkelement"/>
+    </owl:Class>
+    
+
+
+    <!-- http://computas.seres.begrep#Begrepsrelasjon -->
+
+    <owl:Class rdf:about="http://computas.seres.begrep#Begrepsrelasjon">
+        <rdfs:subClassOf rdf:resource="http://computas.seres.begrep#Semantikkelement"/>
+    </owl:Class>
+    
+
+
+    <!-- http://computas.seres.begrep#Begrepsrelasjonstype -->
+
+    <owl:Class rdf:about="http://computas.seres.begrep#Begrepsrelasjonstype">
+        <rdfs:subClassOf rdf:resource="http://computas.seres.begrep#Semantikkelement"/>
+    </owl:Class>
+    
+
+
+    <!-- http://computas.seres.begrep#Bergepsnivå -->
+
+    <owl:Class rdf:about="http://computas.seres.begrep#Bergepsnivå">
+        <rdfs:subClassOf rdf:resource="http://computas.seres.begrep#Nivå"/>
+    </owl:Class>
+    
+
+
+    <!-- http://computas.seres.begrep#DataTypeegenskap -->
+
+    <owl:Class rdf:about="http://computas.seres.begrep#DataTypeegenskap">
+        <rdfs:subClassOf rdf:resource="http://computas.seres.begrep#Implementasjonselement"/>
+    </owl:Class>
+    
+
+
+    <!-- http://computas.seres.begrep#Dataegenskap -->
+
+    <owl:Class rdf:about="http://computas.seres.begrep#Dataegenskap">
+        <rdfs:subClassOf rdf:resource="http://computas.seres.begrep#Dataobjektegenskap"/>
+    </owl:Class>
+    
+
+
+    <!-- http://computas.seres.begrep#Dataegenskapstype -->
+
+    <owl:Class rdf:about="http://computas.seres.begrep#Dataegenskapstype">
+        <rdfs:subClassOf rdf:resource="http://computas.seres.begrep#Implementasjonselement"/>
+    </owl:Class>
+    
+
+
+    <!-- http://computas.seres.begrep#Dataenkeltype -->
+
+    <owl:Class rdf:about="http://computas.seres.begrep#Dataenkeltype">
+        <rdfs:subClassOf rdf:resource="http://computas.seres.begrep#Datasimpeltype"/>
+    </owl:Class>
+    
+
+
+    <!-- http://computas.seres.begrep#Datakodeelement -->
+
+    <owl:Class rdf:about="http://computas.seres.begrep#Datakodeelement">
+        <rdfs:subClassOf rdf:resource="http://computas.seres.begrep#Implementasjonselement"/>
+    </owl:Class>
+    
+
+
+    <!-- http://computas.seres.begrep#Datakodeliste -->
+
+    <owl:Class rdf:about="http://computas.seres.begrep#Datakodeliste">
+        <rdfs:subClassOf rdf:resource="http://computas.seres.begrep#Datasimpeltype"/>
+    </owl:Class>
+    
+
+
+    <!-- http://computas.seres.begrep#Datakomplekstype -->
+
+    <owl:Class rdf:about="http://computas.seres.begrep#Datakomplekstype">
+        <rdfs:subClassOf rdf:resource="http://computas.seres.begrep#Dataegenskapstype"/>
+    </owl:Class>
+    
+
+
+    <!-- http://computas.seres.begrep#Datamodell -->
+
+    <owl:Class rdf:about="http://computas.seres.begrep#Datamodell">
+        <rdfs:subClassOf rdf:resource="http://computas.seres.begrep#Implementasjonselement"/>
+    </owl:Class>
+    
+
+
+    <!-- http://computas.seres.begrep#Dataobjektegenskap -->
+
+    <owl:Class rdf:about="http://computas.seres.begrep#Dataobjektegenskap">
+        <rdfs:subClassOf rdf:resource="http://computas.seres.begrep#Implementasjonselement"/>
+    </owl:Class>
+    
+
+
+    <!-- http://computas.seres.begrep#Dataobjekttype -->
+
+    <owl:Class rdf:about="http://computas.seres.begrep#Dataobjekttype">
+        <rdfs:subClassOf rdf:resource="http://computas.seres.begrep#Implementasjonselement"/>
+    </owl:Class>
+    
+
+
+    <!-- http://computas.seres.begrep#Datasimpeltype -->
+
+    <owl:Class rdf:about="http://computas.seres.begrep#Datasimpeltype">
+        <rdfs:subClassOf rdf:resource="http://computas.seres.begrep#Dataegenskapstype"/>
+    </owl:Class>
+    
+
+
+    <!-- http://computas.seres.begrep#Dokumentasjon -->
+
+    <owl:Class rdf:about="http://computas.seres.begrep#Dokumentasjon">
+        <rdfs:subClassOf rdf:resource="http://computas.seres.begrep#Seres"/>
+    </owl:Class>
+    
+
+
+    <!-- http://computas.seres.begrep#Domene -->
+
+    <owl:Class rdf:about="http://computas.seres.begrep#Domene">
+        <rdfs:subClassOf rdf:resource="http://computas.seres.begrep#SERESmodell"/>
+    </owl:Class>
+    
+
+
+    <!-- http://computas.seres.begrep#Egenskap -->
+
+    <owl:Class rdf:about="http://computas.seres.begrep#Egenskap">
+        <rdfs:subClassOf rdf:resource="http://computas.seres.begrep#Modellelement"/>
+    </owl:Class>
+    
+
+
+    <!-- http://computas.seres.begrep#Egenskapstype -->
+
+    <owl:Class rdf:about="http://computas.seres.begrep#Egenskapstype">
+        <rdfs:subClassOf rdf:resource="http://computas.seres.begrep#Type"/>
+    </owl:Class>
+    
+
+
+    <!-- http://computas.seres.begrep#EksternKodeliste -->
+
+    <owl:Class rdf:about="http://computas.seres.begrep#EksternKodeliste">
+        <rdfs:subClassOf rdf:resource="http://computas.seres.begrep#Dataegenskapstype"/>
+    </owl:Class>
+    
+
+
+    <!-- http://computas.seres.begrep#Enkeltype -->
+
+    <owl:Class rdf:about="http://computas.seres.begrep#Enkeltype">
+        <rdfs:subClassOf rdf:resource="http://computas.seres.begrep#Egenskapstype"/>
+    </owl:Class>
+    
+
+
+    <!-- http://computas.seres.begrep#Forvaltingselement -->
+
+    <owl:Class rdf:about="http://computas.seres.begrep#Forvaltingselement">
+        <rdfs:subClassOf rdf:resource="http://computas.seres.begrep#Seres"/>
+    </owl:Class>
+    
+
+
+    <!-- http://computas.seres.begrep#Implementasjonselement -->
+
+    <owl:Class rdf:about="http://computas.seres.begrep#Implementasjonselement">
+        <rdfs:subClassOf rdf:resource="http://computas.seres.begrep#SERESelement"/>
+    </owl:Class>
+    
+
+
+    <!-- http://computas.seres.begrep#Implementasjonsnivå -->
+
+    <owl:Class rdf:about="http://computas.seres.begrep#Implementasjonsnivå">
+        <rdfs:subClassOf rdf:resource="http://computas.seres.begrep#Nivå"/>
+    </owl:Class>
+    
+
+
+    <!-- http://computas.seres.begrep#ImplementasjonsnivåDomene -->
+
+    <owl:Class rdf:about="http://computas.seres.begrep#ImplementasjonsnivåDomene">
+        <rdfs:subClassOf rdf:resource="http://computas.seres.begrep#Implementasjonsnivå"/>
+    </owl:Class>
+    
+
+
+    <!-- http://computas.seres.begrep#ImplementasjonsnivåKjerne -->
+
+    <owl:Class rdf:about="http://computas.seres.begrep#ImplementasjonsnivåKjerne">
+        <rdfs:subClassOf rdf:resource="http://computas.seres.begrep#Implementasjonsnivå"/>
+    </owl:Class>
+    
+
+
+    <!-- http://computas.seres.begrep#Kjerne -->
+
+    <owl:Class rdf:about="http://computas.seres.begrep#Kjerne">
+        <rdfs:subClassOf rdf:resource="http://computas.seres.begrep#SERESmodell"/>
+    </owl:Class>
+    
+
+
+    <!-- http://computas.seres.begrep#Kodeliste -->
+
+    <owl:Class rdf:about="http://computas.seres.begrep#Kodeliste">
+        <rdfs:subClassOf rdf:resource="http://computas.seres.begrep#Egenskapstype"/>
+    </owl:Class>
+    
+
+
+    <!-- http://computas.seres.begrep#Kodelisteelement -->
+
+    <owl:Class rdf:about="http://computas.seres.begrep#Kodelisteelement">
+        <rdfs:subClassOf rdf:resource="http://computas.seres.begrep#Strukturelement"/>
+    </owl:Class>
+    
+
+
+    <!-- http://computas.seres.begrep#Komplekstype -->
+
+    <owl:Class rdf:about="http://computas.seres.begrep#Komplekstype">
+        <rdfs:subClassOf rdf:resource="http://computas.seres.begrep#Egenskapstype"/>
+    </owl:Class>
+    
+
+
+    <!-- http://computas.seres.begrep#Meldingsdel -->
+
+    <owl:Class rdf:about="http://computas.seres.begrep#Meldingsdel">
+        <rdfs:subClassOf rdf:resource="http://computas.seres.begrep#Dataobjekttype"/>
+    </owl:Class>
+    
+
+
+    <!-- http://computas.seres.begrep#Meldingsmodell -->
+
+    <owl:Class rdf:about="http://computas.seres.begrep#Meldingsmodell">
+        <rdfs:subClassOf rdf:resource="http://computas.seres.begrep#Implementasjonselement"/>
+    </owl:Class>
+    
+
+
+    <!-- http://computas.seres.begrep#Modellelement -->
+
+    <owl:Class rdf:about="http://computas.seres.begrep#Modellelement">
+        <rdfs:subClassOf rdf:resource="http://computas.seres.begrep#Strukturelement"/>
+    </owl:Class>
+    
+
+
+    <!-- http://computas.seres.begrep#Nivå -->
+
+    <owl:Class rdf:about="http://computas.seres.begrep#Nivå">
+        <rdfs:subClassOf rdf:resource="http://computas.seres.begrep#SERESelement"/>
+    </owl:Class>
+    
+
+
+    <!-- http://computas.seres.begrep#ORDataeneltype -->
+
+    <owl:Class rdf:about="http://computas.seres.begrep#ORDataeneltype">
+        <rdfs:subClassOf rdf:resource="http://computas.seres.begrep#Dataenkeltype"/>
+    </owl:Class>
+    
+
+
+    <!-- http://computas.seres.begrep#ORDatakodeliste -->
+
+    <owl:Class rdf:about="http://computas.seres.begrep#ORDatakodeliste">
+        <rdfs:subClassOf rdf:resource="http://computas.seres.begrep#Datakodeliste"/>
+    </owl:Class>
+    
+
+
+    <!-- http://computas.seres.begrep#Objekttype -->
+
+    <owl:Class rdf:about="http://computas.seres.begrep#Objekttype">
+        <rdfs:subClassOf rdf:resource="http://computas.seres.begrep#Type"/>
+    </owl:Class>
+    
+
+
+    <!-- http://computas.seres.begrep#Plattform -->
+
+    <owl:Class rdf:about="http://computas.seres.begrep#Plattform">
+        <rdfs:subClassOf rdf:resource="http://computas.seres.begrep#Implementasjonselement"/>
+    </owl:Class>
+    
+
+
+    <!-- http://computas.seres.begrep#Presentasjonsdel -->
+
+    <owl:Class rdf:about="http://computas.seres.begrep#Presentasjonsdel">
+        <rdfs:subClassOf rdf:resource="http://computas.seres.begrep#Presentasjonselement"/>
+    </owl:Class>
+    
+
+
+    <!-- http://computas.seres.begrep#Presentasjonselement -->
+
+    <owl:Class rdf:about="http://computas.seres.begrep#Presentasjonselement">
+        <rdfs:subClassOf rdf:resource="http://computas.seres.begrep#Implementasjonselement"/>
+    </owl:Class>
+    
+
+
+    <!-- http://computas.seres.begrep#Presentasjonsfelt -->
+
+    <owl:Class rdf:about="http://computas.seres.begrep#Presentasjonsfelt">
+        <rdfs:subClassOf rdf:resource="http://computas.seres.begrep#Presentasjonselement"/>
+    </owl:Class>
+    
+
+
+    <!-- http://computas.seres.begrep#Presentasjonsmodell -->
+
+    <owl:Class rdf:about="http://computas.seres.begrep#Presentasjonsmodell">
+        <rdfs:subClassOf rdf:resource="http://computas.seres.begrep#Presentasjonselement"/>
+    </owl:Class>
+    
+
+
+    <!-- http://computas.seres.begrep#Primetivtype -->
+
+    <owl:Class rdf:about="http://computas.seres.begrep#Primetivtype">
+        <rdfs:subClassOf rdf:resource="http://computas.seres.begrep#Implementasjonselement"/>
+    </owl:Class>
+    
+
+
+    <!-- http://computas.seres.begrep#Relasjonsegenskap -->
+
+    <owl:Class rdf:about="http://computas.seres.begrep#Relasjonsegenskap">
+        <rdfs:subClassOf rdf:resource="http://computas.seres.begrep#Dataobjektegenskap"/>
+    </owl:Class>
+    
+
+
+    <!-- http://computas.seres.begrep#SERESelement -->
+
+    <owl:Class rdf:about="http://computas.seres.begrep#SERESelement">
+        <rdfs:subClassOf rdf:resource="http://computas.seres.begrep#Seres"/>
+    </owl:Class>
+    
+
+
+    <!-- http://computas.seres.begrep#SERESmodell -->
+
+    <owl:Class rdf:about="http://computas.seres.begrep#SERESmodell">
+        <rdfs:subClassOf rdf:resource="http://computas.seres.begrep#SERESelement"/>
+    </owl:Class>
+    
+
+
+    <!-- http://computas.seres.begrep#Semantikkelement -->
+
+    <owl:Class rdf:about="http://computas.seres.begrep#Semantikkelement">
+        <rdfs:subClassOf rdf:resource="http://computas.seres.begrep#SERESelement"/>
+    </owl:Class>
+    
+
+
+    <!-- http://computas.seres.begrep#Seres -->
+
+    <owl:Class rdf:about="http://computas.seres.begrep#Seres"/>
+    
+
+
+    <!-- http://computas.seres.begrep#Strukturelement -->
+
+    <owl:Class rdf:about="http://computas.seres.begrep#Strukturelement">
+        <rdfs:subClassOf rdf:resource="http://computas.seres.begrep#SERESelement"/>
+    </owl:Class>
+    
+
+
+    <!-- http://computas.seres.begrep#Strukturmodell -->
+
+    <owl:Class rdf:about="http://computas.seres.begrep#Strukturmodell">
+        <rdfs:subClassOf rdf:resource="http://computas.seres.begrep#Strukturelement"/>
+    </owl:Class>
+    
+
+
+    <!-- http://computas.seres.begrep#Strukturmodellelement -->
+
+    <owl:Class rdf:about="http://computas.seres.begrep#Strukturmodellelement">
+        <rdfs:subClassOf rdf:resource="http://computas.seres.begrep#Modellelement"/>
+    </owl:Class>
+    
+
+
+    <!-- http://computas.seres.begrep#Stukturnivå -->
+
+    <owl:Class rdf:about="http://computas.seres.begrep#Stukturnivå">
+        <rdfs:subClassOf rdf:resource="http://computas.seres.begrep#Nivå"/>
+    </owl:Class>
+    
+
+
+    <!-- http://computas.seres.begrep#Tallresktriksjon -->
+
+    <owl:Class rdf:about="http://computas.seres.begrep#Tallresktriksjon">
+        <rdfs:subClassOf rdf:resource="http://computas.seres.begrep#Verdirestriksjon"/>
+    </owl:Class>
+    
+
+
+    <!-- http://computas.seres.begrep#Tegnrestriksjon -->
+
+    <owl:Class rdf:about="http://computas.seres.begrep#Tegnrestriksjon">
+        <rdfs:subClassOf rdf:resource="http://computas.seres.begrep#Verdirestriksjon"/>
+    </owl:Class>
+    
+
+
+    <!-- http://computas.seres.begrep#Tjenestemodell -->
+
+    <owl:Class rdf:about="http://computas.seres.begrep#Tjenestemodell">
+        <rdfs:subClassOf rdf:resource="http://computas.seres.begrep#Implementasjonselement"/>
+    </owl:Class>
+    
+
+
+    <!-- http://computas.seres.begrep#Tjenestemodellkategori -->
+
+    <owl:Class rdf:about="http://computas.seres.begrep#Tjenestemodellkategori">
+        <rdfs:subClassOf rdf:resource="http://computas.seres.begrep#Implementasjonselement"/>
+    </owl:Class>
+    
+
+
+    <!-- http://computas.seres.begrep#Type -->
+
+    <owl:Class rdf:about="http://computas.seres.begrep#Type">
+        <rdfs:subClassOf rdf:resource="http://computas.seres.begrep#Strukturmodellelement"/>
+    </owl:Class>
+    
+
+
+    <!-- http://computas.seres.begrep#Typeegenskap -->
+
+    <owl:Class rdf:about="http://computas.seres.begrep#Typeegenskap">
+        <rdfs:subClassOf rdf:resource="http://computas.seres.begrep#Strukturelement"/>
+    </owl:Class>
+    
+
+
+    <!-- http://computas.seres.begrep#Typekategori -->
+
+    <owl:Class rdf:about="http://computas.seres.begrep#Typekategori">
+        <rdfs:subClassOf rdf:resource="http://computas.seres.begrep#Strukturelement"/>
+    </owl:Class>
+    
+
+
+    <!-- http://computas.seres.begrep#Verdiområde -->
+
+    <owl:Class rdf:about="http://computas.seres.begrep#Verdiområde">
+        <rdfs:subClassOf rdf:resource="http://computas.seres.begrep#Implementasjonselement"/>
+    </owl:Class>
+    
+
+
+    <!-- http://computas.seres.begrep#Verdirestriksjon -->
+
+    <owl:Class rdf:about="http://computas.seres.begrep#Verdirestriksjon">
+        <rdfs:subClassOf rdf:resource="http://computas.seres.begrep#Implementasjonselement"/>
+    </owl:Class>
+
+
+
+
+<!-- Generated by the OWL API (version 3.4.2) http://owlapi.sourceforge.net -->
+
+   <rdf:Description rdf:about="http://computas.seres.begrep#Begrepsmodell_29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:802e">
+      <rdf:type rdf:resource="http://computas.seres.begrep#Begrepsmodell"/>
+      <seres:xmi.id xmlns:seres="http://www.seres.computas.com#">a0</seres:xmi.id>
+      <seres:xmi.uuid xmlns:seres="http://www.seres.computas.com#">29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:802e</seres:xmi.uuid>
+      <seres:xmi.label xmlns:seres="http://www.seres.computas.com#"/>
+      <seres:navn xmlns:seres="http://www.seres.computas.com#">Begreper</seres:navn>
+      <seres:guid xmlns:seres="http://www.seres.computas.com#">http://seres.no/guid/Akseptanse/Begrepsmodell/Begreper/1172575</seres:guid>
+      <seres:konfid xmlns:seres="http://www.seres.computas.com#">0</seres:konfid>
+      <seres:gyldigFra xmlns:seres="http://www.seres.computas.com#">1900-01-01 00:00:00.000</seres:gyldigFra>
+      <seres:gyldigTil xmlns:seres="http://www.seres.computas.com#">1900-01-01 00:00:00.000</seres:gyldigTil>
+      <seres:begrepsnivå xmlns:seres="http://www.seres.computas.com#"
+                         rdf:resource="http://computas.seres.begrep#Begrepsnivå_29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:8034"/>
+   </rdf:Description>
+   <rdf:Description rdf:about="http://computas.seres.begrep#Begrep_29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:8029">
+      <rdf:type rdf:resource="http://computas.seres.begrep#Begrep"/>
+      <seres:xmi.id xmlns:seres="http://www.seres.computas.com#">a2</seres:xmi.id>
+      <seres:xmi.uuid xmlns:seres="http://www.seres.computas.com#">29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:8029</seres:xmi.uuid>
+      <seres:xmi.label xmlns:seres="http://www.seres.computas.com#"/>
+      <seres:navn xmlns:seres="http://www.seres.computas.com#">Tekst</seres:navn>
+      <seres:guid xmlns:seres="http://www.seres.computas.com#">http://seres.no/guid/Akseptanse/Begrep/Tekst/1172574</seres:guid>
+      <seres:konfid xmlns:seres="http://www.seres.computas.com#">0</seres:konfid>
+      <seres:gyldigFra xmlns:seres="http://www.seres.computas.com#">1900-01-01 00:00:00.000</seres:gyldigFra>
+      <seres:gyldigTil xmlns:seres="http://www.seres.computas.com#">1900-01-01 00:00:00.000</seres:gyldigTil>
+      <seres:begrepsmodell xmlns:seres="http://www.seres.computas.com#"
+                           rdf:resource="http://computas.seres.begrep#Begrepsmodell_29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:802e"/>
+      <seres:erSluttFor xmlns:seres="http://www.seres.computas.com#"
+                        rdf:resource="http://computas.seres.begrep#Begrepsrelasjon_29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:802d"/>
+   </rdf:Description>
+   <rdf:Description rdf:about="http://computas.seres.begrep#Begrep_29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:802a">
+      <rdf:type rdf:resource="http://computas.seres.begrep#Begrep"/>
+      <seres:xmi.id xmlns:seres="http://www.seres.computas.com#">a4</seres:xmi.id>
+      <seres:xmi.uuid xmlns:seres="http://www.seres.computas.com#">29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:802a</seres:xmi.uuid>
+      <seres:xmi.label xmlns:seres="http://www.seres.computas.com#"/>
+      <seres:navn xmlns:seres="http://www.seres.computas.com#">Navn</seres:navn>
+      <seres:guid xmlns:seres="http://www.seres.computas.com#">http://seres.no/guid/Akseptanse/Begrep/Navn/1172573</seres:guid>
+      <seres:konfid xmlns:seres="http://www.seres.computas.com#">0</seres:konfid>
+      <seres:gyldigFra xmlns:seres="http://www.seres.computas.com#">1900-01-01 00:00:00.000</seres:gyldigFra>
+      <seres:gyldigTil xmlns:seres="http://www.seres.computas.com#">1900-01-01 00:00:00.000</seres:gyldigTil>
+      <seres:begrepsmodell xmlns:seres="http://www.seres.computas.com#"
+                           rdf:resource="http://computas.seres.begrep#Begrepsmodell_29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:802e"/>
+      <seres:erStartFor xmlns:seres="http://www.seres.computas.com#"
+                        rdf:resource="http://computas.seres.begrep#Begrepsrelasjon_29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:802d"/>
+   </rdf:Description>
+   <rdf:Description rdf:about="http://computas.seres.begrep#Begrep_29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:802c">
+      <rdf:type rdf:resource="http://computas.seres.begrep#Begrep"/>
+      <seres:xmi.id xmlns:seres="http://www.seres.computas.com#">a5</seres:xmi.id>
+      <seres:xmi.uuid xmlns:seres="http://www.seres.computas.com#">29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:802c</seres:xmi.uuid>
+      <seres:xmi.label xmlns:seres="http://www.seres.computas.com#"/>
+      <seres:navn xmlns:seres="http://www.seres.computas.com#">Allergi</seres:navn>
+      <seres:guid xmlns:seres="http://www.seres.computas.com#">http://seres.no/guid/Akseptanse/Begrep/Allergi/1172572</seres:guid>
+      <seres:konfid xmlns:seres="http://www.seres.computas.com#">0</seres:konfid>
+      <seres:gyldigFra xmlns:seres="http://www.seres.computas.com#">1900-01-01 00:00:00.000</seres:gyldigFra>
+      <seres:gyldigTil xmlns:seres="http://www.seres.computas.com#">1900-01-01 00:00:00.000</seres:gyldigTil>
+      <seres:definisjon xmlns:seres="http://www.seres.computas.com#">Allergi betyr forandring i kroppens reaksjonsmåte på de i våre omgivelsers naturlige og i utgangspunktet ufarlige stoffer.</seres:definisjon>
+      <seres:begrepsmodell xmlns:seres="http://www.seres.computas.com#"
+                           rdf:resource="http://computas.seres.begrep#Begrepsmodell_29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:802e"/>
+   </rdf:Description>
+   <rdf:Description rdf:about="http://computas.seres.begrep#Dokumentasjon_29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:802b">
+      <rdf:type rdf:resource="http://computas.seres.begrep#Dokumentasjon"/>
+      <seres:xmi.id xmlns:seres="http://www.seres.computas.com#">a6</seres:xmi.id>
+      <seres:xmi.uuid xmlns:seres="http://www.seres.computas.com#">29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:802b</seres:xmi.uuid>
+      <seres:xmi.label xmlns:seres="http://www.seres.computas.com#"/>
+      <seres:type xmlns:seres="http://www.seres.computas.com#">kommentar</seres:type>
+      <seres:språk xmlns:seres="http://www.seres.computas.com#">bokmål</seres:språk>
+      <seres:tekst xmlns:seres="http://www.seres.computas.com#">Allergi er definert i "Definisjon"-attributtet</seres:tekst>
+      <seres:sereselement xmlns:seres="http://www.seres.computas.com#"
+                          rdf:resource="http://computas.seres.begrep#Begrep_29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:802c"/>
+   </rdf:Description>
+   <rdf:Description rdf:about="http://computas.seres.begrep#Begrepsrelasjon_29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:802d">
+      <rdf:type rdf:resource="http://computas.seres.begrep#Begrepsrelasjon"/>
+      <seres:xmi.id xmlns:seres="http://www.seres.computas.com#">a3</seres:xmi.id>
+      <seres:xmi.uuid xmlns:seres="http://www.seres.computas.com#">29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:802d</seres:xmi.uuid>
+      <seres:xmi.label xmlns:seres="http://www.seres.computas.com#"/>
+      <seres:navn xmlns:seres="http://www.seres.computas.com#"/>
+      <seres:guid xmlns:seres="http://www.seres.computas.com#">http://seres.no/guid/Akseptanse/Begrepsrelasjon//1172571</seres:guid>
+      <seres:konfid xmlns:seres="http://www.seres.computas.com#">0</seres:konfid>
+      <seres:gyldigFra xmlns:seres="http://www.seres.computas.com#">1900-01-01 00:00:00.000</seres:gyldigFra>
+      <seres:gyldigTil xmlns:seres="http://www.seres.computas.com#">1900-01-01 00:00:00.000</seres:gyldigTil>
+      <seres:fra xmlns:seres="http://www.seres.computas.com#"
+                 rdf:resource="http://computas.seres.begrep#Begrep_29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:802a"/>
+      <seres:til xmlns:seres="http://www.seres.computas.com#"
+                 rdf:resource="http://computas.seres.begrep#Begrep_29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:8029"/>
+      <seres:begrepsmodell xmlns:seres="http://www.seres.computas.com#"
+                           rdf:resource="http://computas.seres.begrep#Begrepsmodell_29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:802e"/>
+      <seres:type xmlns:seres="http://www.seres.computas.com#"
+                  rdf:resource="http://computas.seres.begrep#Begrepsrelasjonstype_29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:8030"/>
+   </rdf:Description>
+   <rdf:Description rdf:about="http://computas.seres.begrep#Begrepsmodell_3334453b782ba36a:21c0a718:0000013b75765a54:8074">
+      <rdf:type rdf:resource="http://computas.seres.begrep#Begrepsmodell"/>
+      <seres:xmi.id xmlns:seres="http://www.seres.computas.com#">a8</seres:xmi.id>
+      <seres:xmi.uuid xmlns:seres="http://www.seres.computas.com#">3334453b782ba36a:21c0a718:0000013b75765a54:8074</seres:xmi.uuid>
+      <seres:xmi.label xmlns:seres="http://www.seres.computas.com#"/>
+      <seres:navn xmlns:seres="http://www.seres.computas.com#">Begreper</seres:navn>
+      <seres:guid xmlns:seres="http://www.seres.computas.com#">http://seres.no/guid/Akseptanse/Begrepsmodell/Begreper/1172575</seres:guid>
+      <seres:konfid xmlns:seres="http://www.seres.computas.com#">0</seres:konfid>
+      <seres:gyldigFra xmlns:seres="http://www.seres.computas.com#">1900-01-01 00:00:00.000</seres:gyldigFra>
+      <seres:gyldigTil xmlns:seres="http://www.seres.computas.com#">1900-01-01 00:00:00.000</seres:gyldigTil>
+      <seres:begrepsnivå xmlns:seres="http://www.seres.computas.com#"
+                         rdf:resource="http://computas.seres.begrep#Begrepsnivå_28e4453b782ba36a:21c0a718:0000013b75765a54:807a"/>
+   </rdf:Description>
+   <rdf:Description rdf:about="http://computas.seres.begrep#Begrep_3334453b782ba36a:21c0a718:0000013b75765a54:8071">
+      <rdf:type rdf:resource="http://computas.seres.begrep#Begrep"/>
+      <seres:xmi.id xmlns:seres="http://www.seres.computas.com#">a10</seres:xmi.id>
+      <seres:xmi.uuid xmlns:seres="http://www.seres.computas.com#">3334453b782ba36a:21c0a718:0000013b75765a54:8071</seres:xmi.uuid>
+      <seres:xmi.label xmlns:seres="http://www.seres.computas.com#"/>
+      <seres:navn xmlns:seres="http://www.seres.computas.com#">Tekst</seres:navn>
+      <seres:guid xmlns:seres="http://www.seres.computas.com#">http://seres.no/guid/Akseptanse/Begrep/Tekst/1172574</seres:guid>
+      <seres:konfid xmlns:seres="http://www.seres.computas.com#">0</seres:konfid>
+      <seres:gyldigFra xmlns:seres="http://www.seres.computas.com#">1900-01-01 00:00:00.000</seres:gyldigFra>
+      <seres:gyldigTil xmlns:seres="http://www.seres.computas.com#">1900-01-01 00:00:00.000</seres:gyldigTil>
+      <seres:begrepsmodell xmlns:seres="http://www.seres.computas.com#"
+                           rdf:resource="http://computas.seres.begrep#Begrepsmodell_3334453b782ba36a:21c0a718:0000013b75765a54:8074"/>
+      <seres:erSluttFor xmlns:seres="http://www.seres.computas.com#"
+                        rdf:resource="http://computas.seres.begrep#Begrepsrelasjon_3334453b782ba36a:21c0a718:0000013b75765a54:8073"/>
+   </rdf:Description>
+   <rdf:Description rdf:about="http://computas.seres.begrep#Begrep_3334453b782ba36a:21c0a718:0000013b75765a54:8072">
+      <rdf:type rdf:resource="http://computas.seres.begrep#Begrep"/>
+      <seres:xmi.id xmlns:seres="http://www.seres.computas.com#">a12</seres:xmi.id>
+      <seres:xmi.uuid xmlns:seres="http://www.seres.computas.com#">3334453b782ba36a:21c0a718:0000013b75765a54:8072</seres:xmi.uuid>
+      <seres:xmi.label xmlns:seres="http://www.seres.computas.com#"/>
+      <seres:navn xmlns:seres="http://www.seres.computas.com#">Navn</seres:navn>
+      <seres:guid xmlns:seres="http://www.seres.computas.com#">http://seres.no/guid/Akseptanse/Begrep/Navn/1172573</seres:guid>
+      <seres:konfid xmlns:seres="http://www.seres.computas.com#">0</seres:konfid>
+      <seres:gyldigFra xmlns:seres="http://www.seres.computas.com#">1900-01-01 00:00:00.000</seres:gyldigFra>
+      <seres:gyldigTil xmlns:seres="http://www.seres.computas.com#">1900-01-01 00:00:00.000</seres:gyldigTil>
+      <seres:begrepsmodell xmlns:seres="http://www.seres.computas.com#"
+                           rdf:resource="http://computas.seres.begrep#Begrepsmodell_3334453b782ba36a:21c0a718:0000013b75765a54:8074"/>
+      <seres:erStartFor xmlns:seres="http://www.seres.computas.com#"
+                        rdf:resource="http://computas.seres.begrep#Begrepsrelasjon_3334453b782ba36a:21c0a718:0000013b75765a54:8073"/>
+   </rdf:Description>
+   <rdf:Description rdf:about="http://computas.seres.begrep#Begrep_3331EQUUyEeKUvfdwf2k2vw">
+      <rdf:type rdf:resource="http://computas.seres.begrep#Begrep"/>
+      <seres:xmi.id xmlns:seres="http://www.seres.computas.com#">a13</seres:xmi.id>
+      <seres:xmi.uuid xmlns:seres="http://www.seres.computas.com#">3331EQUUyEeKUvfdwf2k2vw</seres:xmi.uuid>
+      <seres:xmi.label xmlns:seres="http://www.seres.computas.com#"/>
+      <seres:navn xmlns:seres="http://www.seres.computas.com#">Allergi</seres:navn>
+      <seres:guid xmlns:seres="http://www.seres.computas.com#">http://seres.no/guid/Akseptanse/Begrep/Allergi/1172572</seres:guid>
+      <seres:konfid xmlns:seres="http://www.seres.computas.com#">0</seres:konfid>
+      <seres:gyldigFra xmlns:seres="http://www.seres.computas.com#">1900-01-01 00:00:00.000</seres:gyldigFra>
+      <seres:gyldigTil xmlns:seres="http://www.seres.computas.com#">1900-01-01 00:00:00.000</seres:gyldigTil>
+      <seres:definisjon xmlns:seres="http://www.seres.computas.com#">Allergi betyr forandring i kroppens reaksjonsmåte på de i våre omgivelsers naturlige og i utgangspunktet ufarlige stoffer.</seres:definisjon>
+      <seres:begrepsmodell xmlns:seres="http://www.seres.computas.com#"
+                           rdf:resource="http://computas.seres.begrep#Begrepsmodell_3334453b782ba36a:21c0a718:0000013b75765a54:8074"/>
+   </rdf:Description>
+   <rdf:Description rdf:about="http://computas.seres.begrep#Dokumentasjon_3333VkUhCEeKYVYkXVtHdsQ">
+      <rdf:type rdf:resource="http://computas.seres.begrep#Dokumentasjon"/>
+      <seres:xmi.id xmlns:seres="http://www.seres.computas.com#">a14</seres:xmi.id>
+      <seres:xmi.uuid xmlns:seres="http://www.seres.computas.com#">3333VkUhCEeKYVYkXVtHdsQ</seres:xmi.uuid>
+      <seres:xmi.label xmlns:seres="http://www.seres.computas.com#"/>
+      <seres:type xmlns:seres="http://www.seres.computas.com#">kommentar</seres:type>
+      <seres:språk xmlns:seres="http://www.seres.computas.com#">bokmål</seres:språk>
+      <seres:tekst xmlns:seres="http://www.seres.computas.com#">Allergi er definert i "Definisjon"-attributtet</seres:tekst>
+      <seres:sereselement xmlns:seres="http://www.seres.computas.com#"
+                          rdf:resource="http://computas.seres.begrep#Begrep_3331EQUUyEeKUvfdwf2k2vw"/>
+   </rdf:Description>
+   <rdf:Description rdf:about="http://computas.seres.begrep#Begrepsrelasjon_3334453b782ba36a:21c0a718:0000013b75765a54:8073">
+      <rdf:type rdf:resource="http://computas.seres.begrep#Begrepsrelasjon"/>
+      <seres:xmi.id xmlns:seres="http://www.seres.computas.com#">a11</seres:xmi.id>
+      <seres:xmi.uuid xmlns:seres="http://www.seres.computas.com#">3334453b782ba36a:21c0a718:0000013b75765a54:8073</seres:xmi.uuid>
+      <seres:xmi.label xmlns:seres="http://www.seres.computas.com#"/>
+      <seres:navn xmlns:seres="http://www.seres.computas.com#"/>
+      <seres:guid xmlns:seres="http://www.seres.computas.com#">http://seres.no/guid/Akseptanse/Begrepsrelasjon//1172571</seres:guid>
+      <seres:konfid xmlns:seres="http://www.seres.computas.com#">0</seres:konfid>
+      <seres:gyldigFra xmlns:seres="http://www.seres.computas.com#">1900-01-01 00:00:00.000</seres:gyldigFra>
+      <seres:gyldigTil xmlns:seres="http://www.seres.computas.com#">1900-01-01 00:00:00.000</seres:gyldigTil>
+      <seres:fra xmlns:seres="http://www.seres.computas.com#"
+                 rdf:resource="http://computas.seres.begrep#Begrep_3334453b782ba36a:21c0a718:0000013b75765a54:8072"/>
+      <seres:til xmlns:seres="http://www.seres.computas.com#"
+                 rdf:resource="http://computas.seres.begrep#Begrep_3334453b782ba36a:21c0a718:0000013b75765a54:8071"/>
+      <seres:begrepsmodell xmlns:seres="http://www.seres.computas.com#"
+                           rdf:resource="http://computas.seres.begrep#Begrepsmodell_3334453b782ba36a:21c0a718:0000013b75765a54:8074"/>
+      <seres:type xmlns:seres="http://www.seres.computas.com#"
+                  rdf:resource="http://computas.seres.begrep#Begrepsrelasjonstype_3334453b782ba36a:21c0a718:0000013b75765a54:8076"/>
+   </rdf:Description>
+   <rdf:Description rdf:about="http://computas.seres.begrep#Begrepsrelasjonstype_29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:8030">
+      <rdf:type rdf:resource="http://computas.seres.begrep#Begrepsrelasjonstype"/>
+      <seres:xmi.id xmlns:seres="http://www.seres.computas.com#">a7</seres:xmi.id>
+      <seres:xmi.uuid xmlns:seres="http://www.seres.computas.com#">29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:8030</seres:xmi.uuid>
+      <seres:xmi.label xmlns:seres="http://www.seres.computas.com#"/>
+      <seres:navn xmlns:seres="http://www.seres.computas.com#">er</seres:navn>
+      <seres:guid xmlns:seres="http://www.seres.computas.com#">http://seres.no/guid/Akseptanse/Begrepsrelasjonstype/er/1172570</seres:guid>
+      <seres:konfid xmlns:seres="http://www.seres.computas.com#">0</seres:konfid>
+      <seres:gyldigFra xmlns:seres="http://www.seres.computas.com#">1900-01-01 00:00:00.000</seres:gyldigFra>
+      <seres:gyldigTil xmlns:seres="http://www.seres.computas.com#">1900-01-01 00:00:00.000</seres:gyldigTil>
+      <seres:definisjon xmlns:seres="http://www.seres.computas.com#">Arv mellom to begreper</seres:definisjon>
+      <seres:begrepsrelasjon xmlns:seres="http://www.seres.computas.com#"
+                             rdf:resource="http://computas.seres.begrep#Begrepsrelasjon_29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:802d"/>
+      <seres:begrepsnivå xmlns:seres="http://www.seres.computas.com#"
+                         rdf:resource="http://computas.seres.begrep#Begrepsnivå_29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:8034"/>
+   </rdf:Description>
+   <rdf:Description rdf:about="http://computas.seres.begrep#Dokumentasjon_29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:802f">
+      <rdf:type rdf:resource="http://computas.seres.begrep#Dokumentasjon"/>
+      <seres:xmi.id xmlns:seres="http://www.seres.computas.com#">a16</seres:xmi.id>
+      <seres:xmi.uuid xmlns:seres="http://www.seres.computas.com#">29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:802f</seres:xmi.uuid>
+      <seres:xmi.label xmlns:seres="http://www.seres.computas.com#"/>
+      <seres:type xmlns:seres="http://www.seres.computas.com#">beskrivelse</seres:type>
+      <seres:språk xmlns:seres="http://www.seres.computas.com#">nb</seres:språk>
+      <seres:tekst xmlns:seres="http://www.seres.computas.com#">En er-relasjon angir at et begrep (fra) *ER* en subtype (subkonsept eller hyponym) av et annet begrep (til).</seres:tekst>
+      <seres:sereselement xmlns:seres="http://www.seres.computas.com#"
+                          rdf:resource="http://computas.seres.begrep#Begrepsrelasjonstype_29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:8030"/>
+   </rdf:Description>
+   <rdf:Description rdf:about="http://computas.seres.begrep#Begrepsrelasjonstype_29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:8033">
+      <rdf:type rdf:resource="http://computas.seres.begrep#Begrepsrelasjonstype"/>
+      <seres:xmi.id xmlns:seres="http://www.seres.computas.com#">a17</seres:xmi.id>
+      <seres:xmi.uuid xmlns:seres="http://www.seres.computas.com#">29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:8033</seres:xmi.uuid>
+      <seres:xmi.label xmlns:seres="http://www.seres.computas.com#"/>
+      <seres:navn xmlns:seres="http://www.seres.computas.com#">omfatter</seres:navn>
+      <seres:guid xmlns:seres="http://www.seres.computas.com#">http://seres.no/guid/Akseptanse/Begrepsrelasjonstype/omfatter/1172569</seres:guid>
+      <seres:konfid xmlns:seres="http://www.seres.computas.com#">0</seres:konfid>
+      <seres:gyldigFra xmlns:seres="http://www.seres.computas.com#">1900-01-01 00:00:00.000</seres:gyldigFra>
+      <seres:gyldigTil xmlns:seres="http://www.seres.computas.com#">1900-01-01 00:00:00.000</seres:gyldigTil>
+      <seres:definisjon xmlns:seres="http://www.seres.computas.com#">Aggregering mellom to begreper</seres:definisjon>
+      <seres:begrepsnivå xmlns:seres="http://www.seres.computas.com#"
+                         rdf:resource="http://computas.seres.begrep#Begrepsnivå_29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:8034"/>
+   </rdf:Description>
+   <rdf:Description rdf:about="http://computas.seres.begrep#Dokumentasjon_29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:8031">
+      <rdf:type rdf:resource="http://computas.seres.begrep#Dokumentasjon"/>
+      <seres:xmi.id xmlns:seres="http://www.seres.computas.com#">a18</seres:xmi.id>
+      <seres:xmi.uuid xmlns:seres="http://www.seres.computas.com#">29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:8031</seres:xmi.uuid>
+      <seres:xmi.label xmlns:seres="http://www.seres.computas.com#"/>
+      <seres:type xmlns:seres="http://www.seres.computas.com#">beskrivelse</seres:type>
+      <seres:språk xmlns:seres="http://www.seres.computas.com#">nb</seres:språk>
+      <seres:tekst xmlns:seres="http://www.seres.computas.com#">En omfatter-relasjon angir at et begrep (fra) består av et annet begrep (til). Omvendt kan vi si at begrepet (til) er en del av et det andre begrepet (fra).</seres:tekst>
+      <seres:sereselement xmlns:seres="http://www.seres.computas.com#"
+                          rdf:resource="http://computas.seres.begrep#Begrepsrelasjonstype_29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:8033"/>
+   </rdf:Description>
+   <rdf:Description rdf:about="http://computas.seres.begrep#Dokumentasjon_29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:8032">
+      <rdf:type rdf:resource="http://computas.seres.begrep#Dokumentasjon"/>
+      <seres:xmi.id xmlns:seres="http://www.seres.computas.com#">a19</seres:xmi.id>
+      <seres:xmi.uuid xmlns:seres="http://www.seres.computas.com#">29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:8032</seres:xmi.uuid>
+      <seres:xmi.label xmlns:seres="http://www.seres.computas.com#"/>
+      <seres:type xmlns:seres="http://www.seres.computas.com#">beskrivelse</seres:type>
+      <seres:språk xmlns:seres="http://www.seres.computas.com#">nb</seres:språk>
+      <seres:tekst xmlns:seres="http://www.seres.computas.com#">Omfatter baseres på UMLs aggregeringsrelasjon. Defineres mellom to begreper</seres:tekst>
+      <seres:sereselement xmlns:seres="http://www.seres.computas.com#"
+                          rdf:resource="http://computas.seres.begrep#Begrepsrelasjonstype_29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:8033"/>
+   </rdf:Description>
+   <rdf:Description rdf:about="http://computas.seres.begrep#Begrepsrelasjonstype_3334453b782ba36a:21c0a718:0000013b75765a54:8076">
+      <rdf:type rdf:resource="http://computas.seres.begrep#Begrepsrelasjonstype"/>
+      <seres:xmi.id xmlns:seres="http://www.seres.computas.com#">a15</seres:xmi.id>
+      <seres:xmi.uuid xmlns:seres="http://www.seres.computas.com#">3334453b782ba36a:21c0a718:0000013b75765a54:8076</seres:xmi.uuid>
+      <seres:xmi.label xmlns:seres="http://www.seres.computas.com#"/>
+      <seres:navn xmlns:seres="http://www.seres.computas.com#">er</seres:navn>
+      <seres:guid xmlns:seres="http://www.seres.computas.com#">http://seres.no/guid/Akseptanse/Begrepsrelasjonstype/er/1172570</seres:guid>
+      <seres:konfid xmlns:seres="http://www.seres.computas.com#">0</seres:konfid>
+      <seres:gyldigFra xmlns:seres="http://www.seres.computas.com#">1900-01-01 00:00:00.000</seres:gyldigFra>
+      <seres:gyldigTil xmlns:seres="http://www.seres.computas.com#">1900-01-01 00:00:00.000</seres:gyldigTil>
+      <seres:definisjon xmlns:seres="http://www.seres.computas.com#">Arv mellom to begreper</seres:definisjon>
+      <seres:begrepsrelasjon xmlns:seres="http://www.seres.computas.com#"
+                             rdf:resource="http://computas.seres.begrep#Begrepsrelasjon_3334453b782ba36a:21c0a718:0000013b75765a54:8073"/>
+      <seres:begrepsnivå xmlns:seres="http://www.seres.computas.com#"
+                         rdf:resource="http://computas.seres.begrep#Begrepsnivå_28e4453b782ba36a:21c0a718:0000013b75765a54:807a"/>
+   </rdf:Description>
+   <rdf:Description rdf:about="http://computas.seres.begrep#Dokumentasjon_3334453b782ba36a:21c0a718:0000013b75765a54:8075">
+      <rdf:type rdf:resource="http://computas.seres.begrep#Dokumentasjon"/>
+      <seres:xmi.id xmlns:seres="http://www.seres.computas.com#">a20</seres:xmi.id>
+      <seres:xmi.uuid xmlns:seres="http://www.seres.computas.com#">3334453b782ba36a:21c0a718:0000013b75765a54:8075</seres:xmi.uuid>
+      <seres:xmi.label xmlns:seres="http://www.seres.computas.com#"/>
+      <seres:type xmlns:seres="http://www.seres.computas.com#">beskrivelse</seres:type>
+      <seres:språk xmlns:seres="http://www.seres.computas.com#">nb</seres:språk>
+      <seres:tekst xmlns:seres="http://www.seres.computas.com#">En er-relasjon angir at et begrep (fra) *ER* en subtype (subkonsept eller hyponym) av et annet begrep (til).</seres:tekst>
+      <seres:sereselement xmlns:seres="http://www.seres.computas.com#"
+                          rdf:resource="http://computas.seres.begrep#Begrepsrelasjonstype_3334453b782ba36a:21c0a718:0000013b75765a54:8076"/>
+   </rdf:Description>
+   <rdf:Description rdf:about="http://computas.seres.begrep#Begrepsrelasjonstype_3334453b782ba36a:21c0a718:0000013b75765a54:8079">
+      <rdf:type rdf:resource="http://computas.seres.begrep#Begrepsrelasjonstype"/>
+      <seres:xmi.id xmlns:seres="http://www.seres.computas.com#">a21</seres:xmi.id>
+      <seres:xmi.uuid xmlns:seres="http://www.seres.computas.com#">3334453b782ba36a:21c0a718:0000013b75765a54:8079</seres:xmi.uuid>
+      <seres:xmi.label xmlns:seres="http://www.seres.computas.com#"/>
+      <seres:navn xmlns:seres="http://www.seres.computas.com#">omfatter</seres:navn>
+      <seres:guid xmlns:seres="http://www.seres.computas.com#">http://seres.no/guid/Akseptanse/Begrepsrelasjonstype/omfatter/1172569</seres:guid>
+      <seres:konfid xmlns:seres="http://www.seres.computas.com#">0</seres:konfid>
+      <seres:gyldigFra xmlns:seres="http://www.seres.computas.com#">1900-01-01 00:00:00.000</seres:gyldigFra>
+      <seres:gyldigTil xmlns:seres="http://www.seres.computas.com#">1900-01-01 00:00:00.000</seres:gyldigTil>
+      <seres:definisjon xmlns:seres="http://www.seres.computas.com#">Aggregering mellom to begreper</seres:definisjon>
+      <seres:begrepsnivå xmlns:seres="http://www.seres.computas.com#"
+                         rdf:resource="http://computas.seres.begrep#Begrepsnivå_28e4453b782ba36a:21c0a718:0000013b75765a54:807a"/>
+   </rdf:Description>
+   <rdf:Description rdf:about="http://computas.seres.begrep#Dokumentasjon_3334453b782ba36a:21c0a718:0000013b75765a54:8077">
+      <rdf:type rdf:resource="http://computas.seres.begrep#Dokumentasjon"/>
+      <seres:xmi.id xmlns:seres="http://www.seres.computas.com#">a22</seres:xmi.id>
+      <seres:xmi.uuid xmlns:seres="http://www.seres.computas.com#">3334453b782ba36a:21c0a718:0000013b75765a54:8077</seres:xmi.uuid>
+      <seres:xmi.label xmlns:seres="http://www.seres.computas.com#"/>
+      <seres:type xmlns:seres="http://www.seres.computas.com#">beskrivelse</seres:type>
+      <seres:språk xmlns:seres="http://www.seres.computas.com#">nb</seres:språk>
+      <seres:tekst xmlns:seres="http://www.seres.computas.com#">En omfatter-relasjon angir at et begrep (fra) består av et annet begrep (til). Omvendt kan vi si at begrepet (til) er en del av et det andre begrepet (fra).</seres:tekst>
+      <seres:sereselement xmlns:seres="http://www.seres.computas.com#"
+                          rdf:resource="http://computas.seres.begrep#Begrepsrelasjonstype_3334453b782ba36a:21c0a718:0000013b75765a54:8079"/>
+   </rdf:Description>
+   <rdf:Description rdf:about="http://computas.seres.begrep#Dokumentasjon_3334453b782ba36a:21c0a718:0000013b75765a54:8078">
+      <rdf:type rdf:resource="http://computas.seres.begrep#Dokumentasjon"/>
+      <seres:xmi.id xmlns:seres="http://www.seres.computas.com#">a23</seres:xmi.id>
+      <seres:xmi.uuid xmlns:seres="http://www.seres.computas.com#">3334453b782ba36a:21c0a718:0000013b75765a54:8078</seres:xmi.uuid>
+      <seres:xmi.label xmlns:seres="http://www.seres.computas.com#"/>
+      <seres:type xmlns:seres="http://www.seres.computas.com#">beskrivelse</seres:type>
+      <seres:språk xmlns:seres="http://www.seres.computas.com#">nb</seres:språk>
+      <seres:tekst xmlns:seres="http://www.seres.computas.com#">Omfatter baseres på UMLs aggregeringsrelasjon. Defineres mellom to begreper</seres:tekst>
+      <seres:sereselement xmlns:seres="http://www.seres.computas.com#"
+                          rdf:resource="http://computas.seres.begrep#Begrepsrelasjonstype_3334453b782ba36a:21c0a718:0000013b75765a54:8079"/>
+   </rdf:Description>
+   <rdf:Description rdf:about="http://computas.seres.begrep#Begrepsnivå_29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:8034">
+      <rdf:type rdf:resource="http://computas.seres.begrep#Begrepsnivå"/>
+      <seres:xmi.id xmlns:seres="http://www.seres.computas.com#">a1</seres:xmi.id>
+      <seres:href xmlns:seres="http://www.seres.computas.com#">localref://./com.adaptive.seres/Akseptanse-NIVAAER#seres.domeneKjerne.Begrepsnivå(Begrepsnivå)(29d78925e6a6f2b7:7df3bfdc:0000013dee0f5474:8034)</seres:href>
+   </rdf:Description>
+   <rdf:Description rdf:about="http://computas.seres.begrep#Begrepsnivå_28e4453b782ba36a:21c0a718:0000013b75765a54:807a">
+      <rdf:type rdf:resource="http://computas.seres.begrep#Begrepsnivå"/>
+      <seres:xmi.id xmlns:seres="http://www.seres.computas.com#">a9</seres:xmi.id>
+      <seres:href xmlns:seres="http://www.seres.computas.com#">localref://./com.adaptive.seres/Akseptanse-NIVAAER#seres.domeneKjerne.Begrepsnivå(Begrepsnivå)(28e4453b782ba36a:21c0a718:0000013b75765a54:807a)</seres:href>
+   </rdf:Description>
+</rdf:RDF>

@@ -95,7 +95,7 @@
     </xsl:function>
     
     <xsl:function name="fn:notNullOrEmpty" as="xsd:boolean">
-        <xsl:param name="element"/>		
+        <xsl:param name="element"/>    
         <xsl:choose>
             <xsl:when test="$element and $element != ''"><xsl:value-of select="true()"/></xsl:when>
             <xsl:otherwise><xsl:value-of select="false()"/></xsl:otherwise>
