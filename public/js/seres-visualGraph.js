@@ -6,19 +6,19 @@ window.seres.visualGraph = function(query, d3) {
 
         for (var subject in json) {
             var node={};
+            node.size=1;
             node.id = subject;
             node.text = subject;
             for(var dataProperty in json[subject].data) {
                 node.property = json[subject].data[property];
             }
             for(var objectProperty in json[subject].object) {
-                node.objectProperty = json[subject].object[objectProperty];
-                links.push([subject, node.objectProperty, objectProperty]);
+                node[objectProperty] = json[subject].object[objectProperty];
+                links.push([subject, node[objectProperty], objectProperty]);
             }
-            node.size = 5;
-            node.cluster = 5;
+            if (node.type === "Class") node.size = 3;
+            node.cluster = Math.floor(Math.random()*4)+3;
             nodes.push(node);
-
     }
 
     return {
@@ -26,11 +26,6 @@ window.seres.visualGraph = function(query, d3) {
         'nodes': nodes
     };
 };
-// var el = document.getElementById("graph-container");
-// if (el !== null && links !== null && nodes !== null) {
-//     var graph = new Insights(el, nodes, links).render();
-// }
-
 
 return {
     'toGraphObject': toGraphObject

@@ -26,7 +26,6 @@ frameworks = ["jasmine"];
 exclude = [
   'app.js',
   'public/js/seres-run.js',
-  'public/js/vendor/insight.js',
   'karma.conf.js'
 ];
 

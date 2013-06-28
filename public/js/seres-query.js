@@ -1,6 +1,5 @@
 window.seres.query = function() {
     'use strict';
-    // var urlEnd = "&output=xml&stylesheet=%2Fxml-to-html.xsl&force-accept=text%2Fplain";
 
     var query = {
         vertion: "0.0.1"
@@ -18,7 +17,6 @@ window.seres.query = function() {
             return data;
         }
         $.ajax({
-
             dataType: "json",
             url: url,
             async: false,
