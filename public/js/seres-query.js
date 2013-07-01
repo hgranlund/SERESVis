@@ -25,6 +25,7 @@ window.seres.query = function() {
             },
             error: function(e) {
                 new Error('Error connecting to endpoint');
+                alert('Error connecting to endpoint: ' +url);
             }
         });
 
