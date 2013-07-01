@@ -30,18 +30,3 @@
   height: 110px;
   border: solid 5px;
 }
-
-#super
-{
-list-style-image:url("../images/super.png");
-}
-
-#sub
-{
-list-style-image:url("../images/sub.png");
-}
-
-#subsub
-{
-list-style-image:url("../images/subsub.png");
-}
