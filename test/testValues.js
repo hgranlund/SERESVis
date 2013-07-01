@@ -6073,6 +6073,13 @@ window.seres.testValues = function() {
         }
       ]
     },
+    "http://computas.seres.begrep#tekst": {
+      "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": [{
+          "type": "uri",
+          "value": "http://www.w3.org/2002/07/owl#DataTypeegenskap"
+        }
+      ]
+    },
     "http://www.semanticweb.org/shgx/ontologies/2013/5/untitled-ontology-2#Implementasjonselement": {
       "http://www.w3.org/2000/01/rdf-schema#subClassOf": [{
           "type": "uri",
@@ -6338,9 +6345,14 @@ window.seres.testValues = function() {
     'Implementasjonselement':
       {'data':{},
         'object' : {'subClassOf': 'SERESelement'}
+        },
+    'tekst':
+      {'data':{},
+        'object' : {'type': 'DataTypeegenskap'}
         }
-    }
+    };
 
 
   return testValues;
 }();
+
