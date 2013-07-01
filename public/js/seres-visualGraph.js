@@ -10,7 +10,7 @@ window.seres.visualGraph = function(query, d3) {
             node.id = subject;
             node.text = subject;
             for(var dataProperty in json[subject].data) {
-                node.property = json[subject].data[property];
+                node[dataProperty] = json[subject].data[dataProperty];
             }
             for(var objectProperty in json[subject].object) {
                 node[objectProperty] = json[subject].object[objectProperty];
