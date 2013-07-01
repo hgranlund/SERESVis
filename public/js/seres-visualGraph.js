@@ -1,5 +1,16 @@
 window.seres.visualGraph = function(query, d3) {
 
+    var filterSparqlJson = function (json, dataPropertyToFilter) {
+        var filtered ={}
+        for (element in json){
+            if (json[element].data[dataPropertyToFilter]) {
+                filtered[element] = json[element];
+            };
+        }
+        return filtered;
+    }
+
+
     var toGraphObject = function(json) {
         var links = [];
         var nodes = [];
@@ -17,7 +28,7 @@ window.seres.visualGraph = function(query, d3) {
                 links.push([subject, node[objectProperty], objectProperty]);
             }
             if (node.type === "Class") node.size = 3;
-            node.cluster = Math.floor(Math.random()*4)+3;
+            node.subclassOf = Math.floor(Math.random()*4)+3;
             nodes.push(node);
     }
 
@@ -28,7 +39,8 @@ window.seres.visualGraph = function(query, d3) {
 };
 
 return {
-    'toGraphObject': toGraphObject
+    'toGraphObject': toGraphObject,
+    'filterSparqlJson' : filterSparqlJson
 };
 }(window.seres.query, window.d3);
 

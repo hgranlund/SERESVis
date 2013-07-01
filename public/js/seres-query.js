@@ -20,7 +20,7 @@ window.seres.query = function() {
 
         $.ajax({
             dataType: output,
-            data: {'query' : queryString, 'output' : output, 'stylesheet': stylesheet },
+            data: {'query' : queryString, 'output' : output, 'stylesheet': stylesheet},
             url: 'http://localhost:3030/ds/query?',
             async: false,
             success: function(fusekiJson) {

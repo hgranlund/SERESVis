@@ -26,4 +26,13 @@ describe('In seres-visualGraphh.js:', function() {
         });
 
         });
+
+    describe('the function filterSparqlJson', function() {
+        var parsedObject=testValues.subClassOfJsonGraphParsed;
+        it('should filter correctly', function() {
+            var filtered = visualGraph.filterSparqlJson(parsedObject, 'xmi.uuid');
+            expect(filtered['test']).toBeDefined();
+        });
     });
+    });
+

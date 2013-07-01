@@ -6349,6 +6349,10 @@ window.seres.testValues = function() {
     'tekst':
       {'data':{},
         'object' : {'type': 'DataTypeegenskap'}
+        },
+      'test':
+      {'data':{'xmi.uuid' : 'fsadf23r3f98h978sfhsdfs98'},
+        'object' : {'type': 'DataTypeegenskap'}
         }
     };
 
