@@ -153,7 +153,7 @@ window.seres.visualTree = function(query, d3) {
     h = 5300,
     i = 0,
     legendheight = 100,
-    legendwidth = 200,
+    legendwidth = 400,
     barHeight = 20,
     barWidth = w * .3,
     duration = 400,
@@ -188,12 +188,12 @@ window.seres.visualTree = function(query, d3) {
     .attr("width", 30)
     .attr('transform', 'translate(-20,50)')
 
-    legend.selectAll('rect')
+ legend.selectAll('rect')
     .data(legends)
     .enter()
     .append("rect")
-    .attr("x", 45)
-    .attr("y", function(d, i){return i * 20;})
+    .attr("x", function(d, i){return i * 125 + 50;})
+    .attr("y", 10)
     .attr("width", 10)
     .attr("height", 10)
     .style("fill", function(d){
@@ -205,8 +205,8 @@ window.seres.visualTree = function(query, d3) {
     .data(legends)
     .enter()
     .append("text")
-    .attr("x", 65)
-    .attr("y", function(d, i){return i * 20 + 9;})
+    .attr("x", function(d, i){return i * 125 + 65;})
+    .attr("y", 20)
     .text(function(d){
         var text = d.text;
         return text;
