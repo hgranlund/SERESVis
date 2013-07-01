@@ -1,66 +1,70 @@
 window.seres.visual = function(query, d3) {
 	var visual = {};
-  
 
-var populateElement = function(parent, parents) {
-	var elm = {};
-	elm.name = parent;
-	elm.children = [];
-	if (parent in parents) {
-		parents[parent].map(function(child) {
-			elm.children.push(populateElement(child, parents));
-		});
-	}
-	delete parents[parent];
-	if (elm.children.length === 0) delete elm.children;
-	return elm;
-};
 
-var toJsonTree = function(json) {
-	parents = {};
-	childs = {};
-	treeJson = [];
-	var parent;
-	for (var child in json) {
-		parent = json[child].object.subClassOf;
-		if (typeof(parent) !== 'undefined') {
-			if (!(parent in parents)) parents[parent] = [];
-			parents[parent].push(child);
-			childs[child] = parent;
+	var populateElement = function(parent, parents) {
+		var elm = {};
+		elm.name = parent;
+		elm.children = [];
+		if (parent in parents) {
+			parents[parent].map(function(child) {
+				elm.children.push(populateElement(child, parents));
+			});
 		}
-	}
-	for (var root in parents) {
-		if (!(root in childs)) {
-			treeJson.push(populateElement(root, parents));
+		delete parents[parent];
+		if (elm.children.length === 0) delete elm.children;
+		return elm;
+	};
+
+	var toJsonTree = function(json) {
+		parents = {};
+		childs = {};
+		treeJson = [];
+		var parent;
+		for (var child in json) {
+			parent = json[child].object.subClassOf;
+			if (typeof(parent) !== 'undefined') {
+				if (!(parent in parents)) parents[parent] = [];
+				parents[parent].push(child);
+				childs[child] = parent;
+			}
 		}
-	}
-	return treeJson;
-};
+		for (var root in parents) {
+			if (!(root in childs)) {
+				treeJson.push(populateElement(root, parents));
+			}
+		}
+		return treeJson;
+	};
 
 
-var w = 960,
-h = 1800,
-i = 0,
-barHeight = 20,
-barWidth = w * .3,
-duration = 400,
-root;
+	var w = 960,
+	h = 1800,
+	i = 0,
+	legendheight = 100,
+	legendwidth = 200,
+	barHeight = 20,
+	barWidth = w * .3,
+	duration = 400,
+	root;
 
-var tree = d3.layout.tree()
-.size([h, 100]);
+	var legends = [{"color": "#3c3c3c", "text" : "Superklasser"}, 
+	{"color": "#c2bcbc", "text": "Subklasser"}, 
+	{"color": "#ffffff", "text": "Subsubklasser"}]
 
-var diagonal = d3.svg.diagonal()
-.projection(function(d) {
-	return [d.y, d.x];
-});
+	var tree = d3.layout.tree()
+	.size([h, 100]);
 
-var vis = d3.select("#indented_tree").append("svg:svg")
-.attr("width", w)
-.attr("height", h)
-.append("svg:g")
-.attr("transform", "translate(20,30)");
+	var diagonal = d3.svg.diagonal()
+	.projection(function(d) {
+		return [d.y, d.x];
+	});
 
-	/////////////////////////////
+	var vis = d3.select("#indented_tree").append("svg:svg")
+	.attr("width", w)
+	.attr("height", h)
+	.append("svg:g")
+	.attr("transform", "translate(20,30)");
 
 	d3.select("#expand-all").on("click", function() {
 		function expand(d) {
@@ -78,9 +82,41 @@ var vis = d3.select("#indented_tree").append("svg:svg")
 		d3.select("#expand-all").classed("active", true);
 	});
 
-	//update(root);
 
-	/////////////////////////////////////
+	var svg = d3.select("#legends")
+	.append("svg")
+	.attr("width", legendwidth)
+	.attr("height", legendheight);
+
+	var legend = svg.append("g")
+	.attr("class", "legend")
+	.attr("height", 30)
+	.attr("width", 30)
+	.attr('transform', 'translate(-20,50)')
+
+	legend.selectAll('rect')
+	.data(legends)
+	.enter()
+	.append("rect")
+	.attr("x", 45)
+	.attr("y", function(d, i){return i * 20;})
+	.attr("width", 10)
+	.attr("height", 10)
+	.style("fill", function(d){
+		var color = d.color;
+		return color;
+	})
+
+	legend.selectAll('text')
+	.data(legends)
+	.enter()
+	.append("text")
+	.attr("x", 65)
+	.attr("y", function(d, i){return i * 20 + 9;})
+	.text(function(d){
+		var text = d.text;
+		return text;
+	})
 
 	update = function(source) {
 
@@ -135,6 +171,7 @@ var vis = d3.select("#indented_tree").append("svg:svg")
 		.style("opacity", 1)
 		.select("rect")
 		.style("fill", coloring);
+
 
 		// Transition exiting nodes to the parent's new position.
 		node.exit().transition()
