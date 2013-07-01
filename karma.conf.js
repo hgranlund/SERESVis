@@ -14,6 +14,7 @@ files = [
 //   MOCHA_ADAPTER,
 //   REQUIRE,
 // REQUIRE_ADAPTER,
+  'public/js/vendor/d3.v3.js',
   'public/js/vendor/*.js',
   'public/js/*.js',
   'test/testValues.js',

@@ -1,6 +1,6 @@
 var query = window.seres.query;
 var testValues = window.seres.testValues;
-// var testValues =window.seres.testValues;
+
 describe("A suite", function() {
     it("contains spec with an expectation", function() {
         expect(true).toBe(true);

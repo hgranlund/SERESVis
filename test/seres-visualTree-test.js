@@ -1,5 +1,6 @@
 var vis = window.seres.visualTree;
 var testValues = window.seres.testValues;
+
 describe('In seres-visualTree.js:', function() {
 	describe('The function toTreeObject()', function() {
 		var json = testValues.subClassOfJsonGraphParsed;
