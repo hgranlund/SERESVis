@@ -219,6 +219,22 @@ window.seres.visualTree = function(query, d3) {
         keydata[i] = json[keys[i]].data;
     }
 
+    d3.select("#expand-all").on("click", function() {
+        function expand(d) {
+            if (d.children) {
+                d._children = d.children;
+                d.children = null;
+            } else {
+                d.children = d._children;
+                d.children.forEach(expand);
+                d._children = null;
+            }
+        }
+
+        root.children.forEach(click);
+        d3.select("#expand-all").classed("active", true);
+    });
+
 
     function click(d) {
         if (d.children) {
