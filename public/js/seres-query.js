@@ -11,20 +11,24 @@ window.seres.query = function() {
     };
     // end util
 
-    query.getJsonFromUrl = function(url) {
+    query.queryEndpoint = function(queryString, host, output, stylesheet) {
         var data = {};
-        if (url === "" | url === null) {
-            return data;
-        }
+        if (queryString === "" | queryString === null) return data;
+        if (typeof(host) === 'undefined') host = "http://localhost:3030/ds/query?";
+        if (typeof(output) === 'undefined') output = "json";
+        if (typeof(stylesheet) === 'undefined') stylesheet = "%2Fxml-to-html.xsl";
+
         $.ajax({
-            dataType: "json",
-            url: url,
+            dataType: output,
+            data: {'query' : queryString, 'output' : output, 'stylesheet': stylesheet},
+            url: 'http://localhost:3030/ds/query?',
             async: false,
             success: function(fusekiJson) {
                 data = fusekiJson;
             },
             error: function(e) {
                 new Error('Error connecting to endpoint');
+                alert('Error connecting to endpoint: ' +host+ '\n with query: '+ queryString);
             }
         });
 
@@ -32,10 +36,6 @@ window.seres.query = function() {
     };
 
     query.sparqlQueryParser = function(queryString, host, output, stylesheet) {
-        if (queryString === "" | queryString === null) return null;
-        if (typeof(host) === 'undefined') host = "http://localhost:3030/ds/";
-        if (typeof(output) === 'undefined') output = "json";
-        if (typeof(stylesheet) === 'undefined') stylesheet = "%2Fxml-to-html.xsl";
         if (!query.endsWith(host, '/')) host += '/';
         var url = [host, 'query?query=', queryString, '&output=', output, '&stylesheet=', stylesheet];
         return url.join('');
@@ -112,7 +112,7 @@ window.seres.query = function() {
 
     query.execute = function(queryString, host, output, stylesheet) {
         if (queryString === null | queryString === "") return;
-        var json = query.getJsonFromUrl(query.sparqlQueryParser(queryString, host));
+        var json = query.queryEndpoint(queryString, host);
         if (queryString.toLowerCase().match("\bselect\b")) {
             return query.parseSelectJson(json);
         }

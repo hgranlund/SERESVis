@@ -7,56 +7,44 @@ describe("A suite", function() {
     });
 });
 
-describe('getJsonFromUrl', function() {
+describe('queryEndpoint', function() {
+    var host = 'http://localhost:3030/ds/query?';
+    var queryString = 'select where {?a ?b ?c}';
+    var output = 'json';
+    var stylesheet = '2Fxml-to-html.xsl';
     var url = "http://localhost:3030/ds/query?query=select+*+where+%7B%3Fd+%3Ff+%3Fg%7D&output=json&stylesheet=%2Fxml-to-html.xsl";
-    var fakeData;
 
     beforeEach(function() {
-        fakeData = testValues.fusekiJsonNotTriple;
-        var ajax = spyOn($, "ajax").andReturn(fakeData);
+        var ajax = spyOn($, "ajax");
     });
 
     it('should be defined', function() {
-        expect(query.getJsonFromUrl).toBeDefined();
+        expect(query.queryEndpoint).toBeDefined();
     });
 
     it('should return empty if url is empty', function() {
-        expect($.isEmptyObject(query.getJsonFromUrl(""))).toBeTruthy();
+        expect($.isEmptyObject(query.queryEndpoint(""))).toBeTruthy();
 
     });
 
     it("should make an AJAX request to the correct URL", function() {
-        query.getJsonFromUrl(url);
-        expect($.ajax.mostRecentCall.args[0]["url"]).toEqual(url);
+        query.queryEndpoint(queryString, host, output, stylesheet);
+        expect($.ajax.mostRecentCall.args[0]["url"]).toEqual(host);
+        expect($.ajax.mostRecentCall.args[0]["data"]['query']).toEqual(queryString);
+    });
+
+    it("should make an AJAX request to the correct URL with just qyeryString as agrument", function() {
+        query.queryEndpoint(queryString);
+        expect($.ajax.mostRecentCall.args[0]["url"]).toEqual(host);
+        expect($.ajax.mostRecentCall.args[0]["data"]['query']).toEqual(queryString);
     });
 
     it("should return json", function() {
-        expect(query.getJsonFromUrl(url)).toEqual(jasmine.any(Object));
+        expect(query.queryEndpoint(queryString, host, output, stylesheet)).toEqual(jasmine.any(Object));
     });
 
 });
 
-describe("the sparqlQueryParser", function() {
-    it('should be defined', function() {
-        expect(query.sparqlQueryParser).toBeDefined();
-    });
-
-
-    it("should return null if where if empty ", function() {
-        expect(query.sparqlQueryParser("")).toBe(null);
-    });
-
-    it("should return a string", function() {
-        expect(query.sparqlQueryParser("select * where {?a ?b ?c")).toEqual(jasmine.any(String));
-    });
-
-    it("should return a valid http url (start with http|https);", function() {
-        var url = query.sparqlQueryParser("select * where {?t ?r ?e");
-        url.trim();
-        expect(url).toMatch("^(http:*|https:*)");
-    });
-
-});
 
 describe('parseSelectJson', function() {
     var fusekiJson = testValues.fusekiJson;

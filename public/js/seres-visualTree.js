@@ -1,36 +1,46 @@
 window.seres.visualTree = function(query, d3, utilities) {
     var json = {};
 
-    var populateElement = function(parent, parents) {
+    var populateElement = function(parent, parentsToChild, parentToInduviduals) {
         var elm = {};
         elm.name = parent;
-        elm.children = [];
-        if (parent in parents) {
-            parents[parent].map(function(child) {
-                elm.children.push(populateElement(child, parents));
+        if (parent in parentToInduviduals) {
+            elm.individuals = parentToInduviduals[parent].map(function(individual) {
+                return {'name' : individual};
             });
         }
-        delete parents[parent];
-        if (elm.children.length === 0) delete elm.children;
+        if (parent in parentsToChild) {
+            elm.children = [];
+            parentsToChild[parent].map(function(child) {
+                elm.children.push(populateElement(child, parentsToChild, parentToInduviduals));
+            });
+        }
+        // delete parentsToChild[parent];
         return elm;
     };
 
     var toTreeObject = function(json) {
-        parents = {};
+        parentsToChild = {};
         childs = {};
+        parentToInduviduals = {};
         treeJson = [];
         var parent;
         for (var child in json) {
-            parent = json[child].object.subClassOf;
-            if (typeof(parent) !== 'undefined') {
-                if (!(parent in parents)) parents[parent] = [];
-                parents[parent].push(child);
+            if (json[child].object.subClassOf) {
+                parent = json[child].object.subClassOf;
+                if (!(parent in parentsToChild)) parentsToChild[parent] = [];
+                parentsToChild[parent].push(child);
                 childs[child] = parent;
             }
+            if (json[child].object.type) {
+                parentToInduvidual = json[child].object.type;
+                if (!(parentToInduvidual in parentToInduviduals)) parentToInduviduals[parentToInduvidual] = [];
+                parentToInduviduals[parentToInduvidual].push(child);
+            }
         }
-        for (var root in parents) {
+        for (var root in parentsToChild) {
             if (!(root in childs)) {
-                treeJson.push(populateElement(root, parents));
+                treeJson.push(populateElement(root, parentsToChild, parentToInduviduals));
             }
         }
         return treeJson;

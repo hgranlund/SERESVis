@@ -30,6 +30,7 @@ describe('In seres-visualTree.js:', function() {
 			expect(parsedJson[0].children.length).toEqual(3);
 			expect(parsedJson[0].children[2].name).toEqual("SERESelement");
 			expect(parsedJson[0].children[2].children[4].children[13].name).toEqual("DataTypeegenskap");
+			expect(parsedJson[0].children[2].children[4].children[13].individuals[0].name).toEqual("tekst");
 		});
 
 	});
