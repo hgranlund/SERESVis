@@ -1,4 +1,4 @@
-window.seres.visualTree = function(query, d3) {
+window.seres.visualTree = function(query, d3, utilities) {
     var json = {};
 
     var populateElement = function(parent, parents) {
@@ -64,7 +64,9 @@ window.seres.visualTree = function(query, d3) {
         .attr("height", barHeight)
         .attr("width", barWidth)
         .style("fill", color)
-        .on("click", click);
+        .on("click", click)
+        .on("mouseover", seres.utilities.highlight)
+        .on("mouseout", seres.utilities.downlight);
 
         nodeEnter.append("svg:text")
         .attr("dy", 3.5)
@@ -279,4 +281,4 @@ return {
     'toTreeObject': toTreeObject,
     'startTree': startTree
 };
-}(window.seres.query, window.d3);
+}(window.seres.query, window.d3, window.seres.utilities);
