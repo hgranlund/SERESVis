@@ -116,6 +116,7 @@ describe('parseGraphJson', function() {
         var aObject2 = "SERESelement";
         expect(parsedJson[aSubject].object[aObjectProperty]).toEqual(aValue);
         expect(parsedJson[aSubject2].object[aPredicat2]).toEqual(aObject2);
+        expect(parsedJson['tekst'].data['teste']).toEqual("testverdi");
     });
 
 });

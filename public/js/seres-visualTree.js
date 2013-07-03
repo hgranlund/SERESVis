@@ -196,7 +196,7 @@ window.seres.visualTree = function(query, d3) {
     .attr("class", "legend")
     .attr("height", 30)
     .attr("width", 30)
-    .attr('transform', 'translate(-20,50)')
+    .attr('transform', 'translate(-20,50)');
 
  legend.selectAll('rect')
     .data(legends)
