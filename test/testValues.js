@@ -6074,9 +6074,9 @@ window.seres.testValues = function() {
       ]
     },
     "http://computas.seres.begrep#tekst": {
-      "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": [{
-          "type": "uri",
-          "value": "http://www.w3.org/2002/07/owl#DataTypeegenskap"
+      "http://www.w3.org/1999/02/22-rdf-syntax-ns#teste": [{
+          "type": "streng",
+          "value": "testverdi"
         }
       ]
     },
