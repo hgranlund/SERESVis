@@ -3,7 +3,7 @@ window.seres.visualGraph = function(query, d3) {
     var formatter;
 
     var startGraph = function(json) {
-        formatter = jsonFormater(json);
+        formatter = jsonFormatter(json);
         parentToChildMap = formatter.getParentToChildMap().parentToChildMap;
         force.nodes([formatter.createNode('Seres', 0)]);
         nodes = force.nodes();
@@ -24,13 +24,13 @@ window.seres.visualGraph = function(query, d3) {
 
     var force = d3.layout.force()
         .size([width, height])
-        // .alpha(0)
-        .linkDistance(80)
+    // .alpha(0)
+    .linkDistance(80)
         .charge(-300)
         .on("tick", tick)
         .friction(.5)
-    // .gravity(0)
-    .start();
+        // .gravity(0)
+        .start();
 
 
     var svg = d3.select("#graph-container").append("svg")

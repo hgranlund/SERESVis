@@ -1,6 +1,6 @@
 var testValues = window.seres.testValues;
 var json = testValues.subClassOfJsonGraphParsed;
-var formatter = jsonFormater(json);
+var formatter = jsonFormatter(json);
 describe('In seres-visualGraphh.js:', function() {
     describe('The function toGraphObject()', function() {
 
