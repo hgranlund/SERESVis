@@ -5,6 +5,7 @@ window.seres.utilities = function(d3, visualtree){
 		rect.style("stroke-width", 3);
 		rect.style("stroke", "black");
 		rect.select("text").style("font", "32px comic sans");
+		//console.log(d.name);
 	}
 
 	var downlight = function() {
