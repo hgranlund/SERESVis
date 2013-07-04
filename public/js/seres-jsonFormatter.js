@@ -1,5 +1,7 @@
-function jsonFormatter(json_arg){
+function jsonFormatter(json_arg) {
     var json = json_arg;
+
+
     var filterSparqlJson = function(dataPropertyToFilter) {
         var filtered = {};
         for (var element in json) {
@@ -52,17 +54,68 @@ function jsonFormatter(json_arg){
         };
     };
 
+
+    var populateElement = function(parent, parentsToChild, parentToInduviduals) {
+        var elm = {};
+        elm.name = parent;
+        if (parent in parentToInduviduals) {
+            elm.individuals = parentToInduviduals[parent].map(function(individual) {
+                return {
+                    'name': individual
+                };
+            });
+        }
+        if (parent in parentsToChild) {
+            elm.children = [];
+            parentsToChild[parent].map(function(child) {
+                elm.children.push(populateElement(child, parentsToChild, parentToInduviduals));
+            });
+        }
+        // delete parentsToChild[parent];
+        return elm;
+    };
+
+    var toTreeObject = function() {
+        parentsToChild = {};
+        childs = {};
+        parentToInduviduals = {};
+        treeJson = [];
+        var parent;
+        for (var child in json) {
+            if (json[child].object.subClassOf) {
+                parent = json[child].object.subClassOf;
+                if (!(parent in parentsToChild)) parentsToChild[parent] = [];
+                parentsToChild[parent].push(child);
+                childs[child] = parent;
+            }
+            if (json[child].object.type) {
+                parentToInduvidual = json[child].object.type;
+                if (!(parentToInduvidual in parentToInduviduals)) parentToInduviduals[parentToInduvidual] = [];
+                parentToInduviduals[parentToInduvidual].push(child);
+            }
+        }
+        for (var root in parentsToChild) {
+            if (!(root in childs)) {
+                treeJson.push(populateElement(root, parentsToChild, parentToInduviduals));
+            }
+        }
+        return treeJson;
+    };
+
+
+
     var createNode = function(subject, nodes_id) {
         var subject_obj = (json.hasOwnProperty(subject) ? json[subject] : {
             'data': {},
             'object': {}
         });
-        var node = $.extend({}, subject_obj.data, subject_obj.object);
+        if (json.hasOwnProperty(subject)) json[subject].id = nodes_id;
+        subject= subject || "Unknown";
+        var node = $.extend({}, subject_obj.object, subject_obj.data);
         node.size = 10;
         node.name = subject;
         node.id = nodes_id;
         node.isExpanded = false;
-        json[subject].id = nodes_id;
         if (node.type === "Class") node.size = 20;
         return node;
     };
@@ -93,6 +146,7 @@ function jsonFormatter(json_arg){
         'filterSparqlJson': filterSparqlJson,
         'toGraphObject': toGraphObject,
         'getParentToChildMap': getParentToChildMap,
+        'toTreeObject': toTreeObject,
         'createNode': createNode,
         'createLink': createLink
     };

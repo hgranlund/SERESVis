@@ -38,11 +38,70 @@ describe('In seres-visualGraphh.js:', function() {
         });
     });
 
+
+    describe('The function toTreeObject()', function() {
+        var json = testValues.subClassOfJsonGraphParsed;
+
+        it('should be defined', function() {
+            expect(formatter.toTreeObject).toBeDefined();
+        });
+
+        it("should return object", function() {
+            expect(formatter.toTreeObject()).toEqual(jasmine.any(Object));
+        });
+
+        it("should have the right format", function() {
+            var parsedJson = formatter.toTreeObject();
+            expect(parsedJson[0].name).toBeDefined();
+            expect(parsedJson[0].children).toBeDefined();
+        });
+
+        it("should contains right values for a triple", function() {
+            var parsedJson = formatter.toTreeObject();
+            var childOfRoot = 'Dokumentasjon';
+            var root = "Seres";
+            var aSubject2 = "Implementasjonselement";
+            var aObjectProperty2 = "childrenOf";
+            var aObject = "SERESelement";
+            expect(parsedJson[0].name).toEqual(root);
+            expect(parsedJson[0].children.length).toEqual(3);
+            expect(parsedJson[0].children[2].name).toEqual("SERESelement");
+            expect(parsedJson[0].children[2].children[4].children[13].name).toEqual("DataTypeegenskap");
+            expect(parsedJson[0].children[2].children[4].children[13].individuals[0].name).toEqual("tekst");
+        });
+
+    });
+
+
     describe('createNode', function() {
         it('should create a node with correct values', function() {
-            var node = formatter
+            var node = formatter.createNode('test', 0);
+            expect(node.name).toEqual('test');
+            expect(node.id).toEqual(0);
+            expect(node['xmi.uuid']).toEqual('fsadf23r3f98h978sfhsdfs98');
+            expect(node.type).toEqual('DataTypeegenskap');
+            expect(node.isExpanded).toEqual(false);
+        })
+
+        it('should create a standard node if json does not contain subject', function(done) {
+            // console.log("LOG:",node);
+            var node = formatter.createNode('', 0);
+            expect(node.size).toBeDefined();
+            expect(node.isExpanded).toEqual(false);
+            expect(node.id).toEqual(0);
         })
     })
+    // TODO: should make json stateless
+    // describe('createLink', function() {
+    //     var nodes = [{'id':0,
+    //     'name':'Seres'},
+    //     {''}
+    // }]
+    //     it('should create a link between two connected nodes', function(done) {
+    //         var links = createLink('Seres', nodes)
+    //     })
+    // })
+
 
 
 });
