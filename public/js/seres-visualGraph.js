@@ -1,11 +1,11 @@
 window.seres.visualGraph = function(query, d3) {
 
-    var formater;
+    var formatter;
 
     var startGraph = function(json) {
-        formater = jsonFormater(json);
-        parentToChildMap = formater.getParentToChildMap().parentToChildMap;
-        force.nodes([formater.createNode('Seres', 0)]);
+        formatter = jsonFormater(json);
+        parentToChildMap = formatter.getParentToChildMap().parentToChildMap;
+        force.nodes([formatter.createNode('Seres', 0)]);
         nodes = force.nodes();
         make_root(nodes[0]);
         click(nodes[0]);
@@ -112,11 +112,11 @@ window.seres.visualGraph = function(query, d3) {
     function expand_node(d) {
         d.isExpanded = true;
         parentToChildMap[d.name].map(function(subject) {
-            nodes.push(formater.createNode(subject, nodes.length));
+            nodes.push(formatter.createNode(subject, nodes.length));
         });
 
         parentToChildMap[d.name].map(function(subject) {
-            links = links.concat(formater.createLink(subject, nodes));
+            links = links.concat(formatter.createLink(subject, nodes));
         });
     }
 

@@ -1,4 +1,4 @@
-function jsonFormater(json_arg){
+function jsonFormatter(json_arg){
     var json = json_arg;
     var filterSparqlJson = function(dataPropertyToFilter) {
         var filtered = {};
