@@ -1,96 +1,19 @@
 window.seres.visualGraph = function(query, d3) {
 
-    var filterSparqlJson = function(json, dataPropertyToFilter) {
-        var filtered = {};
-        for (var element in json) {
-            if (json[element].data[dataPropertyToFilter]) {
-                filtered[element] = json[element];
-            }
-        }
-        return filtered;
+    var formater;
+
+    var startGraph = function(json) {
+        formater = jsonFormater(json);
+        parentToChildMap = formater.getParentToChildMap().parentToChildMap;
+        force.nodes([formater.createNode('Seres', 0)]);
+        nodes = force.nodes();
+        make_root(nodes[0]);
+        click(nodes[0]);
+        update();
     };
-
-    var getParentToChildMap = function(json) {
-        parentToChildMap = {};
-        parentToInduvidualsMap = {};
-        var parent;
-        for (var child in json) {
-            if (json[child].object.subClassOf) {
-                parent = json[child].object.subClassOf;
-                if (!(parent in parentToChildMap)) parentToChildMap[parent] = [];
-                parentToChildMap[parent].push(child);
-                childs[child] = parent;
-            }
-            if (json[child].object.type) {
-                parentToInduvidual = json[child].object.type;
-                if (!(parentToInduvidual in parentToInduvidualsMap)) parentToInduvidualsMap[parentToInduvidual] = [];
-                parentToInduvidualsMap[parentToInduvidual].push(child);
-            }
-        }
-        return {
-            'parentToChildMap': parentToChildMap,
-            'parentToInduvidualsMap': parentToInduvidualsMap
-        };
-    };
-
-
-    var toGraphObject = function(json, expanded_nodes) {
-        var links = [];
-        var nodes = [];
-        var node;
-        expanded_nodes.map(function(subject) {
-            nodes.push(createNode(json, subject, nodes.length));
-        });
-
-        expanded_nodes.map(function(subject) {
-            links = links.concat(createLink(json, subject, nodes));
-        });
-
-        return {
-            'links': links,
-            'nodes': nodes
-        };
-    };
-
-    var createNode = function(json, subject, nodes_id) {
-        var subject_obj = (json.hasOwnProperty(subject) ? json[subject] : {
-            'data': {},
-            'object': {}
-        });
-        var node = $.extend({}, subject_obj.data, subject_obj.object);
-        node.size = 10;
-        node.name = subject;
-        node.id = nodes_id;
-        json[subject].id = nodes_id;
-        if (node.type === "Class") node.size = 20;
-        return node;
-    };
-
-    var createLink = function(json, subject, nodes) {
-        var object,
-            object_id,
-            subject_id = json[subject].id,
-            links = [];
-        for (var objectProperty in json[subject].object) {
-            object = json[subject].object[objectProperty];
-            if (json.hasOwnProperty(object)) {
-                object_id = json[object].id;
-                if (nodes[object_id] && nodes[object_id].name === object) {
-                    links.push({
-                        'source': nodes[subject_id],
-                        'target': nodes[object_id],
-                        'value': objectProperty
-                    });
-                };
-
-            };
-        }
-        return links;
-    }
 
     var width = 960,
         height = 960,
-        json,
         root = {},
         graph_orig,
         graphObject,
@@ -101,36 +24,26 @@ window.seres.visualGraph = function(query, d3) {
 
     var force = d3.layout.force()
         .size([width, height])
-        .linkDistance(100)
-        .charge(-600)
-        .on("tick", tick);
+        // .alpha(0)
+        .linkDistance(80)
+        .charge(-300)
+        .on("tick", tick)
+        .friction(.5)
+    // .gravity(0)
+    .start();
 
 
     var svg = d3.select("#graph-container").append("svg")
         .attr("width", width)
         .attr("height", height);
 
-    svg.append("rect")
-        .attr("width", width)
-        .attr("height", height);
+
 
     var nodes = force.nodes(),
         links = force.links(),
         node = svg.selectAll(".node"),
         link = svg.selectAll(".link");
 
-
-    var startGraph = function(json_arg, graph) {
-        json = json_arg;
-        graph_orig = graph;
-        getParentToChildMap = getParentToChildMap(json).parentToChildMap;
-        force.nodes([createNode(json, 'Seres', 0)]);
-        json['Seres'].id = nodes.length;
-        nodes = force.nodes();
-        make_root(nodes[0]);
-        click(nodes[0]);
-        update();
-    };
 
 
     function tick() {
@@ -152,24 +65,32 @@ window.seres.visualGraph = function(query, d3) {
             .attr("y2", function(d) {
             return d.target.y;
         });
+    };
 
 
-    }
 
     function update() {
         link = link.data(links);
 
-        link.enter().insert("line", ".node")
-            .attr("class", "link");
+        link.enter().insert("line")
+            .attr("stroke-width", .3)
+            .attr('class', "link");
+
 
         node = node.data(nodes);
 
-        node.enter().insert("circle", ".cursor")
+        node.enter().insert("circle")
             .attr("class", "node")
             .attr("r", function(d) {
             return d.size;
         })
             .on('click', click)
+            .attr("cx", function(d) {
+            return d.x;
+        })
+            .attr("cy", function(d) {
+            return d.y;
+        })
             .call(force.drag);
 
 
@@ -182,27 +103,27 @@ window.seres.visualGraph = function(query, d3) {
     }
 
     function click(d) {
-        if (expanded_nodes.indexOf(d) === -1) {
+        if (!d.isExpanded) {
             expand_node(d);
-            expanded_nodes.push(d);
             update();
         };
     };
 
     function expand_node(d) {
+        d.isExpanded = true;
         parentToChildMap[d.name].map(function(subject) {
-            nodes.push(createNode(json, subject, nodes.length));
+            nodes.push(formater.createNode(subject, nodes.length));
         });
 
         parentToChildMap[d.name].map(function(subject) {
-            links = links.concat(createLink(json, subject, nodes));
+            links = links.concat(formater.createLink(subject, nodes));
         });
     }
 
     function make_root(node) {
         if (root === node) {
             return;
-        };
+        }
         root.fixed = false;
         root = node;
         node.fixed = true;
@@ -211,8 +132,6 @@ window.seres.visualGraph = function(query, d3) {
     }
 
     return {
-        'toGraphObject': toGraphObject,
-        'filterSparqlJson': filterSparqlJson,
         'startGraph': startGraph
     };
 
