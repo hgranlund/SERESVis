@@ -1,4 +1,4 @@
-window.seres.visualGraph = function(query, d3) {
+window.seres.visualGraph = function(query, d3, utilities) {
 
     var formatter;
 
@@ -103,10 +103,12 @@ window.seres.visualGraph = function(query, d3) {
     }
 
     function click(d) {
-        if (!d.isExpanded) {
+        if (!d.isExpanded && parentToChildMap.hasOwnProperty(d.name)) {
             expand_node(d);
             update();
         };
+        make_root(d);
+        //seres.utilities.zoom();
     };
 
     function expand_node(d) {
