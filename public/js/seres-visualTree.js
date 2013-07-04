@@ -1,46 +1,36 @@
-window.seres.visualTree = function(query, d3) {
+window.seres.visualTree = function(query, d3, utilities) {
     var json = {};
 
-    var populateElement = function(parent, parentsToChild, parentToInduviduals) {
+    var populateElement = function(parent, parents) {
         var elm = {};
         elm.name = parent;
-        if (parent in parentToInduviduals) {
-            elm.individuals = parentToInduviduals[parent].map(function(individual) {
-                return {'name' : individual};
+        elm.children = [];
+        if (parent in parents) {
+            parents[parent].map(function(child) {
+                elm.children.push(populateElement(child, parents));
             });
         }
-        if (parent in parentsToChild) {
-            elm.children = [];
-            parentsToChild[parent].map(function(child) {
-                elm.children.push(populateElement(child, parentsToChild, parentToInduviduals));
-            });
-        }
-        // delete parentsToChild[parent];
+        delete parents[parent];
+        if (elm.children.length === 0) delete elm.children;
         return elm;
     };
 
     var toTreeObject = function(json) {
-        parentsToChild = {};
+        parents = {};
         childs = {};
-        parentToInduviduals = {};
         treeJson = [];
         var parent;
         for (var child in json) {
-            if (json[child].object.subClassOf) {
-                parent = json[child].object.subClassOf;
-                if (!(parent in parentsToChild)) parentsToChild[parent] = [];
-                parentsToChild[parent].push(child);
+            parent = json[child].object.subClassOf;
+            if (typeof(parent) !== 'undefined') {
+                if (!(parent in parents)) parents[parent] = [];
+                parents[parent].push(child);
                 childs[child] = parent;
             }
-            if (json[child].object.type) {
-                parentToInduvidual = json[child].object.type;
-                if (!(parentToInduvidual in parentToInduviduals)) parentToInduviduals[parentToInduvidual] = [];
-                parentToInduviduals[parentToInduvidual].push(child);
-            }
         }
-        for (var root in parentsToChild) {
+        for (var root in parents) {
             if (!(root in childs)) {
-                treeJson.push(populateElement(root, parentsToChild, parentToInduviduals));
+                treeJson.push(populateElement(root, parents));
             }
         }
         return treeJson;
@@ -74,7 +64,9 @@ window.seres.visualTree = function(query, d3) {
         .attr("height", barHeight)
         .attr("width", barWidth)
         .style("fill", color)
-        .on("click", click);
+        .on("click", click)
+        .on("mouseover", seres.utilities.highlight)
+        .on("mouseout", seres.utilities.downlight);
 
         nodeEnter.append("svg:text")
         .attr("dy", 3.5)
@@ -209,7 +201,7 @@ window.seres.visualTree = function(query, d3) {
     .style("fill", function(d){
         var color = d.color;
         return color;
-    })
+    });
 
     legend.selectAll('text')
     .data(legends)
@@ -220,7 +212,7 @@ window.seres.visualTree = function(query, d3) {
     .text(function(d){
         var text = d.text;
         return text;
-    })
+    });
 
 
     var keys = Object.keys(json);
@@ -289,4 +281,4 @@ return {
     'toTreeObject': toTreeObject,
     'startTree': startTree
 };
-}(window.seres.query, window.d3);
+}(window.seres.query, window.d3, window.seres.utilities);
