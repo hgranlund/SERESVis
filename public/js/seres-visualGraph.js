@@ -12,7 +12,7 @@ window.seres.visualGraph = function(query, d3, utilities) {
         update();
     };
 
-    var width = 960,
+    var width = 1400,
         height = 960,
         root = {},
         graph_orig,
@@ -25,17 +25,20 @@ window.seres.visualGraph = function(query, d3, utilities) {
 
     var force = d3.layout.force()
         .size([width, height])
+        .linkStrength(1)
+    // .friction(0)
     // .alpha(0)
-    .linkStrength(1)
-        .linkDistance(function(d, i) {
-        return (d.target.isExpanded ? 200 : 5);
+    .linkDistance(function(d) {
+        // console.log("LOG:", "this");
+        // console.log(d.source + "--" + d.target + " : " + d.target.size);
+        return (d.target.isExpanded ? 20 : 10);
     })
         .charge(function(d) {
-        return (d.isExpanded ? -400 : -200);
+        // console.log(d.name +" : " + d.size);
+        return (d.isExpanded ? -500 : -100);
     })
         .on("tick", tick)
-    // .friction(0)
-    .gravity(0)
+        .gravity(0)
         .start();
 
 
@@ -60,14 +63,18 @@ window.seres.visualGraph = function(query, d3, utilities) {
 
         nodes.map(function(d, i) {
             cluster(10 * e.alpha * e.alpha)(d);
+
             d.x += (root.x - d.x) * k;
             d.y += (root.y - d.y) * k;
 
-
-            // body...
         });
+        setSVGPositions();
+        // console.log(e.alpha);
 
-        console.log(e.alpha);
+
+    }
+
+    function setSVGPositions() {
         link
             .attr("x1", function(d) {
             return d.source.x;
@@ -82,24 +89,17 @@ window.seres.visualGraph = function(query, d3, utilities) {
             return d.target.y;
         });
 
+
+        // node.attr("transform", function(d) {
+        //     return "translate(" + d.x + "," + d.y + ")";
+        // });
         node.attr("cx", function(d) {
             return d.x = Math.max(d.size, Math.min(height - d.size, d.x));
         });
         node.attr("cy", function(d) {
             return d.y = Math.max(d.size, Math.min(height - d.size, d.y));
         });
-
-        // node.attr("transform", function(d) {
-        //     return "translate(" + d.x + "," + d.y + ")";
-        // });
-        // node.attr("cx", function(d) {
-        //     return d.x = Math.max(d.size, Math.min(width - d.size, d.x));
-        // })
-        //     .attr("cy", function(d) {
-        //     return d.y = Math.max(d.size, Math.min(height - d.size, d.y));
-        // });
-
-    };
+    }
 
 
 
@@ -132,7 +132,7 @@ window.seres.visualGraph = function(query, d3, utilities) {
             .text(function(d) {
             return d.name;
         });
-
+        setSVGPositions();
         force.start();
     }
 
@@ -142,18 +142,33 @@ window.seres.visualGraph = function(query, d3, utilities) {
             update();
         }
         make_root(d);
-        //seres.utilities.zoom();
     }
 
     function expand_node(d) {
-        d.isExpanded = true;
-        parentToChildMap[d.name].map(function(subject) {
-            nodes.push(formatter.createNode(subject, nodes.length));
+        var n;
+        nodes.map(function(d) {
+            d.fixed = true;
         });
 
         parentToChildMap[d.name].map(function(subject) {
+            n = formatter.createNode(subject, nodes.length);
+            n.x = d.x;
+            n.y = d.y;
+            nodes.push(n);
+        });
+        parentToChildMap[d.name].map(function(subject) {
             links = links.concat(formatter.createLink(subject, nodes));
         });
+
+        force.start();
+        for (var i = 0; i < parentToChildMap[d.name].length *2; ++i) force.tick();
+        force.stop();
+
+        nodes.map(function(d) {
+            d.fixed = false;
+        });
+        root.fixed=true;
+        d.isExpanded = true;
     }
 
 
