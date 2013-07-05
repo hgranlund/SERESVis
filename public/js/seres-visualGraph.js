@@ -20,16 +20,22 @@ window.seres.visualGraph = function(query, d3, utilities) {
         parentToChildMap,
         expanded_nodes = [];
 
+
     var fill = d3.scale.category20();
 
     var force = d3.layout.force()
         .size([width, height])
     // .alpha(0)
-    .linkDistance(80)
-        .charge(-300)
+    .linkStrength(1)
+        .linkDistance(function(d, i) {
+        return (d.target.isExpanded ? 200 : 5);
+    })
+        .charge(function(d) {
+        return (d.isExpanded ? -400 : -200);
+    })
         .on("tick", tick)
-        .friction(.5)
-        // .gravity(0)
+    // .friction(0)
+    .gravity(0)
         .start();
 
 
@@ -46,14 +52,24 @@ window.seres.visualGraph = function(query, d3, utilities) {
 
 
 
-    function tick() {
-        node.attr("cx", function(d) {
-            return d.x = Math.max(d.size, Math.min(width - d.size, d.x));
-        })
-            .attr("cy", function(d) {
-            return d.y = Math.max(d.size, Math.min(height - d.size, d.y));
+    function tick(e) {
+        root.x = width / 2;
+        root.y = height / 2;
+
+        var k = 0.05 * e.alpha;
+
+        nodes.map(function(d, i) {
+            cluster(10 * e.alpha * e.alpha)(d);
+            d.x += (root.x - d.x) * k;
+            d.y += (root.y - d.y) * k;
+
+
+            // body...
         });
-        link.attr("x1", function(d) {
+
+        console.log(e.alpha);
+        link
+            .attr("x1", function(d) {
             return d.source.x;
         })
             .attr("y1", function(d) {
@@ -65,6 +81,24 @@ window.seres.visualGraph = function(query, d3, utilities) {
             .attr("y2", function(d) {
             return d.target.y;
         });
+
+        node.attr("cx", function(d) {
+            return d.x = Math.max(d.size, Math.min(height - d.size, d.x));
+        });
+        node.attr("cy", function(d) {
+            return d.y = Math.max(d.size, Math.min(height - d.size, d.y));
+        });
+
+        // node.attr("transform", function(d) {
+        //     return "translate(" + d.x + "," + d.y + ")";
+        // });
+        // node.attr("cx", function(d) {
+        //     return d.x = Math.max(d.size, Math.min(width - d.size, d.x));
+        // })
+        //     .attr("cy", function(d) {
+        //     return d.y = Math.max(d.size, Math.min(height - d.size, d.y));
+        // });
+
     };
 
 
@@ -106,10 +140,10 @@ window.seres.visualGraph = function(query, d3, utilities) {
         if (!d.isExpanded && parentToChildMap.hasOwnProperty(d.name)) {
             expand_node(d);
             update();
-        };
+        }
         make_root(d);
         //seres.utilities.zoom();
-    };
+    }
 
     function expand_node(d) {
         d.isExpanded = true;
@@ -120,6 +154,40 @@ window.seres.visualGraph = function(query, d3, utilities) {
         parentToChildMap[d.name].map(function(subject) {
             links = links.concat(formatter.createLink(subject, nodes));
         });
+    }
+
+
+    // Move d to be adjacent to the cluster node.
+
+    function cluster(alpha) {
+        var nameToNodeMap = {};
+
+        nodes.map(function(d) {
+            nameToNodeMap[d.name] = d;
+        });
+        return function(d) {
+            var parent = d.subClassOf;
+            var node = nameToNodeMap[parent],
+                h,
+                ballR,
+                deltaX,
+                deltaY;
+
+            if (node == d || typeof(node) === 'undefined') return;
+
+            deltaX = d.x - node.x;
+            deltaY = d.y - node.y;
+            h = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+            ballR = d.size + node.size * 2;
+            ballR = (d.isExpanded ? ballR * 2 : ballR);
+            if (h != ballR) {
+                h = (h - ballR) / h * alpha;
+                d.x -= deltaX *= h;
+                d.y -= deltaY *= h;
+                node.x += deltaX;
+                node.y += deltaY;
+            }
+        };
     }
 
     function make_root(node) {
