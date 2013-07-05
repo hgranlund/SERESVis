@@ -1,82 +1,58 @@
-*.orig
-
-
-###Node###
- 
-lib-cov
 *.seed
-*.log
-*.csv
-*.dat
-*.out
-*.pid
-*.gz
-node_modules/
-
-pids
-logs
-results
-
-npm-debug.log
-
-
-###Linux###
- 
-.*
-!.gitignore
 *~
-
-# KDE
-.directory
-
-
-###Windows###
- 
-# Windows image file caches
-Thumbs.db 
-
-# Folder config file
-Desktop.ini
-
-# Recycle Bin used on file shares
-$RECYCLE.BIN/
-
-
-###Eclipse###
- 
+tmp/**
+logs
 *.pydevproject
 .project
-.metadata
-bin/**
-tmp/**
-tmp/**/*
-*.tmp
-*.bak
-*.swp
-*~.nib
-local.properties
-.classpath
-.settings/
-.loadpath
-
-# External tool builders
-.externalToolBuilders/
-
-# Locally stored "Eclipse launch configurations"
-*.launch
-
-# CDT-specific
-.cproject
-
-# PDT-specific
-.buildpath
-
-
+Thumbs.db 
+results
 ###SublimeText###
- 
-# SublimeText project files
-/*.sublime-project
-*.sublime-workspace
+# Locally stored "Eclipse launch configurations"
+!.gitignore
+*.log
+###Node###
 sftp-config*.json
-
-
+*.tmp
+tmp/**/*
+*.pid
+# KDE
+pids
+/*.sublime-project
+ 
+.*
+bin/**
+*.dat
+# Windows image file caches
+*.bak
+# Folder config file
+.buildpath
+*.sublime-workspace
+###Windows###
+###Eclipse###
+.settings/
+# SublimeText project files
+.loadpath
+# CDT-specific
+###Linux###
+.cproject
+*.out
+# Recycle Bin used on file shares
+*.orig
+Desktop.ini
+# External tool builders
+*.launch
+# PDT-specific
+*.swp
+.metadata
+node_modules/
+.classpath
+*~.nib
+$RECYCLE.BIN/
+*.csv
+.externalToolBuilders/
+lib-cov
+local.properties
+npm-debug.log
+.directory
+*.gz
+.Guardfile
