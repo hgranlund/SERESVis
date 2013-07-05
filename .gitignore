@@ -1,12 +1,11 @@
-*.seed
+.project
 *~
+*.bak
 tmp/**
 logs
-*.pydevproject
-.project
+*.seed
 Thumbs.db 
 results
-###SublimeText###
 # Locally stored "Eclipse launch configurations"
 !.gitignore
 *.log
@@ -14,45 +13,47 @@ results
 sftp-config*.json
 *.tmp
 tmp/**/*
-*.pid
-# KDE
 pids
+# KDE
+*.pid
 /*.sublime-project
  
 .*
 bin/**
 *.dat
 # Windows image file caches
-*.bak
+*.pydevproject
 # Folder config file
 .buildpath
 *.sublime-workspace
 ###Windows###
 ###Eclipse###
-.settings/
 # SublimeText project files
 .loadpath
-# CDT-specific
 ###Linux###
 .cproject
 *.out
-# Recycle Bin used on file shares
+.settings/
 *.orig
+/gravegard
 Desktop.ini
 # External tool builders
+# Recycle Bin used on file shares
 *.launch
 # PDT-specific
 *.swp
-.metadata
+###SublimeText###
+$RECYCLE.BIN/
 node_modules/
 .classpath
-*~.nib
-$RECYCLE.BIN/
+# CDT-specific
+.metadata
 *.csv
 .externalToolBuilders/
 lib-cov
 local.properties
+.Guardfile
 npm-debug.log
 .directory
 *.gz
-.Guardfile
+*~.nib
