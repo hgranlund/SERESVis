@@ -30,12 +30,12 @@ window.seres.visualGraph = function(query, d3, utilities) {
     // .alpha(0)
     .linkDistance(function(d) {
         // console.log("LOG:", "this");
-        // console.log(d.source + "--" + d.target + " : " + d.target.size);
+        console.log(d.source + "--" + d.target + " : " + d.target.size);
         return (d.target.isExpanded ? 20 : 10);
     })
         .charge(function(d) {
-        // console.log(d.name +" : " + d.size);
-        return (d.isExpanded ? -500 : -100);
+        // console.log(d.name +" : " + d.isExpanded);
+        return (d.isExpanded ? -500 : -50);
     })
         .on("tick", tick)
         .gravity(0)
@@ -74,31 +74,32 @@ window.seres.visualGraph = function(query, d3, utilities) {
 
     }
 
-    function setSVGPositions() {
+    function setSVGPositions(duration) {
+        duration = duration || 0;
         link
-            .attr("x1", function(d) {
+            .transition().duration(duration).attr("x1", function(d) {
             return d.source.x;
         })
-            .attr("y1", function(d) {
+            .transition().duration(duration).attr("y1", function(d) {
             return d.source.y;
         })
-            .attr("x2", function(d) {
+            .transition().duration(duration).attr("x2", function(d) {
             return d.target.x;
         })
-            .attr("y2", function(d) {
+            .transition().duration(duration).attr("y2", function(d) {
             return d.target.y;
         });
 
-
-        // node.attr("transform", function(d) {
-        //     return "translate(" + d.x + "," + d.y + ")";
-        // });
-        node.attr("cx", function(d) {
+        node.transition().duration(duration).attr("cx", function(d) {
             return d.x = Math.max(d.size, Math.min(height - d.size, d.x));
         });
-        node.attr("cy", function(d) {
+        node.transition().duration(duration).attr("cy", function(d) {
             return d.y = Math.max(d.size, Math.min(height - d.size, d.y));
         });
+
+      //   node.transition()
+      // .duration(0)
+      // .attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
     }
 
 
@@ -132,7 +133,7 @@ window.seres.visualGraph = function(query, d3, utilities) {
             .text(function(d) {
             return d.name;
         });
-        setSVGPositions();
+        // setSVGPositions();
         force.start();
     }
 
@@ -141,19 +142,18 @@ window.seres.visualGraph = function(query, d3, utilities) {
             expand_node(d);
             update();
         }
-        make_root(d);
+        // make_root(d);
     }
 
     function expand_node(d) {
         var n;
-        nodes.map(function(d) {
-            d.fixed = true;
-        });
 
+        deltaX = d.x - width/2 +75;
+        deltaY = d.y - height/2 +75;
         parentToChildMap[d.name].map(function(subject) {
             n = formatter.createNode(subject, nodes.length);
-            n.x = d.x;
-            n.y = d.y;
+            n.x = deltaX;
+            n.y = deltaY;
             nodes.push(n);
         });
         parentToChildMap[d.name].map(function(subject) {
@@ -161,13 +161,9 @@ window.seres.visualGraph = function(query, d3, utilities) {
         });
 
         force.start();
-        for (var i = 0; i < parentToChildMap[d.name].length *2; ++i) force.tick();
+        for (var i = 0; i < parentToChildMap[d.name].length *10; ++i) force.tick();
         force.stop();
 
-        nodes.map(function(d) {
-            d.fixed = false;
-        });
-        root.fixed=true;
         d.isExpanded = true;
     }
 

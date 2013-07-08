@@ -1,0 +1,27 @@
+
+rect {
+	fill: none;
+	pointer-events: all;
+}
+
+
+
+.graph-container .link {
+  fill: none;
+  stroke: #666;
+  stroke-width: 5px;
+}
+
+.graph-container .node circle {
+  fill: #666;
+  stroke: #333;
+  stroke-width: 1.5px;
+  cursor:pointer;
+}
+
+.graph-container text {
+  fill: #44444;
+  font: 9px sans-serif;
+  pointer-events: none;
+  text-shadow: -1px 0px 3px white, -1px 0px 9px white;
+}
