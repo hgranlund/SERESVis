@@ -26,16 +26,17 @@ window.seres.visualGraph = function(query, d3, utilities) {
     var force = d3.layout.force()
         .size([width, height])
         .linkStrength(1)
-    // .friction(0)
+    .friction(.5)
     // .alpha(0)
     .linkDistance(function(d) {
         // console.log("LOG:", "this");
-        console.log(d.source + "--" + d.target + " : " + d.target.size);
+        // console.log(d.source + "--" + d.target + " : " + d.target.size);
         return (d.target.isExpanded ? 20 : 10);
     })
         .charge(function(d) {
+        if (root.name === d.name) return -600;
         // console.log(d.name +" : " + d.isExpanded);
-        return (d.isExpanded ? -500 : -50);
+        return (d.isExpanded ? -5000 : -100);
     })
         .on("tick", tick)
         .gravity(0)
@@ -70,7 +71,6 @@ window.seres.visualGraph = function(query, d3, utilities) {
 
         });
         updateNodeAndLinkPositions();
-        // console.log(e.alpha);
 
 
     }
@@ -84,6 +84,7 @@ window.seres.visualGraph = function(query, d3, utilities) {
 
             return "M" + d.source.x + "," + d.source.y + "A" + dr + "," + dr + " 0 0,1 " + d.target.x + "," + d.target.y;
         });
+
         node.transition().duration(duration).attr("transform", function(d) {
             d.x = Math.max(d.size, Math.min(height - d.size, d.x));
             d.y = Math.max(d.size, Math.min(height - d.size, d.y));
@@ -96,14 +97,12 @@ window.seres.visualGraph = function(query, d3, utilities) {
     function update() {
         link = link.data(links);
 
-        link.enter().insert("svg:path")
+        link.enter().append("svg:path")
             .attr("stroke-width", .3)
             .attr('class', "link");
-
-
         node = node.data(nodes);
 
-        node.enter().insert("svg:circle")
+        node.enter().append("svg:circle")
             .attr("class", "node")
             .attr("r", function(d) {
             return d.size;
@@ -125,6 +124,8 @@ window.seres.visualGraph = function(query, d3, utilities) {
         .text(function(d) {
             return self.text;
         });
+
+
         force.start();
     }
 
@@ -134,6 +135,8 @@ window.seres.visualGraph = function(query, d3, utilities) {
             update();
         }
         make_root(d);
+        center(d);
+
     }
 
     function expand_node(d) {
@@ -152,15 +155,14 @@ window.seres.visualGraph = function(query, d3, utilities) {
         });
 
         force.start();
+        updateNodeAndLinkPositions(500);
         for (var i = 0; i < parentToChildMap[d.name].length * 10; ++i) force.tick();
-        updateNodeAndLinkPositions(100);
+        updateNodeAndLinkPositions(500);
         force.stop();
 
         d.isExpanded = true;
     }
 
-
-    // Move d to be adjacent to the cluster node.
 
     function cluster(alpha) {
         var nameToNodeMap = {};
@@ -193,15 +195,25 @@ window.seres.visualGraph = function(query, d3, utilities) {
         };
     }
 
-    function make_root(node) {
-        if (root === node) {
+    function make_root(d) {
+        if (root === d) {
             return;
         }
         root.fixed = false;
-        root = node;
-        node.fixed = true;
-        node.x = width / 2;
-        node.y = height / 2;
+        root = d;
+        d.fixed = true;
+    }
+
+    function center(d) {
+        var deltaX =  width / 2 - d.x,
+            deltaY =  height / 2 - d.y ,
+            trans = d3.behavior.zoom().translate([deltaX, deltaY]);
+        nodes.map(function(d) {
+            d.x += deltaX;
+            d.y += deltaY;
+        });
+        updateNodeAndLinkPositions(1000);
+
     }
 
     return {
