@@ -1,14 +1,9 @@
 window.seres.visualGraph = function(query, d3, utilities) {
     var formatter;
-    var circleElements = [];
 
     var startGraph = function(json) {
         formatter = jsonFormatter(json);
         parentToChildMap = formatter.getParentToChildMap().parentToChildMap;
-        // expand = [];
-        // for (var subject in json) {
-        //  expand.push(subject);
-
         force.nodes([formatter.createNode('Seres', 0)]);
         nodes = force.nodes();
         make_root(nodes[0]);
@@ -144,8 +139,6 @@ window.seres.visualGraph = function(query, d3, utilities) {
             });
         }
 
-
-
         function update() {
             link = link.data(links);
 
@@ -156,20 +149,16 @@ window.seres.visualGraph = function(query, d3, utilities) {
 
             node.enter().append("svg:circle")
                 .attr("class", "node")
-            .attr("id", function(d) {
+                .attr("id", function(d) {
                 return d.name;
             })
                 .attr("r", function(d) {
                 return d.size;
             })
                 .on('click', click)
-            .call(force.drag)
-            .attr("class", "circleElement")
-            .on("mouseover", seres.utilities.highlight)
-            .on("mouseout", seres.utilities.downlight);
-
-            
-
+                .call(force.drag)
+                .on("mouseover", seres.utilities.highlight)
+                .on("mouseout", seres.utilities.downlight);
 
             node.append("title")
                 .text(function(d) {
@@ -183,8 +172,6 @@ window.seres.visualGraph = function(query, d3, utilities) {
             .text(function(d) {
                 return self.text;
             });
-
-
             force.start();
         }
 
@@ -282,7 +269,4 @@ window.seres.visualGraph = function(query, d3, utilities) {
     return {
         'startGraph': startGraph
     };
-
-
-
 }(window.seres.query, window.d3, window.seres.utilities);

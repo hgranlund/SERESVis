@@ -12,8 +12,8 @@ rect {
   stroke-width: 5px;
 }
 
-.graph-container .node circle {
-  fill: #666;
+.graph-container .node {
+  fill: blue;
   stroke: #333;
   stroke-width: 1.5px;
   cursor:pointer;
