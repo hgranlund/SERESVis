@@ -44,6 +44,7 @@ window.seres.visualGraph = function(query, d3, utilities) {
 
     var svg = d3.select("#graph-container").append("svg")
         .attr("width", width)
+        .attr("class", "svg")
         .attr("height", height);
 
 
@@ -68,38 +69,26 @@ window.seres.visualGraph = function(query, d3, utilities) {
             d.y += (root.y - d.y) * k;
 
         });
-        setSVGPositions();
+        updateNodeAndLinkPositions();
         // console.log(e.alpha);
 
 
     }
 
-    function setSVGPositions(duration) {
+    function updateNodeAndLinkPositions(duration) {
         duration = duration || 0;
-        link
-            .transition().duration(duration).attr("x1", function(d) {
-            return d.source.x;
-        })
-            .transition().duration(duration).attr("y1", function(d) {
-            return d.source.y;
-        })
-            .transition().duration(duration).attr("x2", function(d) {
-            return d.target.x;
-        })
-            .transition().duration(duration).attr("y2", function(d) {
-            return d.target.y;
-        });
+        link.transition().duration(duration).attr("d", function(d) {
+            var dx = d.target.x - d.source.x,
+                dy = d.target.y - d.source.y,
+                dr = Math.sqrt(dx * dx + dy * dy);
 
-        node.transition().duration(duration).attr("cx", function(d) {
-            return d.x = Math.max(d.size, Math.min(height - d.size, d.x));
+            return "M" + d.source.x + "," + d.source.y + "A" + dr + "," + dr + " 0 0,1 " + d.target.x + "," + d.target.y;
         });
-        node.transition().duration(duration).attr("cy", function(d) {
-            return d.y = Math.max(d.size, Math.min(height - d.size, d.y));
+        node.transition().duration(duration).attr("transform", function(d) {
+            d.x = Math.max(d.size, Math.min(height - d.size, d.x));
+            d.y = Math.max(d.size, Math.min(height - d.size, d.y));
+            return "translate(" + d.x + "," + d.y + ")";
         });
-
-      //   node.transition()
-      // .duration(0)
-      // .attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
     }
 
 
@@ -107,25 +96,19 @@ window.seres.visualGraph = function(query, d3, utilities) {
     function update() {
         link = link.data(links);
 
-        link.enter().insert("line")
+        link.enter().insert("svg:path")
             .attr("stroke-width", .3)
             .attr('class', "link");
 
 
         node = node.data(nodes);
 
-        node.enter().insert("circle")
+        node.enter().insert("svg:circle")
             .attr("class", "node")
             .attr("r", function(d) {
             return d.size;
         })
             .on('click', click)
-            .attr("cx", function(d) {
-            return d.x;
-        })
-            .attr("cy", function(d) {
-            return d.y;
-        })
             .call(force.drag);
 
 
@@ -133,7 +116,15 @@ window.seres.visualGraph = function(query, d3, utilities) {
             .text(function(d) {
             return d.name;
         });
-        // setSVGPositions();
+
+
+        node.append("text")
+            .attr("text-anchor", "middle")
+            .attr("dy", ".35em")
+        // .style("display", "none")
+        .text(function(d) {
+            return self.text;
+        });
         force.start();
     }
 
@@ -142,14 +133,14 @@ window.seres.visualGraph = function(query, d3, utilities) {
             expand_node(d);
             update();
         }
-        // make_root(d);
+        make_root(d);
     }
 
     function expand_node(d) {
         var n;
 
-        deltaX = d.x - width/2 +75;
-        deltaY = d.y - height/2 +75;
+        deltaX = d.x - width / 2 + 75;
+        deltaY = d.y - height / 2 + 75;
         parentToChildMap[d.name].map(function(subject) {
             n = formatter.createNode(subject, nodes.length);
             n.x = deltaX;
@@ -161,7 +152,8 @@ window.seres.visualGraph = function(query, d3, utilities) {
         });
 
         force.start();
-        for (var i = 0; i < parentToChildMap[d.name].length *10; ++i) force.tick();
+        for (var i = 0; i < parentToChildMap[d.name].length * 10; ++i) force.tick();
+        updateNodeAndLinkPositions(100);
         force.stop();
 
         d.isExpanded = true;
