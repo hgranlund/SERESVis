@@ -1,6 +1,6 @@
 window.seres.visualGraph = function(query, d3, utilities) {
-
     var formatter;
+    var circleElements = [];
 
     var startGraph = function(json) {
         formatter = jsonFormatter(json);
@@ -97,9 +97,9 @@ window.seres.visualGraph = function(query, d3, utilities) {
             return d.y = Math.max(d.size, Math.min(height - d.size, d.y));
         });
 
-      //   node.transition()
-      // .duration(0)
-      // .attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
+        //   node.transition()
+        // .duration(0)
+        // .attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
     }
 
 
@@ -116,6 +116,9 @@ window.seres.visualGraph = function(query, d3, utilities) {
 
         node.enter().insert("circle")
             .attr("class", "node")
+            .attr("id", function(d) {
+                return d.name;
+            })
             .attr("r", function(d) {
             return d.size;
         })
@@ -126,7 +129,12 @@ window.seres.visualGraph = function(query, d3, utilities) {
             .attr("cy", function(d) {
             return d.y;
         })
-            .call(force.drag);
+            .call(force.drag)
+            .attr("class", "circleElement")
+            .on("mouseover", seres.utilities.highlight)
+            .on("mouseout", seres.utilities.downlight);
+
+            
 
 
         node.append("title")
@@ -148,8 +156,8 @@ window.seres.visualGraph = function(query, d3, utilities) {
     function expand_node(d) {
         var n;
 
-        deltaX = d.x - width/2 +75;
-        deltaY = d.y - height/2 +75;
+        deltaX = d.x - width / 2 + 75;
+        deltaY = d.y - height / 2 + 75;
         parentToChildMap[d.name].map(function(subject) {
             n = formatter.createNode(subject, nodes.length);
             n.x = deltaX;
@@ -161,7 +169,7 @@ window.seres.visualGraph = function(query, d3, utilities) {
         });
 
         force.start();
-        for (var i = 0; i < parentToChildMap[d.name].length *10; ++i) force.tick();
+        for (var i = 0; i < parentToChildMap[d.name].length * 10; ++i) force.tick();
         force.stop();
 
         d.isExpanded = true;
@@ -210,7 +218,9 @@ window.seres.visualGraph = function(query, d3, utilities) {
         node.fixed = true;
         node.x = width / 2;
         node.y = height / 2;
-    }
+    };
+
+    
 
     return {
         'startGraph': startGraph
@@ -218,4 +228,4 @@ window.seres.visualGraph = function(query, d3, utilities) {
 
 
 
-}(window.seres.query, window.d3);
+}(window.seres.query, window.d3, window.seres.utilities);
