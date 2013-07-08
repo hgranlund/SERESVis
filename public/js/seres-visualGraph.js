@@ -1,6 +1,6 @@
 window.seres.visualGraph = function(query, d3, utilities) {
-
     var formatter;
+    var circleElements = [];
 
     var startGraph = function(json) {
         formatter = jsonFormatter(json);
@@ -156,11 +156,19 @@ window.seres.visualGraph = function(query, d3, utilities) {
 
             node.enter().append("svg:circle")
                 .attr("class", "node")
+            .attr("id", function(d) {
+                return d.name;
+            })
                 .attr("r", function(d) {
                 return d.size;
             })
                 .on('click', click)
-                .call(force.drag);
+            .call(force.drag)
+            .attr("class", "circleElement")
+            .on("mouseover", seres.utilities.highlight)
+            .on("mouseout", seres.utilities.downlight);
+
+            
 
 
             node.append("title")
@@ -277,4 +285,4 @@ window.seres.visualGraph = function(query, d3, utilities) {
 
 
 
-}(window.seres.query, window.d3);
+}(window.seres.query, window.d3, window.seres.utilities);

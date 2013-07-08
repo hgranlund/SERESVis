@@ -1,21 +1,22 @@
-window.seres.utilities = function(d3, visualtree){
+window.seres.utilities = function(d3, visualtree, visualgraph) {
+
+	var rectElements = [];
 
 	var highlight = function(d) {
-		var rect = d3.select(this);
-		rect.style("stroke-width", 3);
-		rect.style("stroke", "black");
-		rect.select("text").style("font", "32px comic sans");
-		//console.log(d.name);
-	}
+		d3.selectAll('#' + d.name)
+				.style("stroke-width", 3)
+				.style("stroke", "red");
+	};
 
-	var downlight = function() {
-		var rect = d3.select(this);
-		rect.style("stroke-width", 1);
-		rect.style("stroke", "black");
-		rect.select("text").style("font", "12px sans-serif");
-	}
+	var downlight = function(d) {
+		d3.selectAll('#' + d.name)
+		.style("stroke-width", 1)
+		.style("stroke", "black");
+	};
 
-	return {'highlight' : highlight,
-			'downlight' : downlight};
+	return {
+		'highlight': highlight,
+		'downlight': downlight
+	};
 
-}(window.d3, window.seres.visualtree);
+}(window.d3, window.seres.visualtree, window.seres.visualgraph);

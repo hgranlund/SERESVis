@@ -10,6 +10,7 @@ window.seres.visualTree = function(query, d3, utilities) {
         barWidth = w * .3,
         duration = 400,
         formatter,
+        nodes,
         root;
 
     var legends = [{
@@ -141,7 +142,7 @@ window.seres.visualTree = function(query, d3, utilities) {
         update(root);
     };
     var update = function(source) {
-        var nodes = tree.nodes(root);
+        nodes = tree.nodes(root);
 
         // Compute the "layout".
         nodes.forEach(function(n, i) {
@@ -165,9 +166,13 @@ window.seres.visualTree = function(query, d3, utilities) {
         nodeEnter.append("svg:rect")
             .attr("y", -barHeight / 2)
             .attr("height", barHeight)
+            .attr("id", function(d) {
+            return d.name;
+        })
             .attr("width", barWidth)
             .style("fill", color)
             .on("click", click)
+            .attr("class", "rectElement")
             .on("mouseover", seres.utilities.highlight)
             .on("mouseout", seres.utilities.downlight);
 
@@ -253,9 +258,12 @@ window.seres.visualTree = function(query, d3, utilities) {
             d.y0 = d.y;
         });
     };
-
+    var getnodes = function(){
+        return nodes;
+    } ;
     return {
         'update': update,
-        'startTree': startTree
+        'startTree': startTree,
+        'nodes':getnodes
     };
 }(window.seres.query, window.d3, window.seres.utilities);
