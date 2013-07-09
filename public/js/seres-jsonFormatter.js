@@ -1,5 +1,6 @@
 function jsonFormatter(json_arg) {
-    var json = json_arg;
+    var json = json_arg,
+        parentToChildMap;
 
 
     var filterSparqlJson = function(dataPropertyToFilter) {
@@ -14,7 +15,6 @@ function jsonFormatter(json_arg) {
 
     var getParentToChildMap = function() {
         parentToChildMap = {};
-        parentToInduvidualsMap = {};
         var parent;
         for (var child in json) {
             if (json[child].object.subClassOf) {
@@ -24,14 +24,11 @@ function jsonFormatter(json_arg) {
             }
             if (json[child].object.type) {
                 parentToInduvidual = json[child].object.type;
-                if (!(parentToInduvidual in parentToInduvidualsMap)) parentToInduvidualsMap[parentToInduvidual] = [];
-                parentToInduvidualsMap[parentToInduvidual].push(child);
+                if (!(parentToInduvidual in parentToChildMap)) parentToChildMap[parentToInduvidual] = [];
+                parentToChildMap[parentToInduvidual].push(child);
             }
         }
-        return {
-            'parentToChildMap': parentToChildMap,
-            'parentToInduvidualsMap': parentToInduvidualsMap
-        };
+        return parentToChildMap;
     };
 
 
@@ -114,7 +111,13 @@ function jsonFormatter(json_arg) {
         node.size = 10;
         node.name = subject;
         node.id = nodes_id;
+        node.isInduvidual = false;
         node.isExpanded = false;
+        if (node.type) {
+            if (node.type in parentToChildMap) {
+                node.isInduvidual = true;
+            }
+        }
         if (node.type === "Class") node.size = 20;
         return node;
     };
@@ -142,15 +145,12 @@ function jsonFormatter(json_arg) {
         return links;
     };
 
-    var maps = getParentToChildMap(),
-        parentToChildMap = maps.parentToChildMap,
-        parentToInduvidualsMap = maps.parentToInduvidualsMap;
+    parentToChildMap = getParentToChildMap();
 
     return {
         'filterSparqlJson': filterSparqlJson,
         'toGraphObject': toGraphObject,
         'parentToChildMap': parentToChildMap,
-        'parentToInduvidualsMap': parentToInduvidualsMap,
         'toTreeObject': toTreeObject,
         'createNode': createNode,
         'createLink': createLink

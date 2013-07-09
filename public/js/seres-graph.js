@@ -1,5 +1,6 @@
-function Graph(json, utilities) {
+function Graph(el, json) {
     this.formatter;
+    this.utilities = window.seres.utilities;
     this.width = 1400;
     this.height = 960;
     this.root = {};
@@ -10,8 +11,7 @@ function Graph(json, utilities) {
     this.svg;
     this.updateNodeAndLinkPositions;
     this.parentToChildMap;
-    this.parentToInduvidualsMap;
-    this.init();
+    this.init(el);
     this.compute(json);
 }
 // console.log(d.name +" : " + d.isExpanded);
@@ -21,7 +21,7 @@ function Graph(json, utilities) {
 // 
 Graph.prototype = {
 
-    init: function() {
+    init: function(el) {
         var self = this;
         self.force = d3.layout.force()
             .size([self.width, self.height])
@@ -38,11 +38,10 @@ Graph.prototype = {
             .start();
 
 
-        self.svg = d3.select("#graph-container").append("svg")
+        self.svg = d3.select(el).append("svg")
             .attr("width", self.width)
             .attr("class", "svg")
             .attr("height", self.height);
-
 
 
         self.nodes = self.force.nodes();
@@ -51,7 +50,7 @@ Graph.prototype = {
         self.link = self.svg.selectAll(".link");
 
         function tick(e) {
-            console.log("LOG:", e.alpha);
+            // console.log("LOG:", e.alpha);
             if (e.alpha > 0.05) {
                 self.updatePositions(e.alpha)
                 self.updateNodeAndLinkPositions();
@@ -67,13 +66,12 @@ Graph.prototype = {
     compute: function(json) {
         var self = this;
         self.formatter = jsonFormatter(json);
+        debugger;
         self.parentToChildMap = self.formatter.parentToChildMap;
-        self.parentToInduvidualsMap = self.formatter.parentToInduvidualsMap;
-
         self.force.nodes([self.createNode('Seres', 0)]);
         self.nodes = self.force.nodes();
         self.make_root(self.nodes[0]);
-        // self.click(self.nodes[0]);
+        self.expand_node(self.nodes[0]);
         self.update();
     },
 
@@ -170,13 +168,12 @@ Graph.prototype = {
 
         function click(d) {
             console.log("LOG:", d.name, "--", d);
-            if (!d.isExpanded && d.hasOwnProperty('childeren')) {
-                self.expand_class(d);
+            if (!d.isExpanded && d.hasOwnProperty('children')) {
+                self.expand_node(d);
                 self.root.fixed = false;
                 self.update();
             } else {
                 self.center(d);
-
             }
             self.make_root(d);
         };
@@ -184,24 +181,50 @@ Graph.prototype = {
 
 
 
-    expand_class: function(d) {
+    expand_node: function(d) {
         var n,
             self = this,
             deltaX = d.x - self.width / 2 + 75,
             deltaY = d.y - self.height / 2 + 75;
-        self.parentToChildMap[d.name].map(function(subject) {
+        d.children.map(function(subject) {
             n = self.createNode(subject, self.nodes.length);
             n.x = deltaX;
             n.y = deltaY;
             self.nodes.push(n);
         });
-        self.parentToChildMap[d.name].map(function(subject) {
+        d.children.map(function(subject) {
             self.links = self.links.concat(self.formatter.createLink(subject, self.nodes));
         });
 
         self.force.stop();
         self.updateNodeAndLinkPositions(0);
-        for (var i = 0; i < self.parentToChildMap[d.name].length * 10; ++i)
+        for (var i = 0; i < d.children.length * 10; ++i)
+            self.handleCollisions();
+        self.force.tick();
+        self.updateNodeAndLinkPositions(100);
+        self.force.start();
+
+        d.isExpanded = true;
+    },
+
+    collapse_node: function(d) {
+        var n,
+            self = this,
+            deltaX = d.x - self.width / 2 + 75,
+            deltaY = d.y - self.height / 2 + 75;
+        d.children.map(function(subject) {
+            n = self.createNode(subject, self.nodes.length);
+            n.x = deltaX;
+            n.y = deltaY;
+            self.nodes.push(n);
+        });
+        d.children.map(function(subject) {
+            self.links = self.links.concat(self.formatter.createLink(subject, self.nodes));
+        });
+
+        self.force.stop();
+        self.updateNodeAndLinkPositions(0);
+        for (var i = 0; i < d.children.length * 10; ++i)
             self.handleCollisions();
         self.force.tick();
         self.updateNodeAndLinkPositions(100);
@@ -277,14 +300,15 @@ Graph.prototype = {
     createNode: function(subject, id) {
         var self = this;
         var node = self.formatter.createNode(subject, id);
+        node.children=[];
         if (self.formatter.parentToChildMap.hasOwnProperty(subject)) {
-            node.childeren = self.formatter.parentToChildMap[subject]
+            node.children = self.formatter.parentToChildMap[subject];
         }
-        if (self.formatter.parentToInduvidualsMap.hasOwnProperty(subject)) {
-            node.induvidual = self.formatter.parentToInduvidualsMap[subject]
-        }
+        // if (self.formatter.parentToChildMap.hasOwnProperty(subject)) {
+        //     node.children = self.formatter.parentToChildMap[subject];
+        // }
         return node;
     }
-}
+};
 
 Graph.fn = Graph.prototype;

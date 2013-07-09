@@ -7,7 +7,7 @@ var startSeres = function(query, visualTree) {
 		// 	expand.push(subject);
 		// }
 		// var d = formatter.toGraphObject(expand);
-		// var el = document.getElementById("graph-container"),
+		var el = document.getElementById("graph-container");
 		// 	options = {
 		// 		width: screen.width,
 		// 		height: screen.height,
@@ -24,7 +24,7 @@ var startSeres = function(query, visualTree) {
 		// 	console.log("LOG:",d);
 		// 	graph.center();
 		// })
-		var graph = new Graph(json, window.seres.utilities);
+		var graph = new Graph(el, json);
 		visualTree.startTree(json)
 	});
 }(window.seres.query, window.seres.visualTree);
