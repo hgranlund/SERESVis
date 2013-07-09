@@ -52,7 +52,7 @@ function jsonFormatter(json_arg) {
 
 
     var populateElement = function(parent, parentsToChild, parentToInduviduals) {
-        var elm = {};
+        var elm = createNode(parent, 0);
         elm.name = parent;
         if (parent in parentToInduviduals) {
             elm.individuals = parentToInduviduals[parent].map(function(individual) {
