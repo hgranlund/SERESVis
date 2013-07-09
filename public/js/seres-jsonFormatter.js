@@ -21,7 +21,6 @@ function jsonFormatter(json_arg) {
                 parent = json[child].object.subClassOf;
                 if (!(parent in parentToChildMap)) parentToChildMap[parent] = [];
                 parentToChildMap[parent].push(child);
-                childs[child] = parent;
             }
             if (json[child].object.type) {
                 parentToInduvidual = json[child].object.type;
@@ -110,7 +109,7 @@ function jsonFormatter(json_arg) {
             'object': {}
         });
         if (json.hasOwnProperty(subject)) json[subject].id = nodes_id;
-        subject= subject || "Unknown";
+        subject = subject || "Unknown";
         var node = $.extend({}, subject_obj.object, subject_obj.data);
         node.size = 10;
         node.name = subject;
@@ -130,6 +129,7 @@ function jsonFormatter(json_arg) {
             if (json.hasOwnProperty(object)) {
                 object_id = json[object].id;
                 if (nodes[object_id] && nodes[object_id].name === object) {
+                    // links.push([subject_id, object_id]               );
                     links.push({
                         'source': nodes[subject_id],
                         'target': nodes[object_id],
@@ -142,10 +142,15 @@ function jsonFormatter(json_arg) {
         return links;
     };
 
+    var maps = getParentToChildMap(),
+        parentToChildMap = maps.parentToChildMap,
+        parentToInduvidualsMap = maps.parentToInduvidualsMap;
+
     return {
         'filterSparqlJson': filterSparqlJson,
         'toGraphObject': toGraphObject,
-        'getParentToChildMap': getParentToChildMap,
+        'parentToChildMap': parentToChildMap,
+        'parentToInduvidualsMap': parentToInduvidualsMap,
         'toTreeObject': toTreeObject,
         'createNode': createNode,
         'createLink': createLink
