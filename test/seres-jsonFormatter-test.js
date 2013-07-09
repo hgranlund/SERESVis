@@ -1,6 +1,7 @@
 var testValues = window.seres.testValues;
 var json = testValues.subClassOfJsonGraphParsed;
 var formatter = jsonFormatter(json);
+
 describe('In seres-visualGraphh.js:', function() {
     describe('The function toGraphObject()', function() {
 
@@ -81,7 +82,7 @@ describe('In seres-visualGraphh.js:', function() {
             expect(node['xmi.uuid']).toEqual('fsadf23r3f98h978sfhsdfs98');
             expect(node.type).toEqual('DataTypeegenskap');
             expect(node.isExpanded).toEqual(false);
-        })
+        });
 
         it('should create a standard node if json does not contain subject', function(done) {
             // console.log("LOG:",node);
@@ -89,8 +90,9 @@ describe('In seres-visualGraphh.js:', function() {
             expect(node.size).toBeDefined();
             expect(node.isExpanded).toEqual(false);
             expect(node.id).toEqual(0);
-        })
-    })
+        });
+    });
+
     // TODO: should make json stateless
     // describe('createLink', function() {
     //     var nodes = [{'id':0,
