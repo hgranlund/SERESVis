@@ -94,6 +94,9 @@ Graph.prototype = {
         })
             .on('click', click)
             .call(self.force.drag)
+            .style("fill", function(d){
+                return d.color;
+            })
             .on("mouseover", seres.utilities.highlight)
             .on("mouseout", seres.utilities.downlight);
 
@@ -191,9 +194,6 @@ Graph.prototype = {
         });
     },
 
-            .style("fill", function(d){
-                return d.color;
-            })
     // getColor: function(d) {
 
     //     return self.color(color_num);
