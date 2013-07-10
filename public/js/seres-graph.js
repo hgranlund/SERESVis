@@ -1,4 +1,4 @@
-function Graph(el, json) {
+function Graph(el, json, expand_node) {
     this.formatter;
     this.utilities = window.seres.utilities;
     this.width = 1400;
@@ -12,26 +12,32 @@ function Graph(el, json) {
     this.updateNodeAndLinkPositions;
     this.parentToChildMap;
     this.init(el);
-    this.compute(json);
+    this.nodeId;
+    this.compute(json, expand_node);
 }
 // console.log(d.name +" : " + d.isExpanded);
 // .alpha(0)
 // console.log("LOG:", "this");
-// console.log(d.source + "--" + d.target + " : " + d.target.size);
 // 
 Graph.prototype = {
 
     init: function(el) {
         var self = this;
+        this.nodeId = {};
+
         self.force = d3.layout.force()
             .size([self.width, self.height])
-            .linkStrength(1)
-            .friction(.5)
-            .linkDistance(function(d) {
-            return (d.target.isExpanded ? 20 : 10);
+        .friction(0.9)
+        .linkDistance(function(d) {
+            console.log(d.source + "--" + d.target + " : " + d.target.size * 3);
+            var dist = d.source.size * 8;
+            if (d.target.isExpanded) dist *= 2;
+            return dist;
         })
             .charge(function(d) {
-            return (d.isExpanded ? -5000 : -100);
+            if (d.isInduvidual) return -20;
+            if (d.isExpanded) return -1000;
+            return -500;
         })
             .on("tick", tick)
             .gravity(0)
@@ -51,30 +57,83 @@ Graph.prototype = {
 
         function tick(e) {
             // console.log("LOG:", e.alpha);
-            if (e.alpha > 0.05) {
-                self.updatePositions(e.alpha)
+            if (e.alpha > 0.02) {
                 self.updateNodeAndLinkPositions();
+                self.updatePositions(e.alpha);
             } else {
                 self.center(self.root);
                 self.force.alpha(0);
-            };
-        };
-
+            }
+        }
     },
 
 
-    compute: function(json) {
+    update: function() {
+        var self = this;
+        self.force.nodes(self.nodes)
+            .links(self.links)
+            .start();
+
+
+        self.link = self.link.data(self.force.links());
+        self.node = self.node.data(self.force.nodes());
+
+        self.link.enter().append("svg:path")
+            .attr("stroke-width", 0.3)
+            .attr('class', "link");
+
+        self.node.enter().append("svg:circle")
+            .attr("class", "node")
+            .attr("id", function(d) {
+            return d.name;
+        })
+            .attr("r", function(d) {
+            return d.size;
+        })
+            .on('click', click)
+            .call(self.force.drag)
+            .on("mouseover", seres.utilities.highlight)
+            .on("mouseout", seres.utilities.downlight);
+
+        self.node.append("title")
+            .text(function(d) {
+            return d.name;
+        });
+
+        self.node.append("text")
+            .attr("text-anchor", "middle")
+            .attr("dy", ".35em")
+            .text(function(d) {
+            return self.text;
+        });
+
+
+        function click(d) {
+            console.log("LOG:", d.name, "--", d);
+            if (!d.isExpanded && d.hasOwnProperty('children')) {
+                self.expand_node(d);
+                self.root.fixed = false;
+                self.update();
+            } else {
+                self.center(d);
+            }
+            self.make_root(d);
+        }
+    },
+    compute: function(json, expand_node) {
         var self = this;
         self.formatter = jsonFormatter(json);
-        debugger;
         self.parentToChildMap = self.formatter.parentToChildMap;
-        self.force.nodes([self.createNode('Seres', 0)]);
-        self.nodes = self.force.nodes();
-        self.make_root(self.nodes[0]);
-        self.expand_node(self.nodes[0]);
+        var data = self.formatter.toGraphObject(expand_node);
+        self.make_root(data.nodes[0]);
+        self.nodes = data.nodes;
+        self.links = data.links;
+        self.root.x = self.width / 2;
+        self.root.y = self.height / 2;
+        self.force.nodes(self.nodes);
+        self.force.links(self.links);
         self.update();
     },
-
 
     collide: function(node, alpha) {
         var self = this,
@@ -99,7 +158,7 @@ Graph.prototype = {
                 }
             }
             return x1 > nx2 || x2 < nx1 || y1 > ny2 || y2 < ny1;
-        }
+        };
     },
 
     handleCollisions: function() {
@@ -108,7 +167,7 @@ Graph.prototype = {
             len = this.nodes.length;
 
         while (++i < len) {
-            q.visit(this.collide(this.nodes[i], 20));
+            q.visit(this.collide(this.nodes[i], 10));
         }
     },
 
@@ -128,57 +187,6 @@ Graph.prototype = {
         });
     },
 
-    update: function() {
-        var self = this;
-        self.link = self.link.data(self.links);
-
-        self.link.enter().append("svg:path")
-            .attr("stroke-width", .3)
-            .attr('class', "link");
-
-        self.node = self.node.data(self.nodes);
-        self.node.enter().append("svg:circle")
-            .attr("class", "node")
-            .attr("id", function(d) {
-            return d.name;
-        })
-            .attr("r", function(d) {
-            return d.size;
-        })
-            .on('click', click)
-            .call(self.force.drag)
-            .on("mouseover", seres.utilities.highlight)
-            .on("mouseout", seres.utilities.downlight);
-
-        self.node.append("title")
-            .text(function(d) {
-            return d.name;
-        });
-
-        self.node.append("text")
-            .attr("text-anchor", "middle")
-            .attr("dy", ".35em")
-        // .style("display", "none")
-        .text(function(d) {
-            return self.text;
-        });
-        self.force.start();
-
-
-
-        function click(d) {
-            console.log("LOG:", d.name, "--", d);
-            if (!d.isExpanded && d.hasOwnProperty('children')) {
-                self.expand_node(d);
-                self.root.fixed = false;
-                self.update();
-            } else {
-                self.center(d);
-            }
-            self.make_root(d);
-        };
-    },
-
 
 
     expand_node: function(d) {
@@ -187,20 +195,21 @@ Graph.prototype = {
             deltaX = d.x - self.width / 2 + 75,
             deltaY = d.y - self.height / 2 + 75;
         d.children.map(function(subject) {
-            n = self.createNode(subject, self.nodes.length);
+            n = self.createNode(subject);
             n.x = deltaX;
             n.y = deltaY;
             self.nodes.push(n);
         });
         d.children.map(function(subject) {
-            self.links = self.links.concat(self.formatter.createLink(subject, self.nodes));
+            self.links = self.links.concat(self.formatter.createLink(self.nodeId[subject], self.nodes));
         });
 
-        self.force.stop();
         self.updateNodeAndLinkPositions(0);
-        for (var i = 0; i < d.children.length * 10; ++i)
+        self.force.stop();
+        for (var i = 0; i < d.children.length * 10; ++i) {
             self.handleCollisions();
-        self.force.tick();
+            self.force.tick();
+        }
         self.updateNodeAndLinkPositions(100);
         self.force.start();
 
@@ -210,14 +219,13 @@ Graph.prototype = {
     collapse_node: function(d) {
         var n,
             self = this,
-            deltaX = d.x - self.width / 2 + 75,
-            deltaY = d.y - self.height / 2 + 75;
-        d.children.map(function(subject) {
-            n = self.createNode(subject, self.nodes.length);
-            n.x = deltaX;
-            n.y = deltaY;
-            self.nodes.push(n);
+            children = d.children;
+        deltaX = d.x + 75,
+        deltaY = d.y + 75;
+        self.nodes.filter(function(node) {
+            return node.name in children;
         });
+
         d.children.map(function(subject) {
             self.links = self.links.concat(self.formatter.createLink(subject, self.nodes));
         });
@@ -251,7 +259,7 @@ Graph.prototype = {
             nameToNodeMap[d.name] = d;
         });
         return function(d) {
-            var parent = d.subClassOf;
+            var parent = d.object.subClassOf;
             var node = nameToNodeMap[parent],
                 h,
                 ballR,
@@ -284,30 +292,50 @@ Graph.prototype = {
         d.fixed = true;
     },
 
-    center: function(d) {
-        var deltaX = this.width / 2 - d.x,
-            deltaY = this.height / 2 - d.y,
+    center: function(node_to_center) {
+        var deltaX = this.width / 2 - node_to_center.x,
+            deltaY = this.height / 2 - node_to_center.y,
             self = this;
+
+
         self.nodes.map(function(d) {
             d.x += deltaX;
             d.y += deltaY;
         });
-        self.force.stop()
-        self.updateNodeAndLinkPositions(500);
+        self.update();
+        self.force.stop();
+        self.updateNodeAndLinkPositions(400);
         self.force.start();
+
     },
 
-    createNode: function(subject, id) {
+
+
+    createNode: function(subject) {
         var self = this;
-        var node = self.formatter.createNode(subject, id);
-        node.children=[];
+        self.nodeId[subject] = self.nodes.length;
+        var node = self.formatter.createNode(subject, self.nodes.length);
+        node.children = [];
         if (self.formatter.parentToChildMap.hasOwnProperty(subject)) {
             node.children = self.formatter.parentToChildMap[subject];
         }
-        // if (self.formatter.parentToChildMap.hasOwnProperty(subject)) {
-        //     node.children = self.formatter.parentToChildMap[subject];
-        // }
         return node;
+    },
+
+    updateLinks: function() {
+        var self = this,
+            links = [];
+        self.nodes.map(function() {
+            if (node.isExpanded) {
+                node.children.map(function(child) {
+                    links.push({
+                        'source': node,
+                        'target': self.nodes[self.nodeId[child]],
+                        'value': objectProperty
+                    });
+                })
+            };
+        })
     }
 };
 
