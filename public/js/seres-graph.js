@@ -29,15 +29,15 @@ Graph.prototype = {
             .size([self.width, self.height])
         .friction(0.9)
         .linkDistance(function(d) {
-            console.log(d.source + "--" + d.target + " : " + d.target.size * 3);
             var dist = d.source.size * 8;
-            if (d.target.isExpanded) dist *= 2;
+            if (d.source.isExpanded) dist *= 2;
+            console.log(d.source + "--" + d.target + " : " + dist);
             return dist;
         })
             .charge(function(d) {
-            if (d.isInduvidual) return -20;
-            if (d.isExpanded) return -1000;
-            return -500;
+            if (d.isInduvidual) return -200;
+            if (d === self.root) return -8000;
+            return -8000;
         })
             .on("tick", tick)
             .gravity(0)
@@ -110,6 +110,7 @@ Graph.prototype = {
 
         function click(d) {
             console.log("LOG:", d.name, "--", d);
+            if (d.isInduvidual) {return};
             if (!d.isExpanded && d.hasOwnProperty('children')) {
                 self.expand_node(d);
                 self.root.fixed = false;
@@ -120,18 +121,19 @@ Graph.prototype = {
             self.make_root(d);
         }
     },
+
     compute: function(json, expand_node) {
         var self = this;
         self.formatter = jsonFormatter(json);
         self.parentToChildMap = self.formatter.parentToChildMap;
-        var data = self.formatter.toGraphObject(expand_node);
-        self.make_root(data.nodes[0]);
-        self.nodes = data.nodes;
-        self.links = data.links;
+        self.make_root(self.createNode('Seres'));
+        self.links = [];
+        self.nodes = [self.root]
         self.root.x = self.width / 2;
         self.root.y = self.height / 2;
         self.force.nodes(self.nodes);
         self.force.links(self.links);
+        self.expand_node(self.root);
         self.update();
     },
 
