@@ -3,12 +3,14 @@ window.seres.utilities = function(d3, visualtree, visualgraph) {
 	var rectElements = [];
 
 	var highlight = function(d) {
+		if (d.isInduvidual) {return};
 		d3.selectAll('#' + d.name)
 				.style("stroke-width", 3)
 				.style("stroke", "red");
 	};
 
 	var downlight = function(d) {
+		if (d.isInduvidual) {return};
 		d3.selectAll('#' + d.name)
 		.style("stroke-width", 1)
 		.style("stroke", "black");
