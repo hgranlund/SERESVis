@@ -2,7 +2,7 @@ var testValues = window.seres.testValues;
 var json = testValues.subClassOfJsonGraphParsed;
 var formatter = jsonFormatter(json);
 
-describe('In seres-visualGraphh.js:', function() {
+describe('seres-jsonformatter:', function() {
     describe('The function toGraphObject()', function() {
 
         it('should be defined', function() {
@@ -79,8 +79,8 @@ describe('In seres-visualGraphh.js:', function() {
             var node = formatter.createNode('test', 0);
             expect(node.name).toEqual('test');
             expect(node.id).toEqual(0);
-            expect(node['xmi.uuid']).toEqual('fsadf23r3f98h978sfhsdfs98');
-            expect(node.type).toEqual('DataTypeegenskap');
+            expect(node.data['xmi.uuid']).toEqual('fsadf23r3f98h978sfhsdfs98');
+            expect(node.object.type).toEqual('DataTypeegenskap');
             expect(node.isExpanded).toEqual(false);
         });
 
@@ -93,14 +93,14 @@ describe('In seres-visualGraphh.js:', function() {
         });
     });
 
-    // TODO: should make json stateless
+    // // TODO: should make json stateless
     // describe('createLink', function() {
     //     var nodes = [{'id':0,
     //     'name':'Seres'},
     //     {''}
     // }]
     //     it('should create a link between two connected nodes', function(done) {
-    //         var links = createLink('Seres', nodes)
+    //         var links = createLink('Seres', nodes);
     //     })
     // })
 

@@ -31,7 +31,6 @@ function jsonFormatter(json_arg) {
         return parentToChildMap;
     };
 
-
     var toGraphObject = function(expanded_nodes) {
         var links = [];
         var nodes = [];
@@ -39,10 +38,9 @@ function jsonFormatter(json_arg) {
         expanded_nodes.map(function(subject) {
             nodes.push(createNode(subject, nodes.length));
         });
-
-        expanded_nodes.map(function(subject) {
-            links = links.concat(createLink(subject, nodes));
-        });
+        for (var i = 0; i < nodes.length; i++) {
+            links = links.concat(createLink(i, nodes));
+        };
 
         return {
             'links': links,
@@ -67,7 +65,6 @@ function jsonFormatter(json_arg) {
                 elm.children.push(populateElement(child, parentsToChild, parentToInduviduals));
             });
         }
-        // delete parentsToChild[parent];
         return elm;
     };
 
@@ -84,7 +81,7 @@ function jsonFormatter(json_arg) {
                 parentsToChild[parent].push(child);
                 childs[child] = parent;
             }
-            if (json[child].object.type) {
+            if (json[child].object.type !== "Class") {
                 parentToInduvidual = json[child].object.type;
                 if (!(parentToInduvidual in parentToInduviduals)) parentToInduviduals[parentToInduvidual] = [];
                 parentToInduviduals[parentToInduvidual].push(child);
@@ -107,41 +104,40 @@ function jsonFormatter(json_arg) {
         });
         if (json.hasOwnProperty(subject)) json[subject].id = nodes_id;
         subject = subject || "Unknown";
-        var node = $.extend({}, subject_obj.object, subject_obj.data);
+        var node = $.extend({}, subject_obj);
         node.size = 10;
         node.name = subject;
         node.id = nodes_id;
         node.isInduvidual = false;
         node.isExpanded = false;
-        if (node.type) {
-            if (node.type in parentToChildMap) {
-                node.isInduvidual = true;
+        if (node.object.type) {
+            if (node.object.type !== "Class") {
+                if (node.object.type in parentToChildMap) {
+                    node.isInduvidual = true;
+                    node.size=5;
+                }
             }
         }
-        if (node.type === "Class") node.size = 20;
+        if (node.object.type === "Class") node.size = 30;
         return node;
     };
 
-    var createLink = function(subject, nodes) {
+    var createLink = function(id, nodes) {
         var object,
             object_id,
-            subject_id = json[subject].id,
+            subject_id = id,
             links = [];
-        for (var objectProperty in json[subject].object) {
-            object = json[subject].object[objectProperty];
-            if (json.hasOwnProperty(object)) {
-                object_id = json[object].id;
-                if (nodes[object_id] && nodes[object_id].name === object) {
-                    // links.push([subject_id, object_id]               );
+        var object_name = nodes[subject_id].object.subClassOf || nodes[subject_id].object.type || false;
+        if (object_name && object_name !== "Class") {
+            nodes.map(function(object) {
+                if (object.name === object_name) {
                     links.push({
                         'source': nodes[subject_id],
-                        'target': nodes[object_id],
-                        'value': objectProperty
+                        'target': object
                     });
-                }
-
-            }
-        }
+                };
+            });
+        };
         return links;
     };
 
