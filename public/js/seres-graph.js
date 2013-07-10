@@ -21,9 +21,11 @@ function Graph(el, json, expand_node) {
 // 
 Graph.prototype = {
 
+
     init: function(el) {
         var self = this;
-        this.nodeId = {};
+        self.nodeId={};
+        self.color = d3.scale.category20b();
 
         self.force = d3.layout.force()
             .size([self.width, self.height])
@@ -189,17 +191,25 @@ Graph.prototype = {
         });
     },
 
+            .style("fill", function(d){
+                return d.color;
+            })
+    // getColor: function(d) {
 
+    //     return self.color(color_num);
+    // },
 
     expand_node: function(d) {
         var n,
             self = this,
             deltaX = d.x - self.width / 2 + 75,
             deltaY = d.y - self.height / 2 + 75;
+        d.color = d3.rgb(self.color());
         d.children.map(function(subject) {
             n = self.createNode(subject);
             n.x = deltaX;
             n.y = deltaY;
+            n.color = d.color.brighter();
             self.nodes.push(n);
         });
         d.children.map(function(subject) {
@@ -248,8 +258,6 @@ Graph.prototype = {
         var k = 0.05 * alpha;
         self.nodes.map(function(d, i) {
             self.cluster(10 * alpha * alpha)(d);
-            d.x += (self.root.x - d.x) * k;
-            d.y += (self.root.y - d.y) * k;
         });
     },
 
