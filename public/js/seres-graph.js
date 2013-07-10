@@ -21,8 +21,10 @@ function Graph(el, json) {
 // 
 Graph.prototype = {
 
+
     init: function(el) {
         var self = this;
+        self.color = d3.scale.category20b();
         self.force = d3.layout.force()
             .size([self.width, self.height])
             .linkStrength(1)
@@ -31,7 +33,7 @@ Graph.prototype = {
             return (d.target.isExpanded ? 20 : 10);
         })
             .charge(function(d) {
-            return (d.isExpanded ? -5000 : -100);
+            return (d.isExpanded ? -5000 : -1000);
         })
             .on("tick", tick)
             .gravity(0)
@@ -66,7 +68,6 @@ Graph.prototype = {
     compute: function(json) {
         var self = this;
         self.formatter = jsonFormatter(json);
-        debugger;
         self.parentToChildMap = self.formatter.parentToChildMap;
         self.force.nodes([self.createNode('Seres', 0)]);
         self.nodes = self.force.nodes();
@@ -147,6 +148,9 @@ Graph.prototype = {
         })
             .on('click', click)
             .call(self.force.drag)
+            .style("fill", function(d){
+                return d.color;
+            })
             .on("mouseover", seres.utilities.highlight)
             .on("mouseout", seres.utilities.downlight);
 
@@ -179,17 +183,22 @@ Graph.prototype = {
         };
     },
 
+    // getColor: function(d) {
 
+    //     return self.color(color_num);
+    // },
 
     expand_node: function(d) {
         var n,
             self = this,
             deltaX = d.x - self.width / 2 + 75,
             deltaY = d.y - self.height / 2 + 75;
+        d.color = d3.rgb(self.color());
         d.children.map(function(subject) {
             n = self.createNode(subject, self.nodes.length);
             n.x = deltaX;
             n.y = deltaY;
+            n.color = d.color.brighter();
             self.nodes.push(n);
         });
         d.children.map(function(subject) {
@@ -238,8 +247,6 @@ Graph.prototype = {
         var k = 0.05 * alpha;
         self.nodes.map(function(d, i) {
             self.cluster(10 * alpha * alpha)(d);
-            d.x += (self.root.x - d.x) * k;
-            d.y += (self.root.y - d.y) * k;
         });
     },
 
@@ -300,7 +307,7 @@ Graph.prototype = {
     createNode: function(subject, id) {
         var self = this;
         var node = self.formatter.createNode(subject, id);
-        node.children=[];
+        node.children = [];
         if (self.formatter.parentToChildMap.hasOwnProperty(subject)) {
             node.children = self.formatter.parentToChildMap[subject];
         }
