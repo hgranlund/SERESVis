@@ -23,7 +23,8 @@ Graph.prototype = {
     init: function(el) {
         var self = this;
         self.nodeId = {};
-        self.color = d3.scale.category20b();
+        self.color = [d3.rgb("#1f77b4"), d3.rgb("#aec7e8"), d3.rgb("#ff7f0e"), d3.rgb("#ffbb78"), d3.rgb("#2ca02c"), d3.rgb("#98df8a"), d3.rgb("#d62728"), d3.rgb("#ff9896"), d3.rgb("#9467bd"), d3.rgb("#c5b0d5"), d3.rgb("#8c564b"), d3.rgb("#c49c94"), d3.rgb("#e377c2"), d3.rgb("#f7b6d2"), d3.rgb("#7f7f7f"), d3.rgb("#c7c7c7"), d3.rgb("#bcbd22"), d3.rgb("#dbdb8d"), d3.rgb("#17becf"), d3.rgb("#9edae5")];
+
 
         self.force = d3.layout.force()
             .size([self.width, self.height])
@@ -101,7 +102,7 @@ Graph.prototype = {
             return d.size;
         })
             .style("fill", function(d) {
-            return d.color;
+            return self.color.toString();
         });
 
         self.node.insert("title")
@@ -214,12 +215,14 @@ Graph.prototype = {
             self = this,
             deltaX = d.x + 75,
             deltaY = d.y + 75;
-        d.color = d3.rgb(self.color());
+            d.color = self.color[4];
         var node_id_to_update=[];
         d.children.map(function(subject) {
             n = self.formatter.createNode(subject,self.nodes.length);
             n.x = deltaX;
             n.y = deltaY;
+            n.strokeColor = d.color;
+            //n.fillColor = d3.rgb(d.color.toString()).brighter();
             n.color = d.color.brighter();
             self.nodes.push(n);
             node_id_to_update.push(n.id);

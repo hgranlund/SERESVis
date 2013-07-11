@@ -13,7 +13,7 @@ rect {
 }
 
 .graph-container .node {
-  fill: blue;
+  /*fill: blue; */
   stroke: #333;
   stroke-width: 1.5px;
   cursor:pointer;
