@@ -1,10 +1,17 @@
-var startSeres = function(query, tree) {
+var startSeres = function(query) {
 	var json = query.execute('construct where {?a ?s ?b}');
 	$(document).ready(function() {
-		var el = document.getElementById("graph-container");
+		var elGraph = document.getElementById("graph-container");
+		var elTree = document.getElementById("indented_tree");
 		var expand_node = ['Seres', 'Dokumentasjon' , 'SERESelement', 'Forvaltingselement'];
-		var graph = new Graph(el, json);
-		tree.startTree(json)
+		var graph = new Graph(elGraph, json);
+		var tree = new Tree(elTree, json);
+
+	});
+}(window.seres.query);
+
+
+
 		// var ex = []
 		// for (f in json ){
 		// 	ex.push(f);
@@ -18,6 +25,3 @@ var startSeres = function(query, tree) {
   //           };
 
   //       graph = new Insights(el, data.nodes, data.links, options).render();
-
-	});
-}(window.seres.query, window.seres.tree);

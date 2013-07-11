@@ -34,15 +34,14 @@ describe('graph', function() {
 
     beforeEach(function() {
         el = document.createElement("div");
-        var expand_node = ['Seres', 'Dokumentasjon', 'SERESelement', 'Forvaltingselement'];
-        graph = new Graph(el, json, expand_node);
+        graph = new Graph(el, json);
     });
 
 
-    it('it should render correctly initial circles and paths.', function() {
-        var circles = el.getElementsByTagName("circle");
+    it('it should render 4 initial nodes and  3 initial paths.', function() {
+        var node = el.getElementsByClassName("node");
         var paths = el.getElementsByTagName("path");
-        expect(circles.length).toEqual(4);
+        expect(node.length).toEqual(4);
         expect(paths.length).toEqual(3);
     });
 

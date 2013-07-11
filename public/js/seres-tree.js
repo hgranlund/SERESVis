@@ -1,19 +1,6 @@
-window.seres.tree = function(query, d3, utilities) {
+function Tree(el, json) {
 
-
-    var w = 960,
-        h = 5300,
-        i = 0,
-        legendheight = 100,
-        legendwidth = 400,
-        barHeight = 20,
-        barWidth = w * .3,
-        duration = 400,
-        formatter,
-        nodes,
-        root;
-
-    var legends = [{
+    this.legends = [{
             "color": "#3c3c3c",
             "text": "Superklasser"
         }, {
@@ -23,136 +10,126 @@ window.seres.tree = function(query, d3, utilities) {
             "color": "#ffffff",
             "text": "Subsubklasser"
         }
-    ]
+    ];
 
-    var tree = d3.layout.tree()
-        .size([h, 100]);
-
-    var diagonal = d3.svg.diagonal()
-        .projection(function(d) {
-        return [d.y, d.x];
-    });
-
-    var vis = d3.select("#indented_tree").append("svg:svg")
-        .attr("width", w)
-        .attr("height", h)
-        .append("svg:g")
-        .attr("transform", "translate(20,30)");
-
-    var svg = d3.select("#legends")
-        .append("svg")
-        .attr("width", legendwidth)
-        .attr("height", legendheight);
-
-    var legend = svg.append("g")
-        .attr("class", "legend")
-        .attr("height", 30)
-        .attr("width", 30)
-        .attr('transform', 'translate(-20,50)');
-
-    legend.selectAll('rect')
-        .data(legends)
-        .enter()
-        .append("rect")
-        .attr("x", function(d, i) {
-        return i * 125 + 50;
-    })
-        .attr("y", 10)
-        .attr("width", 10)
-        .attr("height", 10)
-        .style("fill", function(d) {
-        var color = d.color;
-        return color;
-    });
-
-    legend.selectAll('text')
-        .data(legends)
-        .enter()
-        .append("text")
-        .attr("x", function(d, i) {
-        return i * 125 + 65;
-    })
-        .attr("y", 20)
-        .text(function(d) {
-        var text = d.text;
-        return text;
-    });
+    this.w = 960;
+    this.h = 5300;
+    this.i = 0;
+    this.legendheight = 100;
+    this.legendwidth = 400;
+    this.barHeight = 20;
+    this.barWidth = this.w * .3;
+    this.duration = 400;
+    this.formatter;
+    this.nodes;
+    this.root;
 
 
-    // var keys = Object.keys(json);
-    // var keydata = [];
-    // for (i = 0; i < keys.length; i++) {
-    //     keydata[i] = json[keys[i]].data;
-    // }
+    this.init(el);
+    this.compute(json);
+}
 
-    d3.select("#expand-all").on("click", function() {
-        function expand(d) {
-            if (d.children) {
-                d._children = d.children;
-                d.children = null;
-            } else {
-                d.children = d._children;
-                d.children.forEach(expand);
-                d._children = null;
+Tree.prototype = {
+
+
+    init: function(el) {
+        var self = this;
+        self.tree = d3.layout.tree()
+            .size([self.h, 100]);
+
+        self.diagonal = d3.svg.diagonal()
+            .projection(function(d) {
+            return [d.y, d.x];
+        });
+
+        self.vis = d3.select(el).append("svg:svg")
+            .attr("width", self.w)
+            .attr("height", self.h)
+            .append("svg:g")
+            .attr("transform", "translate(20,30)");
+
+        self.svg = d3.select("#legends")
+            .append("svg")
+            .attr("width", self.legendwidth)
+            .attr("height", self.legendheight);
+
+        self.legend = self.svg.append("g")
+            .attr("class", "legend")
+            .attr("height", 30)
+            .attr("width", 30)
+            .attr('transform', 'translate(-20,50)');
+
+        self.legend.selectAll('rect')
+            .data(self.legends)
+            .enter()
+            .append("rect")
+            .attr("x", function(d, i) {
+            return i * 125 + 50;
+        })
+            .attr("y", 10)
+            .attr("width", 10)
+            .attr("height", 10)
+            .style("fill", function(d) {
+            var color = d.color;
+            return color;
+        });
+
+        self.legend.selectAll('text')
+            .data(self.legends)
+            .enter()
+            .append("text")
+            .attr("x", function(d, i) {
+            return i * 125 + 65;
+        })
+            .attr("y", 20)
+            .text(function(d) {
+            var text = d.text;
+            return text;
+        });
+
+
+        d3.select("#expand-all").on("click", function() {
+            function expand(d) {
+                if (d.children) {
+                    d._children = d.children;
+                    d.children = null;
+                } else {
+                    d.children = d._children;
+                    d.children.forEach(expand);
+                    d._children = null;
+                }
             }
-        }
 
-        root.children.forEach(click);
-        d3.select("#expand-all").classed("active", true);
-    });
+            self.root.children.forEach(click);
+            d3.select("#expand-all").classed("active", true);
+        });
+
+    },
+
+    compute: function(json) {
+        var self = this;
+        self.formatter = jsonFormatter(json);
+        self.root = self.formatter.toTreeObject()[0];
+        self.root.x0 = 0;
+        self.root.y0 = 0;
+        self.update(self.root);
+    },
 
 
-    function click(d) {
-        if (d.children) {
-            d._children = d.children;
-            d.children = null;
-        } else {
-            d.children = d._children;
-            d._children = null;
-        }
-        update(d);
-    }
 
-    function color(d) {
-        return d._children ? "#3c3c3c" : d.children ? "#c2bcbc" : "#ffffff";
-    }
-
-    function toggle(d) {
-        if (d.children) {
-            d._children = d.children;
-            d.children = null;
-        } else {
-            d.children = d._children;
-            d._children = null;
-        }
-    }
-
-    function toggleAll(d) {
-        if (d.children) {
-            d.children.forEach(toggleAll);
-            toggle(d);
-        }
-    }
-
-    var startTree = function(json) {
-        formatter = jsonFormatter(json);
-        root = formatter.toTreeObject()[0];
-        root.x0 = 0;
-        root.y0 = 0;
-        update(root);
-    };
-    var update = function(source) {
-        nodes = tree.nodes(root);
+    update: function(source) {
+        var self = this
+        self.nodes = self.tree.nodes(self.root);
 
         // Compute the "layout".
-        nodes.forEach(function(n, i) {
-            n.x = i * barHeight;
+        self.nodes.forEach(function(n, i) {
+            n.x = i * self.barHeight;
         });
 
         // Update the nodes…
-        var node = vis.selectAll("g.node")
-            .data(nodes, function(d) {
-            return d.id || (d.id = ++i);
+        var node = self.vis.selectAll("g.node")
+            .data(self.nodes, function(d) {
+            return d.id || (d.id = ++self.i);
         });
 
         var nodeEnter = node.enter().append("svg:g")
@@ -164,13 +141,13 @@ window.seres.tree = function(query, d3, utilities) {
 
         // Enter any new nodes at the parent's previous position.
         nodeEnter.append("svg:rect")
-            .attr("y", -barHeight / 2)
-            .attr("height", barHeight)
+            .attr("y", -self.barHeight / 2)
+            .attr("height", self.barHeight)
             .attr("id", function(d) {
             return d.name;
         })
-            .attr("width", barWidth)
-            .style("fill", color)
+            .attr("width", self.barWidth)
+            .style("fill", self.color)
             .on("click", click)
             .attr("class", "rectElement")
             .on("mouseover", seres.utilities.highlight)
@@ -185,24 +162,24 @@ window.seres.tree = function(query, d3, utilities) {
 
         // Transition nodes to their new position.
         nodeEnter.transition()
-            .duration(duration)
+            .duration(self.duration)
             .attr("transform", function(d) {
             return "translate(" + d.y + "," + d.x + ")";
         })
             .style("opacity", 1);
 
         node.transition()
-            .duration(duration)
+            .duration(self.duration)
             .attr("transform", function(d) {
             return "translate(" + d.y + "," + d.x + ")";
         })
             .style("opacity", 1)
             .select("rect")
-            .style("fill", color);
+            .style("fill", self.color);
 
         // Transition exiting nodes to the parent's new position.
         node.exit().transition()
-            .duration(duration)
+            .duration(self.duration)
             .attr("transform", function(d) {
             return "translate(" + source.y + "," + source.x + ")";
         })
@@ -210,8 +187,8 @@ window.seres.tree = function(query, d3, utilities) {
             .remove();
 
         // Update the links…
-        var link = vis.selectAll("path.link")
-            .data(tree.links(nodes), function(d) {
+        var link = self.vis.selectAll("path.link")
+            .data(self.tree.links(self.nodes), function(d) {
             return d.target.id;
         });
 
@@ -223,29 +200,29 @@ window.seres.tree = function(query, d3, utilities) {
                 x: source.x0,
                 y: source.y0
             };
-            return diagonal({
+            return self.diagonal({
                 source: o,
                 target: o
             });
         })
             .transition()
-            .duration(duration)
-            .attr("d", diagonal);
+            .duration(self.duration)
+            .attr("d", self.diagonal);
 
         // Transition links to their new position.
         link.transition()
-            .duration(duration)
-            .attr("d", diagonal);
+            .duration(self.duration)
+            .attr("d", self.diagonal);
 
         // Transition exiting nodes to the parent's new position.
         link.exit().transition()
-            .duration(duration)
+            .duration(self.duration)
             .attr("d", function(d) {
             var o = {
                 x: source.x,
                 y: source.y
             };
-            return diagonal({
+            return self.diagonal({
                 source: o,
                 target: o
             });
@@ -253,17 +230,44 @@ window.seres.tree = function(query, d3, utilities) {
             .remove();
 
         // Stash the old positions for transition.
-        nodes.forEach(function(d) {
+        self.nodes.forEach(function(d) {
             d.x0 = d.x;
             d.y0 = d.y;
         });
-    };
-    var getnodes = function(){
-        return nodes;
-    } ;
-    return {
-        'update': update,
-        'startTree': startTree,
-        'nodes':getnodes
-    };
-}(window.seres.query, window.d3, window.seres.utilities);
+
+        function click(d) {
+            if (d.children) {
+                d._children = d.children;
+                d.children = null;
+            } else {
+                d.children = d._children;
+                d._children = null;
+            }
+            update(d);
+        }
+    },
+
+
+    color: function(d) {
+        return d._children ? "#3c3c3c" : d.children ? "#c2bcbc" : "#ffffff";
+    },
+
+    toggle: function(d) {
+        if (d.children) {
+            d._children = d.children;
+            d.children = null;
+        } else {
+            d.children = d._children;
+            d._children = null;
+        }
+    },
+
+    toggleAll: function(d) {
+        if (d.children) {
+            d.children.forEach(toggleAll);
+            toggle(d);
+        }
+    }
+};
+
+Tree.fn = Tree.prototype;

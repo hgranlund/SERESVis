@@ -123,7 +123,7 @@ Graph.prototype = {
             if (d.isInduvidual) {
                 return;
             };
-            if (!d.isExpanded && d.hasOwnProperty('children')) {
+            if (!d.isExpanded && d.children) {
                 self.expand_node(d);
                 self.root.fixed = false;
                 self.update();
@@ -141,7 +141,7 @@ Graph.prototype = {
         var self = this;
         self.formatter = jsonFormatter(json);
         self.parentToChildMap = self.formatter.parentToChildMap;
-        self.make_root(self.createNode('Seres'));
+        self.make_root(self.formatter.createNode('Seres', self.nodes.length));
         self.links = [];
         self.nodes = [self.root];
         self.root.x = self.width / 2;
@@ -215,15 +215,17 @@ Graph.prototype = {
             deltaX = d.x + 75,
             deltaY = d.y + 75;
         d.color = d3.rgb(self.color());
+        var node_id_to_update=[];
         d.children.map(function(subject) {
-            n = self.createNode(subject);
+            n = self.formatter.createNode(subject,self.nodes.length);
             n.x = deltaX;
             n.y = deltaY;
             n.color = d.color.brighter();
             self.nodes.push(n);
+            node_id_to_update.push(n.id);
         });
-        d.children.map(function(subject) {
-            self.links = self.links.concat(self.formatter.createLink(self.nodeId[subject], self.nodes));
+        node_id_to_update.map(function(id) {
+            self.links = self.links.concat(self.formatter.createLink(id, self.nodes));
         });
 
         self.updateNodeAndLinkPositions(0);
@@ -331,19 +333,6 @@ Graph.prototype = {
         self.updateNodeAndLinkPositions(400);
         self.force.start();
 
-    },
-
-
-
-    createNode: function(subject) {
-        var self = this;
-        self.nodeId[subject] = self.nodes.length;
-        var node = self.formatter.createNode(subject, self.nodes.length);
-        node.children = [];
-        if (self.formatter.parentToChildMap.hasOwnProperty(subject)) {
-            node.children = self.formatter.parentToChildMap[subject];
-        }
-        return node;
     },
 
     updateLinks: function() {
