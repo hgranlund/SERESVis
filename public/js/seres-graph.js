@@ -57,8 +57,8 @@ Graph.prototype = {
         self.link = self.svg.selectAll(".link");
 
         function tick(e) {
-            // console.log("LOG:", e.alpha);
-            if (e.alpha > 0.08) {
+            console.log("LOG:", e.alpha);
+            if (e.alpha > 0.05) {
                 self.updateNodeAndLinkPositions();
                 self.updatePositions(e.alpha);
             } else {
@@ -139,7 +139,7 @@ Graph.prototype = {
     compute: function(json) {
         var self = this;
         self.formatter = jsonFormatter(json);
-        
+        self.parentToChildMap = self.formatter.parparentToChildMap;
         self.make_root(self.createNode('Seres'));
         self.links = [];
         self.nodes = [self.root];
