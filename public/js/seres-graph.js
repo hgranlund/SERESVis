@@ -99,7 +99,7 @@ Graph.prototype = {
         })
             .attr("r", function(d) {
             return d.size;
-        });
+        })
             .style("fill", function(d){
                 return d.color;
             })
