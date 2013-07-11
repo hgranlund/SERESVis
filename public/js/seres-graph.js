@@ -21,25 +21,24 @@ function Graph(el, json, expand_node) {
 // 
 Graph.prototype = {
 
-
     init: function(el) {
         var self = this;
-        self.nodeId={};
+        self.nodeId = {};
         self.color = d3.scale.category20b();
 
         self.force = d3.layout.force()
             .size([self.width, self.height])
-        .friction(0.9)
-        .linkDistance(function(d) {
-            var dist = d.source.size * 8;
+            .friction(0.9)
+            .linkDistance(function(d) {
+            var dist = d.source.size /2 ;
             if (d.source.isExpanded) dist *= 2;
-            console.log(d.source + "--" + d.target + " : " + dist);
+            console.log(d.source.name + "--" + d.target.name + " : " + dist);
             return dist;
         })
             .charge(function(d) {
             if (d.isInduvidual) return -200;
-            if (d === self.root) return -8000;
-            return -8000;
+            if (d === self.root) return -5000;
+            return -5000;
         })
             .on("tick", tick)
             .gravity(0)
@@ -59,7 +58,7 @@ Graph.prototype = {
 
         function tick(e) {
             // console.log("LOG:", e.alpha);
-            if (e.alpha > 0.02) {
+            if (e.alpha > 0.08) {
                 self.updateNodeAndLinkPositions();
                 self.updatePositions(e.alpha);
             } else {
@@ -80,57 +79,70 @@ Graph.prototype = {
         self.link = self.link.data(self.force.links());
         self.node = self.node.data(self.force.nodes());
 
-        self.link.enter().append("svg:path")
+        self.link.enter().insert("svg:path")
             .attr("stroke-width", 0.3)
             .attr('class', "link");
 
-        self.node.enter().append("svg:circle")
+        self.node.enter().insert("g")
             .attr("class", "node")
-            .attr("id", function(d) {
-            return d.name;
-        })
-            .attr("r", function(d) {
-            return d.size;
-        })
             .on('click', click)
             .call(self.force.drag)
             .on("mouseover", seres.utilities.highlight)
             .on("mouseout", seres.utilities.downlight);
 
-        self.node.append("title")
+        self.circle = self.node.insert("circle")
+            .style("fill", function(d) {
+            return d.color;
+        })
+            .attr("id", function(d) {
+            return d.name;
+        })
+            .attr("r", function(d) {
+            return d.size;
+        });
+
+        self.node.insert("title")
             .text(function(d) {
             return d.name;
         });
 
-        self.node.append("text")
+        self.node.insert("text")
             .attr("text-anchor", "middle")
             .attr("dy", ".35em")
             .text(function(d) {
-            return self.text;
+            return d.name;
         });
 
+        self.node.exit().remove();
 
         function click(d) {
             console.log("LOG:", d.name, "--", d);
-            if (d.isInduvidual) {return};
+            if (d.isInduvidual) {
+                return;
+            };
             if (!d.isExpanded && d.hasOwnProperty('children')) {
                 self.expand_node(d);
                 self.root.fixed = false;
                 self.update();
-            } else {
+            } 
+            else if(d.isExpanded){
+                self.collapse_node(d);
+                self.update();
+            }
+            else {
                 self.center(d);
             }
             self.make_root(d);
         }
     },
 
-    compute: function(json, expand_node) {
+    compute: function(json) {
         var self = this;
         self.formatter = jsonFormatter(json);
-        self.parentToChildMap = self.formatter.parentToChildMap;
+        
         self.make_root(self.createNode('Seres'));
         self.links = [];
-        self.nodes = [self.root]
+        self.nodes = [self.root];
         self.root.x = self.width / 2;
         self.root.y = self.height / 2;
         self.force.nodes(self.nodes);
@@ -185,15 +197,15 @@ Graph.prototype = {
         });
 
         this.node.transition().duration(duration).attr("transform", function(d) {
-            // d.x = Math.max(d.size, Math.min(this.height - d.size, d.x));
-            // d.y = Math.max(d.size, Math.min(this.height - d.size, d.y));
+            // d.x = Math.max(d.size, Math.min(self.width - d.size, d.x));
+            // d.y = Math.max(d.size, Math.min(self.height - d.size, d.y));
             return "translate(" + d.x + "," + d.y + ")";
         });
     },
 
-            .style("fill", function(d){
-                return d.color;
-            })
+    // .style("fill", function(d){
+    //     return d.color;
+    // })
     // getColor: function(d) {
 
     //     return self.color(color_num);
@@ -202,8 +214,8 @@ Graph.prototype = {
     expand_node: function(d) {
         var n,
             self = this,
-            deltaX = d.x - self.width / 2 + 75,
-            deltaY = d.y - self.height / 2 + 75;
+            deltaX = d.x + 75,
+            deltaY = d.y + 75;
         d.color = d3.rgb(self.color());
         d.children.map(function(subject) {
             n = self.createNode(subject);
@@ -232,15 +244,19 @@ Graph.prototype = {
         var n,
             self = this,
             children = d.children;
-        deltaX = d.x + 75,
-        deltaY = d.y + 75;
+
         self.nodes.filter(function(node) {
             return node.name in children;
         });
 
-        d.children.map(function(subject) {
-            self.links = self.links.concat(self.formatter.createLink(subject, self.nodes));
-        });
+        self.links.filter(function(l){
+            if( l.target.name in self.parentToChildMap){
+                if (l.source.name in self.parentToChildMap) {
+                    return true;
+                };
+            }
+            return false;
+        })
 
         self.force.stop();
         self.updateNodeAndLinkPositions(0);
@@ -250,7 +266,7 @@ Graph.prototype = {
         self.updateNodeAndLinkPositions(100);
         self.force.start();
 
-        d.isExpanded = true;
+        d.isExpanded = false;
     },
 
     updatePositions: function(alpha) {
@@ -343,9 +359,9 @@ Graph.prototype = {
                         'target': self.nodes[self.nodeId[child]],
                         'value': objectProperty
                     });
-                })
-            };
-        })
+                });
+            }
+        });
     }
 };
 
