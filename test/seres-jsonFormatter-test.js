@@ -101,7 +101,7 @@ describe('seres-jsonformatter:', function() {
             expect(parsedJson[0].children.length).toEqual(3);
             expect(parsedJson[0].children[2].name).toEqual("SERESelement");
             expect(parsedJson[0].children[1].name).toEqual("Forvaltingselement");
-            expect(parsedJson[0].children[2].individuals[0].name).toEqual("test");
+            expect(parsedJson[0].children[2].individuals[0].id).toEqual("test");
         });
 
     });

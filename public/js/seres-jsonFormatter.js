@@ -58,9 +58,7 @@ function jsonFormatter(json_arg) {
         elm.name = parent;
         if (parent in parentToInduvidualsMap) {
             elm.individuals = parentToInduvidualsMap[parent].map(function(individual) {
-                return {
-                    'name': individual
-                };
+                return createNode(individual);
             });
         }
         if (parent in parentsToChildMap) {
