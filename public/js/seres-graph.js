@@ -99,7 +99,7 @@ Graph.prototype = {
         })
             .attr("r", function(d) {
             return d.size;
-        });
+        })
             .style("fill", function(d){
                 return d.color;
             })
@@ -221,7 +221,8 @@ Graph.prototype = {
             n = self.createNode(subject);
             n.x = deltaX;
             n.y = deltaY;
-            n.color = d.color.brighter();
+            n.strokeColor = d.color;
+            n.fillColor = d.color.brighter();
             self.nodes.push(n);
         });
         d.children.map(function(subject) {
