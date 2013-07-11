@@ -37,74 +37,7 @@ var json_orig = {
         }
     }
 };
-var json_formattet =
-    [{
-        "data": {},
-        "object": {},
-        "id": 0,
-        "size": 10,
-        "name": "Seres",
-        "isInduvidual": false,
-        "isExpanded": false,
-        "x": 500,
-        "y": 500,
-        "children": [{
-                "data": {},
-                "object": {
-                    "subClassOf": "Seres"
-                },
-                "id": 0,
-                "size": 10,
-                "name": "Dokumentasjon",
-                "isInduvidual": false,
-                "isExpanded": false,
-                "x": 500,
-                "y": 500,
-                "children": []
-            }, {
-                "data": {},
-                "object": {
-                    "subClassOf": "Seres"
-                },
-                "id": 0,
-                "size": 10,
-                "name": "Forvaltingselement",
-                "isInduvidual": false,
-                "isExpanded": false,
-                "x": 500,
-                "y": 500,
-                "children": []
-            }, {
-                "data": {},
-                "object": {
-                    "subClassOf": "Seres"
-                },
-                "id": 0,
-                "size": 10,
-                "name": "SERESelement",
-                "isInduvidual": false,
-                "isExpanded": false,
-                "x": 500,
-                "y": 500,
-                "children": [{
-                        "data": {},
-                        "object": {
-                            "subClassOf": "SERESelement"
-                        },
-                        "id": 0,
-                        "size": 10,
-                        "name": "Nivå",
-                        "isInduvidual": false,
-                        "isExpanded": false,
-                        "x": 500,
-                        "y": 500,
-                        "children": []
-                    }
-                ]
-            }
-        ]
-    }
-];
+
 var formatter = jsonFormatter(json_orig);
 
 describe('seres-jsonformatter:', function() {
@@ -137,7 +70,7 @@ describe('seres-jsonformatter:', function() {
 
     });
 
-    describe('the function filterSparqlJson', function() {
+    xdescribe('the function filterSparqlJson', function() {
         it('should filter correctly', function() {
             var filtered = formatter.filterSparqlJson('xmi.uuid');
             expect(filtered['test']).toBeDefined();
@@ -178,7 +111,8 @@ describe('seres-jsonformatter:', function() {
         it('should create a node with correct values', function() {
             var node = formatter.createNode('test', 0);
             expect(node.name).toEqual('');
-            expect(node.id).toEqual(0);
+            expect(node.index).toEqual(0);
+            expect(node.id).toEqual('test');
             expect(node.data['xmi.uuid']).toEqual('fsadf23r3f98h978sfhsdfs98');
             expect(node.object.type).toEqual('SERESelement');
             expect(node.isExpanded).toEqual(false);
@@ -189,6 +123,7 @@ describe('seres-jsonformatter:', function() {
             var node = formatter.createNode('', 0);
             expect(node.size).toBeDefined();
             expect(node.isExpanded).toEqual(false);
+            expect(node.index).toEqual(0);
             expect(node.id).toEqual(0);
         });
 
@@ -197,7 +132,7 @@ describe('seres-jsonformatter:', function() {
             expect(node.children.length).toEqual(3);
         });
 
-        it('should add an empty children array if no children exist', function (done) {
+        it('should add an empty children array if no children exist', function () {
             var node = formatter.createNode('Forvaltingselement', 0);
             expect(node.children.length).toEqual(0);
         });
