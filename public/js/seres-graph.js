@@ -100,6 +100,9 @@ Graph.prototype = {
             .attr("r", function(d) {
             return d.size;
         });
+            .style("fill", function(d){
+                return d.color;
+            })
 
         self.node.insert("title")
             .text(function(d) {
@@ -203,9 +206,6 @@ Graph.prototype = {
         });
     },
 
-    // .style("fill", function(d){
-    //     return d.color;
-    // })
     // getColor: function(d) {
 
     //     return self.color(color_num);
