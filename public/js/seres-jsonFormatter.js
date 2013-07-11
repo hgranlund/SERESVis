@@ -40,8 +40,7 @@ function jsonFormatter(json_arg) {
         });
         for (var i = 0; i < nodes.length; i++) {
             links = links.concat(createLink(i, nodes));
-        };
-
+        }
         return {
             'links': links,
             'nodes': nodes
@@ -115,10 +114,13 @@ function jsonFormatter(json_arg) {
                 if (node.object.type in parentToChildMap) {
                     node.isInduvidual = true;
                     node.size=5;
+                    node.name= "";
                 }
             }
         }
         if (node.object.type === "Class") node.size = 30;
+        node.x=500;
+        node.y=500;
         return node;
     };
 
@@ -132,9 +134,10 @@ function jsonFormatter(json_arg) {
             nodes.map(function(object) {
                 if (object.name === object_name) {
                     links.push({
-                        'source': nodes[subject_id],
-                        'target': object
+                        'source': nodes[subject_id].id,
+                        'target': object.id
                     });
+                                        // links.push([nodes[subject_id].id, object.id]);
                 };
             });
         };
