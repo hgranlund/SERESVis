@@ -24,15 +24,16 @@ Graph.prototype = {
     init: function(el) {
         var self = this;
         self.nodeId = {};
-        self.color = d3.scale.category20b();
+        self.color = [d3.rgb("#1f77b4"), d3.rgb("#aec7e8"), d3.rgb("#ff7f0e"), d3.rgb("#ffbb78"), d3.rgb("#2ca02c"), d3.rgb("#98df8a"), d3.rgb("#d62728"), d3.rgb("#ff9896"), d3.rgb("#9467bd"), d3.rgb("#c5b0d5"), d3.rgb("#8c564b"), d3.rgb("#c49c94"), d3.rgb("#e377c2"), d3.rgb("#f7b6d2"), d3.rgb("#7f7f7f"), d3.rgb("#c7c7c7"), d3.rgb("#bcbd22"), d3.rgb("#dbdb8d"), d3.rgb("#17becf"), d3.rgb("#9edae5")];
+
 
         self.force = d3.layout.force()
             .size([self.width, self.height])
             .friction(0.9)
             .linkDistance(function(d) {
-            var dist = d.source.size /2 ;
+            var dist = d.source.size / 2;
             if (d.source.isExpanded) dist *= 2;
-            console.log(d.source.name + "--" + d.target.name + " : " + dist);
+            //console.log(d.source.name + "--" + d.target.name + " : " + dist);
             return dist;
         })
             .charge(function(d) {
@@ -57,7 +58,7 @@ Graph.prototype = {
         self.link = self.svg.selectAll(".link");
 
         function tick(e) {
-            console.log("LOG:", e.alpha);
+            //console.log("LOG:", e.alpha);
             if (e.alpha > 0.05) {
                 self.updateNodeAndLinkPositions();
                 self.updatePositions(e.alpha);
@@ -100,9 +101,9 @@ Graph.prototype = {
             .attr("r", function(d) {
             return d.size;
         })
-            .style("fill", function(d){
-                return d.color;
-            })
+            .style("fill", function(d) {
+            return self.color.toString();
+        })
 
         self.node.insert("title")
             .text(function(d) {
@@ -119,20 +120,18 @@ Graph.prototype = {
         self.node.exit().remove();
 
         function click(d) {
-            console.log("LOG:", d.name, "--", d);
+            //console.log("LOG:", d.name, "--", d);
             if (d.isInduvidual) {
                 return;
             };
-            if (!d.isExpanded && d.hasOwnProperty('children')) {
+            if (!d.isExpanded && d.children.length > 0) {
                 self.expand_node(d);
                 self.root.fixed = false;
                 self.update();
-            } 
-            else if(d.isExpanded){
+            } else if (d.isExpanded) {
                 self.collapse_node(d);
                 self.update();
-            }
-            else {
+            } else {
                 self.center(d);
             }
             self.make_root(d);
@@ -216,13 +215,14 @@ Graph.prototype = {
             self = this,
             deltaX = d.x + 75,
             deltaY = d.y + 75;
-        d.color = d3.rgb(self.color());
+            d.color = self.color[4];
         d.children.map(function(subject) {
             n = self.createNode(subject);
             n.x = deltaX;
             n.y = deltaY;
             n.strokeColor = d.color;
-            n.fillColor = d.color.brighter();
+            //n.fillColor = d3.rgb(d.color.toString()).brighter();
+            n.color = d.color.brighter();
             self.nodes.push(n);
         });
         d.children.map(function(subject) {
@@ -250,8 +250,8 @@ Graph.prototype = {
             return node.name in children;
         });
 
-        self.links.filter(function(l){
-            if( l.target.name in self.parentToChildMap){
+        self.links.filter(function(l) {
+            if (l.target.name in self.parentToChildMap) {
                 if (l.source.name in self.parentToChildMap) {
                     return true;
                 };
