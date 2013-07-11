@@ -8,6 +8,7 @@ function Graph(el, json, expand_node) {
     this.links;
     this.force;
     this.svg;
+    this.auto_id=0;
     this.updateNodeAndLinkPositions;
     this.parentToChildMap;
     this.init(el);
@@ -86,7 +87,7 @@ Graph.prototype = {
 
         self.node.enter().insert("g")
             .attr("class", "node")
-            .on('click', click)
+            .on('click', fireClick)
             .call(self.force.drag)
             .on("mouseover", seres.utilities.highlight)
             .on("mouseout", seres.utilities.downlight);
@@ -117,25 +118,30 @@ Graph.prototype = {
             return d.name;
         });
 
-        self.node.exit().remove();
-
-        function click(d) {
-            // console.log("LOG:", d.name, "--", d);
-            if (d.isInduvidual) {
-                return;
-            };
-            if (!d.isExpanded && d.children) {
-                self.expand_node(d);
-                self.root.fixed = false;
-                self.update();
-            } else if (d.isExpanded) {
-                self.collapse_node(d);
-                self.update();
-            } else {
-                self.center(d);
-            }
-            self.make_root(d);
+        function fireClick(d) {
+            window.seres.controller.fireClick(d);
         }
+
+
+    },
+    click: function(id) {
+        var self = this;
+        var d = self.getNode(id);
+        // console.log("LOG:", d.name, "--", d);
+        if (d.isInduvidual) {
+            return;
+        }
+        if (!d.isExpanded && d.children) {
+            self.expand_node(d);
+            self.root.fixed = false;
+            self.update();
+        } else if (d.isExpanded) {
+            self.collapse_node(d);
+            self.update();
+        } else {
+            self.center(d);
+        }
+        self.make_root(d);
     },
 
     compute: function(json) {
@@ -215,20 +221,20 @@ Graph.prototype = {
             self = this,
             deltaX = d.x + 75,
             deltaY = d.y + 75;
-            d.color = self.color[4];
-        var node_id_to_update=[];
+        d.color = self.color[4];
+        var node_id_to_update = [];
         d.children.map(function(subject) {
-            n = self.formatter.createNode(subject,self.nodes.length);
+            n = self.formatter.createNode(subject, self.nodes.length);
             n.x = deltaX;
             n.y = deltaY;
             n.strokeColor = d.color;
             //n.fillColor = d3.rgb(d.color.toString()).brighter();
             n.color = d.color.brighter();
             self.nodes.push(n);
-            node_id_to_update.push(n.id);
+            node_id_to_update.push(n.index);
         });
-        node_id_to_update.map(function(id) {
-            self.links = self.links.concat(self.formatter.createLink(id, self.nodes));
+        node_id_to_update.map(function(index) {
+            self.links = self.links.concat(self.formatter.createLink(index, self.nodes));
         });
 
         self.updateNodeAndLinkPositions(0);
@@ -352,6 +358,14 @@ Graph.prototype = {
                 });
             }
         });
+    },
+
+    getNode : function  (id) {
+        var self =this;
+        var nodes=self.nodes.filter(function(d){  
+            return d.id ===id;
+        });
+        return nodes[0];
     }
 };
 

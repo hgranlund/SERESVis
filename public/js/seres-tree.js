@@ -1,6 +1,6 @@
 function Tree(el, json) {
-
-    this.legends = [{
+    var self = this;
+    self.legends = [{
             "color": "#3c3c3c",
             "text": "Superklasser"
         }, {
@@ -12,21 +12,21 @@ function Tree(el, json) {
         }
     ];
 
-    this.w = 960;
-    this.h = 5300;
-    this.i = 0;
-    this.legendheight = 100;
-    this.legendwidth = 400;
-    this.barHeight = 20;
-    this.barWidth = this.w * .3;
-    this.duration = 400;
-    this.formatter;
-    this.nodes;
-    this.root;
+    self.w = 960;
+    self.h = 5300;
+    self.i = 0;
+    self.legendheight = 100;
+    self.legendwidth = 400;
+    self.barHeight = 20;
+    self.barWidth = self.w * .3;
+    self.duration = 400;
+    self.formatter;
+    self.nodes;
+    self.root;
 
+    self.init(el);
+    self.compute(json);
 
-    this.init(el);
-    this.compute(json);
 }
 
 Tree.prototype = {
@@ -104,6 +104,7 @@ Tree.prototype = {
             d3.select("#expand-all").classed("active", true);
         });
 
+
     },
 
     compute: function(json) {
@@ -112,13 +113,15 @@ Tree.prototype = {
         self.root = self.formatter.toTreeObject()[0];
         self.root.x0 = 0;
         self.root.y0 = 0;
+        self.nodes = self.root;
+        self.resetTree();
         self.update(self.root);
     },
 
 
 
     update: function(source) {
-        var self = this
+        var self = this;
         self.nodes = self.tree.nodes(self.root);
 
         // Compute the "layout".
@@ -148,7 +151,7 @@ Tree.prototype = {
         })
             .attr("width", self.barWidth)
             .style("fill", self.color)
-            .on("click", click)
+            .on("click", fireClick)
             .attr("class", "rectElement")
             .on("mouseover", seres.utilities.highlight)
             .on("mouseout", seres.utilities.downlight);
@@ -235,18 +238,18 @@ Tree.prototype = {
             d.y0 = d.y;
         });
 
-        function click(d) {
-            if (d.children) {
-                d._children = d.children;
-                d.children = null;
-            } else {
-                d.children = d._children;
-                d._children = null;
-            }
-            update(d);
+        function fireClick(d) {
+            window.seres.controller.fireClick(d);
         }
     },
 
+
+    click: function(id) {
+        var self = this;
+        var d = self.getNode(id);
+        self.toggle(d);
+        self.update(d);
+    },
 
     color: function(d) {
         return d._children ? "#3c3c3c" : d.children ? "#c2bcbc" : "#ffffff";
@@ -267,6 +270,36 @@ Tree.prototype = {
             d.children.forEach(toggleAll);
             toggle(d);
         }
+    },
+
+    resetTree: function() {
+        var self = this;
+        self.mapNodes(function(d) {
+            if (d.children) {
+                d._children = d.children;
+                d.children = null;
+            }
+        });
+        self.toggle(self.root);
+    },
+
+    mapNodes: function(callback) {
+        var self = this;
+
+        function mapL(d) {
+            if (d.children) {
+                d.children.map(mapL);
+                callback(d);
+            }
+        };
+        mapL((self.root));
+    },
+    getNode: function(id) {
+        var self = this;
+        var nodes = self.nodes.filter(function(d) {
+            return d.id === id;
+        });
+        return nodes[0];
     }
 };
 
