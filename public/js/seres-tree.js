@@ -1,4 +1,4 @@
-window.seres.visualTree = function(query, d3, utilities) {
+window.seres.tree = function(query, d3, utilities) {
 
 
     var w = 960,
