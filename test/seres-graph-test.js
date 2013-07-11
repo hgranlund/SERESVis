@@ -50,9 +50,9 @@ describe('graph', function() {
         it('should add all children to the dom', function() {
             graph.expand_node(graph.nodes[3]);
             graph.update();
-            var circles = el.getElementsByTagName("circle");
+            var node = el.getElementsByClassName("node");
             var paths = el.getElementsByTagName("path");
-            expect(circles.length).toEqual(5);
+            expect(node.length).toEqual(5);
             expect(paths.length).toEqual(4);
         });
 
@@ -66,9 +66,9 @@ describe('graph', function() {
         it('should remove all children from the dom', function() {
             graph.collapse_node(graph.nodes[3]);
             graph.update();
-            var circles = el.getElementsByTagName("circle");
+            var node = el.getElementsByClassName("node");
             var paths = el.getElementsByTagName("path");
-            expect(circles.length).toEqual(4);
+            expect(node.length).toEqual(4);
             expect(paths.length).toEqual(3);
         });
 

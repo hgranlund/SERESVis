@@ -4,7 +4,6 @@ function Graph(el, json, expand_node) {
     this.width = 1400;
     this.height = 960;
     this.root = {};
-    this.parentToChildMap;
     this.nodes;
     this.links;
     this.force;
@@ -30,9 +29,9 @@ Graph.prototype = {
             .size([self.width, self.height])
             .friction(0.9)
             .linkDistance(function(d) {
-            var dist = d.source.size /2 ;
+            var dist = d.source.size / 2;
             if (d.source.isExpanded) dist *= 2;
-            console.log(d.source.name + "--" + d.target.name + " : " + dist);
+            // console.log(d.source.name + "--" + d.target.name + " : " + dist);
             return dist;
         })
             .charge(function(d) {
@@ -57,7 +56,7 @@ Graph.prototype = {
         self.link = self.svg.selectAll(".link");
 
         function tick(e) {
-            console.log("LOG:", e.alpha);
+            // console.log("LOG:", e.alpha);
             if (e.alpha > 0.05) {
                 self.updateNodeAndLinkPositions();
                 self.updatePositions(e.alpha);
@@ -78,7 +77,8 @@ Graph.prototype = {
 
         self.link = self.link.data(self.force.links());
         self.node = self.node.data(self.force.nodes());
-
+        self.link.exit().remove();
+        self.node.exit().remove();
         self.link.enter().insert("svg:path")
             .attr("stroke-width", 0.3)
             .attr('class', "link");
@@ -100,9 +100,9 @@ Graph.prototype = {
             .attr("r", function(d) {
             return d.size;
         })
-            .style("fill", function(d){
-                return d.color;
-            })
+            .style("fill", function(d) {
+            return d.color;
+        });
 
         self.node.insert("title")
             .text(function(d) {
@@ -119,7 +119,7 @@ Graph.prototype = {
         self.node.exit().remove();
 
         function click(d) {
-            console.log("LOG:", d.name, "--", d);
+            // console.log("LOG:", d.name, "--", d);
             if (d.isInduvidual) {
                 return;
             };
@@ -127,12 +127,10 @@ Graph.prototype = {
                 self.expand_node(d);
                 self.root.fixed = false;
                 self.update();
-            } 
-            else if(d.isExpanded){
+            } else if (d.isExpanded) {
                 self.collapse_node(d);
                 self.update();
-            }
-            else {
+            } else {
                 self.center(d);
             }
             self.make_root(d);
@@ -142,7 +140,7 @@ Graph.prototype = {
     compute: function(json) {
         var self = this;
         self.formatter = jsonFormatter(json);
-        self.parentToChildMap = self.formatter.parparentToChildMap;
+        self.parentToChildMap = self.formatter.parentToChildMap;
         self.make_root(self.createNode('Seres'));
         self.links = [];
         self.nodes = [self.root];
@@ -249,8 +247,8 @@ Graph.prototype = {
             return node.name in children;
         });
 
-        self.links.filter(function(l){
-            if( l.target.name in self.parentToChildMap){
+        self.links.filter(function(l) {
+            if (l.target.name in self.parentToChildMap) {
                 if (l.source.name in self.parentToChildMap) {
                     return true;
                 };
