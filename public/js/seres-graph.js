@@ -37,7 +37,7 @@ Graph.prototype = {
             return dist;
         })
             .charge(function(d) {
-            if (d.isInduvidual) return -200;
+            if (d.isIndividual) return -200;
             if (d === self.root) return -5000;
             return -5000;
         })
@@ -104,6 +104,10 @@ Graph.prototype = {
             .style("fill", function(d) {
             return self.color.toString();
         })
+            .style("stroke-width", 10)
+            .style("stroke", function(d) {
+            return d.stroke;
+        })
 
         self.node.insert("title")
             .text(function(d) {
@@ -121,7 +125,7 @@ Graph.prototype = {
 
         function click(d) {
             //console.log("LOG:", d.name, "--", d);
-            if (d.isInduvidual) {
+            if (d.isIndividual) {
                 return;
             };
             if (!d.isExpanded && d.children.length > 0) {
@@ -141,16 +145,27 @@ Graph.prototype = {
     compute: function(json) {
         var self = this;
         self.formatter = jsonFormatter(json);
-        self.parentToChildMap = self.formatter.parparentToChildMap;
+        self.parentToChildMap = self.formatter.parentToChildMap;
         self.make_root(self.createNode('Seres'));
         self.links = [];
         self.nodes = [self.root];
         self.root.x = self.width / 2;
         self.root.y = self.height / 2;
+        self.root.color = self.getColor(self.root); //Update
+        self.root.stroke = self.getColor(self.root); //Update
         self.force.nodes(self.nodes);
         self.force.links(self.links);
         self.expand_node(self.root);
         self.update();
+    },
+
+    getColor: function(d) {
+        var self = this;
+        var color_num = d.name.split('').length + d.children.length;
+        color_num = color_num*123;
+        color_num = color_num%21;
+
+        return this.color[color_num];
     },
 
     collide: function(node, alpha) {
@@ -205,24 +220,19 @@ Graph.prototype = {
         });
     },
 
-    // getColor: function(d) {
-
-    //     return self.color(color_num);
-    // },
 
     expand_node: function(d) {
         var n,
             self = this,
             deltaX = d.x + 75,
             deltaY = d.y + 75;
-            d.color = self.color[4];
+            d.color = self.getColor(d);
         d.children.map(function(subject) {
             n = self.createNode(subject);
             n.x = deltaX;
             n.y = deltaY;
-            n.strokeColor = d.color;
-            //n.fillColor = d3.rgb(d.color.toString()).brighter();
             n.color = d.color.brighter();
+            n.stroke = d.color;
             self.nodes.push(n);
         });
         d.children.map(function(subject) {
@@ -240,6 +250,7 @@ Graph.prototype = {
 
         d.isExpanded = true;
     },
+
 
     collapse_node: function(d) {
         var n,
