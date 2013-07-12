@@ -176,7 +176,9 @@ Tree.prototype = {
         })
             .style("opacity", 1)
             .select("rect")
-            .style("fill", self.color);
+            .style("fill", self.color)
+            .attr("rx", "10")
+            .attr("ry", "10");
 
         // Transition exiting nodes to the parent's new position.
         node.exit().transition()
