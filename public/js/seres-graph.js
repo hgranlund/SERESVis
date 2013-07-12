@@ -1,7 +1,7 @@
 function Graph(el, json, expand_node) {
     this.formatter;
-    this.width = 1400;
-    this.height = 960;
+    this.width = 900;
+    this.height = 800;
     this.root = {};
     this.nodes;
     this.links;
@@ -42,7 +42,7 @@ Graph.prototype = {
             return -5000;
         })
             .on("tick", tick)
-            .gravity(0)
+            .gravity(0.006)
             .start();
 
 
@@ -142,17 +142,19 @@ Graph.prototype = {
         if (d.isInduvidual) {
             return;
         }
-        if (!d.isExpanded && d.children) {
+        if (!d.isExpanded && d.children.length >0) {
             self.expand_node(d);
             self.root.fixed = false;
+            self.make_root(d);
             self.update();
-        } else if (d.isExpanded) {
-            self.collapse_node(d);
-            self.update();
+        // } else if (d.isExpanded && d !==root) {
+        //     // self.collapse_node(d);
+        //     self.make_root(d);
+        //     self.update();
         } else {
+            self.make_root(d);
             self.center(d);
         }
-        self.make_root(d);
     },
 
     compute: function(json) {
@@ -395,9 +397,6 @@ Graph.prototype = {
     mouseOver: function(id) {
         var self = this,
             d = self.getNode(id);
-        if (d.isInduvidual) {
-            return;
-        }
         d3.select(self.el).selectAll('#' + d.name)
             .style("stroke-width", 10)
             .style("stroke", "red");
