@@ -1,7 +1,7 @@
 function Graph(el, json, expand_node) {
     this.formatter;
-    this.width = 900;
-    this.height = 800;
+    this.width = 1250;
+    this.height = 900;
     this.root = {};
     this.nodes;
     this.links;
@@ -31,16 +31,16 @@ Graph.prototype = {
             .size([self.width, self.height])
             .friction(0.9)
             .linkDistance(function(d) {
-            var dist = d.source.size / 2;
-            if (d.source.isExpanded) dist *= 2;
-            // console.log(d.source.name + "--" + d.target.name + " : " + dist);
-            return dist;
-        })
+                var dist = d.source.size / 2;
+                if (d.source.isExpanded) dist *= 2;
+                // console.log(d.source.name + "--" + d.target.name + " : " + dist);
+                return dist;
+            })
             .charge(function(d) {
-            if (d.isIndividual) return -200;
-            if (d === self.root) return -5000;
-            return -5000;
-        })
+                if (d.isIndividual) return -200;
+                if (d === self.root) return -5000;
+                return -5000;
+            })
             .on("tick", tick)
             .gravity(0.006)
             .start();
@@ -83,44 +83,52 @@ Graph.prototype = {
         self.node.exit().remove();
         self.link.enter().insert("svg:path")
             .attr("stroke-width", 0.3)
-            .attr('class', "link");
-
-        self.node.enter().insert("g")
-            .attr("class", "node")
             .on('click', fireClick)
             .call(self.force.drag)
             .on("mouseover", fireMouseOver)
-            .on("mouseout", fireMouseOut);
+            .on("mouseout", fireMouseOut)
+            .style("fill", function(d) {
+                return d.color;
+            })
+            .attr('class', "link");
+
+        self.node.enter().insert("g")
+            .attr("class", "node");
+
 
         self.circle = self.node.insert("circle")
+            .on('click', fireClick)
+            .call(self.force.drag)
+            .on("mouseover", fireMouseOver)
+            .on("mouseout", fireMouseOut)
             .style("fill", function(d) {
-            return d.color;
-        })
+                return d.color;
+            })
             .attr("id", function(d) {
-            return d.name;
-        })
+                return d.name;
+            })
             .attr("r", function(d) {
-            return d.size;
-        })
+                return d.size;
+            })
             .style("fill", function(d) {
-            return self.utilities.getColor.toString();
-        })
+                return self.utilities.getColor.toString();
+            })
             .style("stroke-width", 10)
             .style("stroke", function(d) {
-            return d.stroke;
-        });
+                return d.stroke;
+            });
 
         self.node.insert("title")
             .text(function(d) {
-            return d.name;
-        });
+                return d.name;
+            });
 
         self.node.insert("text")
             .attr("text-anchor", "middle")
             .attr("dy", ".35em")
             .text(function(d) {
-            return d.name;
-        });
+                return d.name;
+            });
 
         function fireClick(d) {
             window.seres.eventController.fireClick(d);
@@ -142,15 +150,15 @@ Graph.prototype = {
         if (d.isInduvidual) {
             return;
         }
-        if (!d.isExpanded && d.children.length >0) {
+        if (!d.isExpanded && d.children.length > 0) {
             self.expand_node(d);
             self.root.fixed = false;
             self.make_root(d);
             self.update();
-        // } else if (d.isExpanded && d !==root) {
-        //     // self.collapse_node(d);
-        //     self.make_root(d);
-        //     self.update();
+            // } else if (d.isExpanded && d !==root) {
+            //     // self.collapse_node(d);
+            //     self.make_root(d);
+            //     self.update();
         } else {
             self.make_root(d);
             self.center(d);
@@ -262,7 +270,7 @@ Graph.prototype = {
             self.handleCollisions();
             self.force.tick();
         }
-        self.updateNodeAndLinkPositions(100);
+        self.updateNodeAndLinkPositions();
         self.force.start();
 
         d.isExpanded = true;
@@ -318,7 +326,7 @@ Graph.prototype = {
             var node = nameToNodeMap[parent],
                 h,
                 ballR,
-                deltaX,
+                delatX,
                 deltaY;
 
             if (node == d || typeof(node) === 'undefined') return;
@@ -408,8 +416,8 @@ Graph.prototype = {
         d3.select(self.el).selectAll('#' + d.name)
             .style("stroke-width", 10)
             .style("stroke", function(d) {
-            return d.stroke;
-        });
+                return d.stroke;
+            });
     }
 };
 
