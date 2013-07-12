@@ -61,7 +61,7 @@ describe('graph', function() {
         });
     });
 
-    xdescribe('collapse_node', function() {
+    describe('collapse_node', function() {
         it('should remove all children from the dom', function() {
             graph.collapse_node(graph.nodes[3]);
             graph.update();
