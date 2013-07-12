@@ -17,6 +17,9 @@ function jsonFormatter(json_arg) {
         parentToChildMap = {};
         var parent;
         for (var child in json) {
+            parentToChildMap[child]=[];
+        }
+        for (var child in json) {
             if (json[child].object.subClassOf) {
                 parent = json[child].object.subClassOf;
                 if (!(parent in parentToChildMap)) parentToChildMap[parent] = [];
@@ -48,47 +51,47 @@ function jsonFormatter(json_arg) {
     };
 
 
-    var populateElement = function(parent, parentsToChild, parentToInduviduals) {
+    var populateElement = function(parent, parentsToChildMap, parentToInduvidualsMap) {
         var elm = createNode(parent, 0);
         elm.name = parent;
-        if (parent in parentToInduviduals) {
-            elm.individuals = parentToInduviduals[parent].map(function(individual) {
+        if (parent in parentToInduvidualsMap) {
+            elm.individuals = parentToInduvidualsMap[parent].map(function(individual) {
                 return {
                     'name': individual
                 };
             });
         }
-        if (parent in parentsToChild) {
+        if (parent in parentsToChildMap) {
             elm.children = [];
-            parentsToChild[parent].map(function(child) {
-                elm.children.push(populateElement(child, parentsToChild, parentToInduviduals));
+            parentsToChildMap[parent].map(function(child) {
+                elm.children.push(populateElement(child, parentsToChildMap, parentToInduvidualsMap));
             });
         }
         return elm;
     };
 
     var toTreeObject = function() {
-        parentsToChild = {};
+        parentsToChildMap = {};
         childs = {};
-        parentToInduviduals = {};
+        parentToInduvidualsMap = {};
         treeJson = [];
         var parent;
         for (var child in json) {
             if (json[child].object.subClassOf) {
                 parent = json[child].object.subClassOf;
-                if (!(parent in parentsToChild)) parentsToChild[parent] = [];
-                parentsToChild[parent].push(child);
+                if (!(parent in parentsToChildMap)) parentsToChildMap[parent] = [];
+                parentsToChildMap[parent].push(child);
                 childs[child] = parent;
             }
             if (json[child].object.type !== "Class") {
                 parentToInduvidual = json[child].object.type;
-                if (!(parentToInduvidual in parentToInduviduals)) parentToInduviduals[parentToInduvidual] = [];
-                parentToInduviduals[parentToInduvidual].push(child);
+                if (!(parentToInduvidual in parentToInduvidualsMap)) parentToInduvidualsMap[parentToInduvidual] = [];
+                parentToInduvidualsMap[parentToInduvidual].push(child);
             }
         }
-        for (var root in parentsToChild) {
+        for (var root in parentsToChildMap) {
             if (!(root in childs)) {
-                treeJson.push(populateElement(root, parentsToChild, parentToInduviduals));
+                treeJson.push(populateElement(root, parentsToChildMap, parentToInduvidualsMap));
             }
         }
         return treeJson;
@@ -102,13 +105,14 @@ function jsonFormatter(json_arg) {
             'object': {}
         });
         if (json.hasOwnProperty(subject)) json[subject].id = nodes_id;
-        subject = subject || "Unknown";
         var node = $.extend({}, subject_obj);
+        subject = subject || node.data.type || node.data['xmi.lapel'] || '';
         node.size = 10;
         node.name = subject;
         node.id = nodes_id;
         node.isInduvidual = false;
         node.isExpanded = false;
+        node.children=this.parentToChildMap[subject] || [];
         if (node.object.type) {
             if (node.object.type !== "Class") {
                 if (node.object.type in parentToChildMap) {
@@ -144,12 +148,12 @@ function jsonFormatter(json_arg) {
         return links;
     };
 
-    parentToChildMap = getParentToChildMap();
+    this.parentToChildMap = getParentToChildMap();
 
     return {
         'filterSparqlJson': filterSparqlJson,
         'toGraphObject': toGraphObject,
-        'parentToChildMap': parentToChildMap,
+        'parentToChildMap': this.parentToChildMap,
         'toTreeObject': toTreeObject,
         'createNode': createNode,
         'createLink': createLink
