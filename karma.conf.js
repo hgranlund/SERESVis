@@ -18,7 +18,8 @@ files = [
   'public/js/vendor/*.js',
   'public/js/*.js',
   'test/testValues.js',
-  'test/*.js'
+  'test/*.js',
+  {pattern: 'test/*.html', watched: true, served: true, included: false}
 ];
 
 frameworks = ["jasmine"];
