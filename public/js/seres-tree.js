@@ -20,9 +20,6 @@ function Tree(el, json) {
     self.barHeight = 20;
     self.barWidth = self.w * .3;
     self.duration = 400;
-    self.formatter;
-    self.nodes;
-    self.root;
 
     self.init(el);
     self.compute(json);
@@ -34,6 +31,7 @@ Tree.prototype = {
 
     init: function(el) {
         var self = this;
+        self.l = el;
         self.tree = d3.layout.tree()
             .size([self.h, 100]);
 
@@ -153,8 +151,8 @@ Tree.prototype = {
             .style("fill", self.color)
             .on("click", fireClick)
             .attr("class", "rectElement")
-            .on("mouseover", seres.utilities.highlight)
-            .on("mouseout", seres.utilities.downlight);
+            .on("mouseover", fireMouseOver)
+            .on("mouseout", fireMouseOut);
 
         nodeEnter.append("svg:text")
             .attr("dy", 3.5)
@@ -241,6 +239,14 @@ Tree.prototype = {
         function fireClick(d) {
             window.seres.controller.fireClick(d);
         }
+
+        function fireMouseOver(d) {
+            window.seres.controller.fireMouseOver(d);
+        }
+
+        function fireMouseOut(d) {
+            window.seres.controller.fireMouseOut(d);
+        }
     },
 
 
@@ -291,7 +297,7 @@ Tree.prototype = {
                 d.children.map(mapL);
                 callback(d);
             }
-        };
+        }
         mapL((self.root));
     },
     getNode: function(id) {
@@ -300,7 +306,32 @@ Tree.prototype = {
             return d.id === id;
         });
         return nodes[0];
+    },
+
+    highlight: function(id) {
+        var self = this,
+            d = self.getNode(id);
+        if (d.isInduvidual) {
+            return;
+        }
+        self.vis.selectAll('#' + d.name)
+            .style("stroke-width", 5)
+            .style("stroke", "red");
+    },
+
+    downlight: function(id) {
+        var self = this,
+            d = self.getNode(id);
+        if (d.isInduvidual) {
+            return;
+        }
+        self.vis.selectAll('#' + d.name)
+            .style("stroke-width", 1)
+            .style("stroke", function(d) {
+            return d.stroke;
+        });
     }
+
 };
 
 Tree.fn = Tree.prototype;

@@ -7,7 +7,7 @@ function Graph(el, json, expand_node) {
     this.links;
     this.force;
     this.svg;
-    this.auto_id=0;
+    this.auto_id = 0;
     this.updateNodeAndLinkPositions;
     this.parentToChildMap;
     this.init(el);
@@ -23,6 +23,7 @@ Graph.prototype = {
     init: function(el) {
         var self = this;
         self.utilities = window.seres.utilities;
+        self.el = el;
         self.nodeId = {};
 
 
@@ -88,8 +89,8 @@ Graph.prototype = {
             .attr("class", "node")
             .on('click', fireClick)
             .call(self.force.drag)
-            .on("mouseover", seres.utilities.highlight)
-            .on("mouseout", seres.utilities.downlight);
+            .on("mouseover", fireMouseOver)
+            .on("mouseout", fireMouseOut);
 
         self.circle = self.node.insert("circle")
             .style("fill", function(d) {
@@ -107,7 +108,7 @@ Graph.prototype = {
             .style("stroke-width", 10)
             .style("stroke", function(d) {
             return d.stroke;
-        })
+        });
 
         self.node.insert("title")
             .text(function(d) {
@@ -123,6 +124,14 @@ Graph.prototype = {
 
         function fireClick(d) {
             window.seres.controller.fireClick(d);
+        }
+
+        function fireMouseOver(d) {
+            window.seres.controller.fireMouseOver(d);
+        }
+
+        function fireMouseOut(d) {
+            window.seres.controller.fireMouseOut(d);
         }
     },
 
@@ -155,8 +164,8 @@ Graph.prototype = {
         self.nodes = [self.root];
         self.root.x = self.width / 2;
         self.root.y = self.height / 2;
-        self.root.color = self.utilities.getColor(self.root); 
-        self.root.stroke = self.utilities.getColor(self.root); 
+        self.root.color = self.utilities.getColor(self.root);
+        self.root.stroke = self.utilities.getColor(self.root);
         self.force.nodes(self.nodes);
         self.force.links(self.links);
         self.expand_node(self.root);
@@ -230,10 +239,10 @@ Graph.prototype = {
             self = this,
             deltaX = d.x + 75,
             deltaY = d.y + 75;
-            d.color = self.utilities.getColor(d);
-        var node_id_to_update=[];
+        d.color = self.utilities.getColor(d);
+        var node_id_to_update = [];
         d.children.map(function(subject) {
-            n = self.formatter.createNode(subject,self.nodes.length);
+            n = self.formatter.createNode(subject, self.nodes.length);
             n.x = deltaX;
             n.y = deltaY;
             n.color = d.color.brighter();
@@ -259,32 +268,32 @@ Graph.prototype = {
 
 
     collapse_node: function(d) {
-        var n,
-            self = this,
-            children = d.children;
+        // var n,
+        //     self = this,
+        //     children = d.children;
 
-        self.nodes.filter(function(node) {
-            return node.name in children;
-        });
+        // self.nodes.filter(function(node) {
+        //     return node.id in children;
+        // });
 
-        self.links.filter(function(l) {
-            if (l.target.name in self.parentToChildMap) {
-                if (l.source.name in self.parentToChildMap) {
-                    return true;
-                };
-            }
-            return false;
-        })
+        // self.links.filter(function(l) {
+        //     if (l.target.name in self.parentToChildMap) {
+        //         if (l.source.name in self.parentToChildMap) {
+        //             return true;
+        //         };
+        //     }
+        //     return false;
+        // })
 
-        self.force.stop();
-        self.updateNodeAndLinkPositions(0);
-        for (var i = 0; i < d.children.length * 10; ++i)
-            self.handleCollisions();
-        self.force.tick();
-        self.updateNodeAndLinkPositions(100);
-        self.force.start();
+        // self.force.stop();
+        // self.updateNodeAndLinkPositions(0);
+        // for (var i = 0; i < d.children.length * 10; ++i)
+        //     self.handleCollisions();
+        // self.force.tick();
+        // self.updateNodeAndLinkPositions(100);
+        // self.force.start();
 
-        d.isExpanded = false;
+        // d.isExpanded = false;
     },
 
     updatePositions: function(alpha) {
@@ -369,12 +378,39 @@ Graph.prototype = {
         });
     },
 
-    getNode : function  (id) {
-        var self =this;
-        var nodes=self.nodes.filter(function(d){  
-            return d.id ===id;
+    getNode: function(id) {
+        var self = this;
+        var nodes = self.nodes.filter(function(d) {
+            return d.id === id;
         });
-        return nodes[0];
+        return nodes[0] || false;
+    },
+
+    // nodeExist: function(d) {
+    //     return (getNode(id)) {
+
+    //     };
+    // },
+
+    highlight: function(id) {
+        var self = this,
+            d = self.getNode(id);
+        if (d.isInduvidual) {
+            return;
+        }
+        d3.select(self.el).selectAll('#' + d.name)
+            .style("stroke-width", 10)
+            .style("stroke", "red");
+    },
+
+    downlight: function(id) {
+        var self = this,
+            d = self.getNode(id);
+        d3.select(self.el).selectAll('#' + d.name)
+            .style("stroke-width", 10)
+            .style("stroke", function(d) {
+            return d.stroke;
+        });
     }
 };
 
