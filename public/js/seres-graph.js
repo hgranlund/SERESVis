@@ -124,6 +124,7 @@ Graph.prototype = {
         function fireClick(d) {
             window.seres.controller.fireClick(d);
         }
+    },
 
     click: function(id) {
         var self = this;

@@ -1,11 +1,6 @@
 function Tree(el, json) {
-<<<<<<< HEAD
-
-    this.legends = [{
-=======
     var self = this;
     self.legends = [{
->>>>>>> 72978025fca97a627791a2f8ab0d4b7b4785a1af
             "color": "#3c3c3c",
             "text": "Superklasser"
         }, {
@@ -17,23 +12,6 @@ function Tree(el, json) {
         }
     ];
 
-<<<<<<< HEAD
-    this.w = 960;
-    this.h = 5300;
-    this.i = 0;
-    this.legendheight = 100;
-    this.legendwidth = 400;
-    this.barHeight = 20;
-    this.barWidth = this.w * .3;
-    this.duration = 400;
-    this.formatter;
-    this.nodes;
-    this.root;
-
-
-    this.init(el);
-    this.compute(json);
-=======
     self.w = 960;
     self.h = 5300;
     self.i = 0;
@@ -49,7 +27,6 @@ function Tree(el, json) {
     self.init(el);
     self.compute(json);
 
->>>>>>> 72978025fca97a627791a2f8ab0d4b7b4785a1af
 }
 
 Tree.prototype = {
@@ -127,10 +104,7 @@ Tree.prototype = {
             d3.select("#expand-all").classed("active", true);
         });
 
-<<<<<<< HEAD
-=======
 
->>>>>>> 72978025fca97a627791a2f8ab0d4b7b4785a1af
     },
 
     compute: function(json) {
@@ -139,22 +113,15 @@ Tree.prototype = {
         self.root = self.formatter.toTreeObject()[0];
         self.root.x0 = 0;
         self.root.y0 = 0;
-<<<<<<< HEAD
-=======
         self.nodes = self.root;
         self.resetTree();
->>>>>>> 72978025fca97a627791a2f8ab0d4b7b4785a1af
         self.update(self.root);
     },
 
 
 
     update: function(source) {
-<<<<<<< HEAD
-        var self = this
-=======
         var self = this;
->>>>>>> 72978025fca97a627791a2f8ab0d4b7b4785a1af
         self.nodes = self.tree.nodes(self.root);
 
         // Compute the "layout".
@@ -184,11 +151,7 @@ Tree.prototype = {
         })
             .attr("width", self.barWidth)
             .style("fill", self.color)
-<<<<<<< HEAD
-            .on("click", click)
-=======
             .on("click", fireClick)
->>>>>>> 72978025fca97a627791a2f8ab0d4b7b4785a1af
             .attr("class", "rectElement")
             .on("mouseover", seres.utilities.highlight)
             .on("mouseout", seres.utilities.downlight);
@@ -275,26 +238,12 @@ Tree.prototype = {
             d.y0 = d.y;
         });
 
-<<<<<<< HEAD
-        function click(d) {
-            if (d.children) {
-                d._children = d.children;
-                d.children = null;
-            } else {
-                d.children = d._children;
-                d._children = null;
-            }
-            update(d);
-=======
         function fireClick(d) {
             window.seres.controller.fireClick(d);
->>>>>>> 72978025fca97a627791a2f8ab0d4b7b4785a1af
         }
     },
 
 
-<<<<<<< HEAD
-=======
     click: function(id) {
         var self = this;
         var d = self.getNode(id);
@@ -302,7 +251,6 @@ Tree.prototype = {
         self.update(d);
     },
 
->>>>>>> 72978025fca97a627791a2f8ab0d4b7b4785a1af
     color: function(d) {
         return d._children ? "#3c3c3c" : d.children ? "#c2bcbc" : "#ffffff";
     },
@@ -322,8 +270,6 @@ Tree.prototype = {
             d.children.forEach(toggleAll);
             toggle(d);
         }
-<<<<<<< HEAD
-=======
     },
 
     resetTree: function() {
@@ -354,7 +300,6 @@ Tree.prototype = {
             return d.id === id;
         });
         return nodes[0];
->>>>>>> 72978025fca97a627791a2f8ab0d4b7b4785a1af
     }
 };
 
