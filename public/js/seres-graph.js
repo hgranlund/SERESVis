@@ -392,7 +392,7 @@ Graph.prototype = {
     //     };
     // },
 
-    highlight: function(id) {
+    mouseOver: function(id) {
         var self = this,
             d = self.getNode(id);
         if (d.isInduvidual) {
@@ -403,7 +403,7 @@ Graph.prototype = {
             .style("stroke", "red");
     },
 
-    downlight: function(id) {
+    mouseOut: function(id) {
         var self = this,
             d = self.getNode(id);
         d3.select(self.el).selectAll('#' + d.name)

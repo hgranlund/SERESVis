@@ -308,7 +308,7 @@ Tree.prototype = {
         return nodes[0];
     },
 
-    highlight: function(id) {
+    mouseOver: function(id) {
         var self = this,
             d = self.getNode(id);
         if (d.isInduvidual) {
@@ -319,9 +319,10 @@ Tree.prototype = {
             .style("stroke", "red");
     },
 
-    downlight: function(id) {
+    mouseOut : function(id) {
         var self = this,
             d = self.getNode(id);
+        debugger;
         if (d.isInduvidual) {
             return;
         }
