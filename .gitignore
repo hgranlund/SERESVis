@@ -1,10 +1,10 @@
 .project
 *~
-*.bak
 tmp/**
 logs
-*.seed
+*.pydevproject
 Thumbs.db 
+*.seed
 results
 # Locally stored "Eclipse launch configurations"
 !.gitignore
@@ -22,7 +22,8 @@ pids
 bin/**
 *.dat
 # Windows image file caches
-*.pydevproject
+*.bak
+local.properties
 # Folder config file
 .buildpath
 *.sublime-workspace
@@ -46,14 +47,14 @@ Desktop.ini
 $RECYCLE.BIN/
 node_modules/
 .classpath
-# CDT-specific
+*~.nib
 .metadata
 *.csv
 .externalToolBuilders/
 lib-cov
-local.properties
-.Guardfile
+# CDT-specific
 npm-debug.log
 .directory
+Gemfile
 *.gz
-*~.nib
+.Guardfile
