@@ -3,10 +3,9 @@ var startSeres = function(query) {
 	$(document).ready(function() {
 		var elGraph = document.getElementById("graph-container");
 		var elTree = document.getElementById("indented_tree");
-		var expand_node = ['Seres', 'Dokumentasjon' , 'SERESelement', 'Forvaltingselement'];
 		var graph = new Graph(elGraph, json);
 		var tree = new Tree(elTree, json);
-
+		window.seres.controller = new Controller(tree, graph);
 	});
 }(window.seres.query);
 

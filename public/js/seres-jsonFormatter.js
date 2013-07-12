@@ -1,6 +1,8 @@
 function jsonFormatter(json_arg) {
     var json = json_arg,
-        parentToChildMap;
+        parentToChildMap,
+        auto_id =0;
+
 
 
     var filterSparqlJson = function(dataPropertyToFilter) {
@@ -56,9 +58,7 @@ function jsonFormatter(json_arg) {
         elm.name = parent;
         if (parent in parentToInduvidualsMap) {
             elm.individuals = parentToInduvidualsMap[parent].map(function(individual) {
-                return {
-                    'name': individual
-                };
+                return createNode(individual);
             });
         }
         if (parent in parentsToChildMap) {
@@ -99,17 +99,18 @@ function jsonFormatter(json_arg) {
 
 
 
-    var createNode = function(subject, nodes_id) {
+    var createNode = function(subject, index) {
         var subject_obj = (json.hasOwnProperty(subject) ? json[subject] : {
             'data': {},
             'object': {}
         });
-        if (json.hasOwnProperty(subject)) json[subject].id = nodes_id;
+        if (json.hasOwnProperty(subject)) json[subject].id = index;
         var node = $.extend({}, subject_obj);
         subject = subject || node.data.type || node.data['xmi.lapel'] || '';
         node.size = 10;
         node.name = subject;
-        node.id = nodes_id;
+        node.id=subject || auto_id++;
+        node.index = index;
         node.isInduvidual = false;
         node.isExpanded = false;
         node.children=this.parentToChildMap[subject] || [];
@@ -128,18 +129,18 @@ function jsonFormatter(json_arg) {
         return node;
     };
 
-    var createLink = function(id, nodes) {
+    var createLink = function(index, nodes) {
         var object,
             object_id,
-            subject_id = id,
+            subject_id = index,
             links = [];
         var object_name = nodes[subject_id].object.subClassOf || nodes[subject_id].object.type || false;
         if (object_name && object_name !== "Class") {
             nodes.map(function(object) {
                 if (object.name === object_name) {
                     links.push({
-                        'source': nodes[subject_id].id,
-                        'target': object.id
+                        'source': nodes[subject_id].index,
+                        'target': object.index
                     });
                                         // links.push([nodes[subject_id].id, object.id]);
                 };
