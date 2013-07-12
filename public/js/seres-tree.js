@@ -237,15 +237,15 @@ Tree.prototype = {
         });
 
         function fireClick(d) {
-            window.seres.controller.fireClick(d);
+            window.seres.eventController.fireClick(d);
         }
 
         function fireMouseOver(d) {
-            window.seres.controller.fireMouseOver(d);
+            window.seres.eventController.fireMouseOver(d);
         }
 
         function fireMouseOut(d) {
-            window.seres.controller.fireMouseOut(d);
+            window.seres.eventController.fireMouseOut(d);
         }
     },
 

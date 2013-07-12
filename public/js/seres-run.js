@@ -5,7 +5,7 @@ var startSeres = function(query) {
 		var elTree = document.getElementById("indented_tree");
 		var graph = new Graph(elGraph, json);
 		var tree = new Tree(elTree, json);
-		window.seres.controller = new Controller(tree, graph);
+		window.seres.eventController = new EventController(tree, graph);
 	});
 }(window.seres.query);
 
