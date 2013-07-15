@@ -113,6 +113,7 @@ Tree.prototype = {
         self.root.y0 = 0;
         self.nodes = self.root;
         self.resetTree();
+        self.setColors();
         self.update(self.root);
     },
 
@@ -176,6 +177,7 @@ Tree.prototype = {
         })
             .style("opacity", 1)
             .select("rect")
+            .attr("rx", "10")
             .style("fill", self.color);
 
         // Transition exiting nodes to the parent's new position.
@@ -289,6 +291,10 @@ Tree.prototype = {
         self.toggle(self.root);
     },
 
+    setColors: function() {
+        
+    },
+
     mapNodes: function(callback) {
         var self = this;
 
@@ -312,7 +318,7 @@ Tree.prototype = {
         var self = this,
             d = self.getNode(id);
         if (d.isInduvidual) {
-            return;
+            return; 
         }
         self.vis.selectAll('#' + d.name)
             .style("stroke-width", 5)
@@ -322,7 +328,6 @@ Tree.prototype = {
     mouseOut : function(id) {
         var self = this,
             d = self.getNode(id);
-        debugger;
         if (d.isInduvidual) {
             return;
         }
