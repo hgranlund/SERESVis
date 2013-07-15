@@ -116,9 +116,6 @@ Graph.prototype = {
             .attr("r", function(d) {
                 return d.size;
             })
-            .style("fill", function(d) {
-                return self.utilities.getColor.toString();
-            })
             .style("stroke-width", 10)
             .style("stroke", function(d) {
                 return d.stroke;

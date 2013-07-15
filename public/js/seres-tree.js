@@ -31,7 +31,7 @@ Tree.prototype = {
 
     init: function(el) {
         var self = this;
-        self.utilites = window.seres.utilities;
+        self.utilities = window.seres.utilities;
         self.l = el;
         self.tree = d3.layout.tree()
             .size([self.h, 100]);
@@ -112,6 +112,8 @@ Tree.prototype = {
         self.root = self.formatter.toTreeObject()[0];
         self.root.x0 = 0;
         self.root.y0 = 0;
+        debugger;
+        self.root.color = self.utilities.getColor(self.root);
         self.nodes = self.root;
         self.resetTree();
         self.setColors();
@@ -179,7 +181,9 @@ Tree.prototype = {
             .style("opacity", 1)
             .select("rect")
             .attr("rx", "10")
-            .style("fill", self.utilites.getColor);
+            .style("fill", function(d){
+                return d.color;
+            });
 
         // Transition exiting nodes to the parent's new position.
         node.exit().transition()
@@ -260,17 +264,19 @@ Tree.prototype = {
         self.update(d);
     },
 
-    color: function(d) {
-        return d._children ? "#3c3c3c" : d.children ? "#c2bcbc" : "#ffffff";
-    },
 
     toggle: function(d) {
+        var self = this;
         if (d.children) {
             d._children = d.children;
             d.children = null;
         } else {
             d.children = d._children;
             d._children = null;
+            d.color = self.utilities.getColor(d);
+            d.children.map(function(node){
+                node.color = d.color.brighter();
+            });
         }
     },
 
