@@ -12,7 +12,7 @@ function Graph(el, json) {
 //
 Graph.prototype = {
 
-    init: function(el) {
+    init: function (el) {
         var self = this;
         self.util = window.seres.utilities;
         self.el = el;
@@ -22,7 +22,7 @@ Graph.prototype = {
         self.force = d3.layout.force()
             .size([self.width, self.height])
             .friction(0.9)
-            .linkDistance(function(d) {
+            .linkDistance(function (d) {
                 var dist = d.source.size / 2;
                 if (d.source.isExpanded) {
                     dist *= 2;
@@ -30,7 +30,7 @@ Graph.prototype = {
                 // console.log(d.source.name + "--" + d.target.name + " : " + dist);
                 return dist;
             })
-            .charge(function(d) {
+            .charge(function (d) {
                 if (d.isIndividual) {
                     return -200;
                 }
@@ -68,7 +68,7 @@ Graph.prototype = {
         }
     },
 
-    update: function() {
+    update: function () {
         var self = this;
         self.force.nodes(self.nodes)
             .links(self.links)
@@ -80,12 +80,11 @@ Graph.prototype = {
         self.link.exit().remove();
         self.node.exit().remove();
         self.link.enter().insert("svg:path")
-            .attr("stroke-width", 0.3)
-            .on('click', fireClick)
+            .attr("stroke-width", 0.3).on('click', fireClick)
             .call(self.force.drag)
             .on("mouseover", fireMouseOver)
             .on("mouseout", fireMouseOut)
-            .style("fill", function(d) {
+            .style("fill", function (d) {
                 return d.color;
             })
             .attr('class', "link");
@@ -99,32 +98,32 @@ Graph.prototype = {
             .call(self.force.drag)
             .on("mouseover", fireMouseOver)
             .on("mouseout", fireMouseOut)
-            .style("fill", function(d) {
+            .style("fill", function (d) {
                 return d.color;
             })
-            .attr("id", function(d) {
+            .attr("id", function (d) {
                 return self.util.toLegalClassName(d.id);
             })
-            .attr("r", function(d) {
+            .attr("r", function (d) {
                 return d.size;
             })
-            .style("fill", function(d) {
+            .style("fill", function (d) {
                 return self.util.getColor.toString();
             })
             .style("stroke-width", 10)
-            .style("stroke", function(d) {
+            .style("stroke", function (d) {
                 return d.stroke;
             });
 
         self.node.insert("title")
-            .text(function(d) {
+            .text(function (d) {
                 return d.name;
             });
 
         self.node.insert("text")
             .attr("text-anchor", "middle")
             .attr("dy", ".35em")
-            .text(function(d) {
+            .text(function (d) {
                 return d.name;
             });
 
@@ -141,13 +140,13 @@ Graph.prototype = {
         }
     },
 
-    click: function(id) {
+    click: function (id) {
         var self = this;
         var d = self.getNode(id);
         console.log("LOG:", d.name, "--", d);
-        if (d.isInduvidual) {
-            return;
-        }
+        // if (d.isInduvidual) {
+        //     return;
+        // }
         if (!d.isExpanded && d.children.length > 0) {
             self.expandNode(d);
             self.root.fixed = false;
@@ -163,7 +162,7 @@ Graph.prototype = {
         }
     },
 
-    compute: function(json) {
+    compute: function (json) {
         var self = this;
         self.formatter = jsonFormatter(json);
         self.parentToChildMap = self.formatter.parentToChildMap;
@@ -189,7 +188,7 @@ Graph.prototype = {
     //     return this.color[color_num];
     // },
 
-    collide: function(node, alpha) {
+    collide: function (node, alpha) {
         var self = this,
             r = node.radius + 16,
             nx1 = node.x - r,
@@ -197,7 +196,7 @@ Graph.prototype = {
             ny1 = node.y - r,
             ny2 = node.y + r;
 
-        return function(quad, x1, y1, x2, y2) {
+        return function (quad, x1, y1, x2, y2) {
             if (quad.point && (quad.point !== node)) {
                 var x = node.x - quad.point.x,
                     y = node.y - quad.point.y,
@@ -215,7 +214,7 @@ Graph.prototype = {
         };
     },
 
-    handleCollisions: function() {
+    handleCollisions: function () {
         var q = d3.geom.quadtree(this.nodes),
             i = 0,
             len = this.nodes.length;
@@ -225,16 +224,16 @@ Graph.prototype = {
         }
     },
 
-    updateNodeAndLinkPositions: function(duration) {
+    updateNodeAndLinkPositions: function (duration) {
         duration = duration || 0;
-        this.link.transition().duration(duration).attr("d", function(d) {
+        this.link.transition().duration(duration).attr("d", function (d) {
             var dx = d.target.x - d.source.x,
                 dy = d.target.y - d.source.y,
                 dr = Math.sqrt(dx * dx + dy * dy);
             return "M" + d.source.x + "," + d.source.y + "A" + dr + "," + dr + " 0 0,1 " + d.target.x + "," + d.target.y;
         });
 
-        this.node.transition().duration(duration).attr("transform", function(d) {
+        this.node.transition().duration(duration).attr("transform", function (d) {
             // d.x = Math.max(d.size, Math.min(self.width - d.size, d.x));
             // d.y = Math.max(d.size, Math.min(self.height - d.size, d.y));
             return "translate(" + d.x + "," + d.y + ")";
@@ -242,14 +241,14 @@ Graph.prototype = {
     },
 
 
-    expandNode: function(d) {
+    expandNode: function (d) {
         var n,
             self = this,
             deltaX = d.x + 75,
             deltaY = d.y + 75;
         d.color = self.util.getColor(d);
         var nodeIdToUpdate = [];
-        d.children.map(function(subject) {
+        d.children.map(function (subject) {
             n = self.formatter.createNode(subject, self.nodes.length);
             n.x = deltaX;
             n.y = deltaY;
@@ -258,7 +257,7 @@ Graph.prototype = {
             self.nodes.push(n);
             nodeIdToUpdate.push(n.index);
         });
-        nodeIdToUpdate.map(function(index) {
+        nodeIdToUpdate.map(function (index) {
             self.links = self.links.concat(self.formatter.createLink(index, self.nodes));
         });
 
@@ -275,7 +274,7 @@ Graph.prototype = {
     },
 
 
-    collapseNode: function(d) {
+    collapseNode: function (d) {
         // var n,
         //     self = this,
         //     children = d.children;
@@ -304,27 +303,27 @@ Graph.prototype = {
         // d.isExpanded = false;
     },
 
-    expandIndividual: function(d) {
+    expandIndividual: function (d) {
         var self = this;
     },
 
 
-    updatePositions: function(alpha) {
+    updatePositions: function (alpha) {
         var self = this;
         var k = 0.05 * alpha;
-        self.nodes.map(function(d, i) {
+        self.nodes.map(function (d, i) {
             self.cluster(10 * alpha * alpha)(d);
         });
     },
 
-    cluster: function(alpha) {
+    cluster: function (alpha) {
         var self = this;
         var nameToNodeMap = {};
 
-        self.nodes.map(function(d) {
+        self.nodes.map(function (d) {
             nameToNodeMap[d.name] = d;
         });
-        return function(d) {
+        return function (d) {
             var parent = d.object.subClassOf;
             var node = nameToNodeMap[parent],
                 h,
@@ -332,7 +331,7 @@ Graph.prototype = {
                 delatX,
                 deltaY;
 
-            if (node == d || typeof(node) === 'undefined') return;
+            if (node == d || typeof (node) === 'undefined') return;
 
             deltaX = d.x - node.x;
             deltaY = d.y - node.y;
@@ -349,7 +348,7 @@ Graph.prototype = {
         };
     },
 
-    makeRoot: function(d) {
+    makeRoot: function (d) {
         if (this.root === d) {
             return;
         }
@@ -358,13 +357,13 @@ Graph.prototype = {
         d.fixed = true;
     },
 
-    center: function(nodeToCenter) {
+    center: function (nodeToCenter) {
         var deltaX = this.width / 2 - nodeToCenter.x,
             deltaY = this.height / 2 - nodeToCenter.y,
             self = this;
 
 
-        self.nodes.map(function(d) {
+        self.nodes.map(function (d) {
             d.x += deltaX;
             d.y += deltaY;
         });
@@ -375,12 +374,12 @@ Graph.prototype = {
 
     },
 
-    updateLinks: function() {
+    updateLinks: function () {
         var self = this,
             links = [];
-        self.nodes.map(function() {
+        self.nodes.map(function () {
             if (node.isExpanded) {
-                node.children.map(function(child) {
+                node.children.map(function (child) {
                     links.push({
                         'source': node,
                         'target': self.nodes[self.nodeId[child]],
@@ -391,9 +390,9 @@ Graph.prototype = {
         });
     },
 
-    getNode: function(id) {
+    getNode: function (id) {
         var self = this;
-        var nodes = self.nodes.filter(function(d) {
+        var nodes = self.nodes.filter(function (d) {
             return d.id === id;
         });
         return nodes[0] || false;
@@ -405,7 +404,7 @@ Graph.prototype = {
     //     };
     // },
 
-    mouseOver: function(id) {
+    mouseOver: function (id) {
         var self = this;
         var className = self.util.toLegalClassName(id);
         d3.select(self.el).selectAll('#' + className)
@@ -413,12 +412,12 @@ Graph.prototype = {
             .style("stroke", "red");
     },
 
-    mouseOut: function(id) {
+    mouseOut: function (id) {
         var self = this;
         var className = self.util.toLegalClassName(id);
         d3.select(self.el).selectAll('#' + className)
             .style("stroke-width", 10)
-            .style("stroke", function(d) {
+            .style("stroke", function (d) {
                 return d.stroke;
             });
     }
