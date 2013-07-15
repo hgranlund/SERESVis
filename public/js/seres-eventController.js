@@ -8,20 +8,20 @@ EventController.prototype = {
 
     fireClick: function(d) {
         var self = this;
-        self.tree.click(d.id);
-        self.graph.click(d.id);
+        self.tree.click(d.class);
+        self.graph.click(d.class);
     },
 
     fireMouseOver: function(d) {
         var self = this;
-        self.tree.mouseOver (d.id);
-        self.graph.mouseOver(d.id);
+        self.tree.mouseOver (d.class);
+        self.graph.mouseOver(d.class);
     },
 
     fireMouseOut: function(d) {
         var self = this;
-        self.tree.mouseOut(d.id);
-        self.graph.mouseOut(d.id);
+        self.tree.mouseOut(d.class);
+        self.graph.mouseOut(d.class);
     }
 };
 

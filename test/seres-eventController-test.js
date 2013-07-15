@@ -34,7 +34,7 @@ describe('EventController', function() {
         el,
         controller,
         tree,
-        nodeData = {'id':123,
+        nodeData = {'class':123,
         'isInduvidual':false};
 
     beforeEach(function() {
@@ -60,9 +60,7 @@ describe('EventController', function() {
         it('should fire click in both tree and graph', function(done) {
             var graphClick = spyOn(graph, "click");
             var treeClick = spyOn(tree, "click");
-            controller.fireClick({
-                'id': 123
-            });
+            controller.fireClick(nodeData);
             expect(graphClick.wasCalled).toBeTruthy();
             expect(treeClick.wasCalled).toBeTruthy();
             expect(treeClick.mostRecentCall.args[0]).toBe(123);
@@ -88,9 +86,7 @@ describe('EventController', function() {
         it('should fire mouseOver in both tree and graph', function(done) {
             var graphClick = spyOn(graph, "mouseOver");
             var treeClick = spyOn(tree, "mouseOver");
-            controller.fireMouseOver({
-                'id': 123
-            });
+            controller.fireMouseOver(nodeData);
             expect(graphClick.wasCalled).toBeTruthy();
             expect(treeClick.wasCalled).toBeTruthy();
             expect(treeClick.mostRecentCall.args[0]).toBe(123);
@@ -116,9 +112,7 @@ describe('EventController', function() {
             var graphClick = spyOn(graph, "mouseOut");
             var treeClick = spyOn(tree, "mouseOut");
             var getNode = spyOn(tree, "getNode").andReturn(nodeData);
-            controller.fireMouseOut({
-                'id': 123
-            });
+            controller.fireMouseOut(nodeData);
             expect(graphClick.wasCalled).toBeTruthy();
             expect(treeClick.wasCalled).toBeTruthy();
             expect(treeClick.mostRecentCall.args[0]).toBe(123);
