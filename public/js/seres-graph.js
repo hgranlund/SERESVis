@@ -1,23 +1,23 @@
-function Graph(el, json, expand_node) {
+function Graph(el, json, expandNode) {
     this.formatter;
-    this.width = 900;
-    this.height = 800;
+    this.width = 1250;
+    this.height = 900;
     this.root = {};
     this.nodes;
     this.links;
     this.force;
     this.svg;
-    this.auto_id = 0;
+    this.autoId = 0;
     this.updateNodeAndLinkPositions;
     this.parentToChildMap;
     this.init(el);
     this.nodeId;
-    this.compute(json, expand_node);
+    this.compute(json, expandNode);
 }
 // console.log(d.name +" : " + d.isExpanded);
 // .alpha(0)
 // console.log("LOG:", "this");
-// 
+//
 Graph.prototype = {
 
     init: function(el) {
@@ -31,16 +31,23 @@ Graph.prototype = {
             .size([self.width, self.height])
             .friction(0.9)
             .linkDistance(function(d) {
-            var dist = d.source.size / 2;
-            if (d.source.isExpanded) dist *= 2;
-            // console.log(d.source.name + "--" + d.target.name + " : " + dist);
-            return dist;
-        })
+                var dist = d.source.size / 2;
+                if (d.source.isExpanded) {
+                    dist *= 2;
+                }
+                // console.log(d.source.name + "--" + d.target.name + " : " + dist);
+                return dist;
+            })
             .charge(function(d) {
-            if (d.isIndividual) return -200;
-            if (d === self.root) return -5000;
-            return -5000;
-        })
+                if (d.isIndividual) {
+                    return -200;
+                }
+                if (d === self.root) {
+                    return -5000;
+                } else {
+                    return -5000;
+                }
+            })
             .on("tick", tick)
             .gravity(0.006)
             .start();
@@ -69,7 +76,6 @@ Graph.prototype = {
         }
     },
 
-
     update: function() {
         var self = this;
         self.force.nodes(self.nodes)
@@ -83,44 +89,52 @@ Graph.prototype = {
         self.node.exit().remove();
         self.link.enter().insert("svg:path")
             .attr("stroke-width", 0.3)
-            .attr('class', "link");
-
-        self.node.enter().insert("g")
-            .attr("class", "node")
             .on('click', fireClick)
             .call(self.force.drag)
             .on("mouseover", fireMouseOver)
-            .on("mouseout", fireMouseOut);
+            .on("mouseout", fireMouseOut)
+            .style("fill", function(d) {
+                return d.color;
+            })
+            .attr('class', "link");
+
+        self.node.enter().insert("g")
+            .attr("class", "node");
+
 
         self.circle = self.node.insert("circle")
+            .on('click', fireClick)
+            .call(self.force.drag)
+            .on("mouseover", fireMouseOver)
+            .on("mouseout", fireMouseOut)
             .style("fill", function(d) {
-            return d.color;
-        })
+                return d.color;
+            })
             .attr("id", function(d) {
-            return d.name;
-        })
+                return d.name;
+            })
             .attr("r", function(d) {
-            return d.size;
-        })
+                return d.size;
+            })
             .style("fill", function(d) {
-            return self.utilities.getColor.toString();
-        })
+                return self.utilities.getColor.toString();
+            })
             .style("stroke-width", 10)
             .style("stroke", function(d) {
-            return d.stroke;
-        });
+                return d.stroke;
+            });
 
         self.node.insert("title")
             .text(function(d) {
-            return d.name;
-        });
+                return d.name;
+            });
 
         self.node.insert("text")
             .attr("text-anchor", "middle")
             .attr("dy", ".35em")
             .text(function(d) {
-            return d.name;
-        });
+                return d.name;
+            });
 
         function fireClick(d) {
             window.seres.eventController.fireClick(d);
@@ -142,17 +156,17 @@ Graph.prototype = {
         if (d.isInduvidual) {
             return;
         }
-        if (!d.isExpanded && d.children.length >0) {
-            self.expand_node(d);
+        if (!d.isExpanded && d.children.length > 0) {
+            self.expandNode(d);
             self.root.fixed = false;
-            self.make_root(d);
+            self.makeRoot(d);
             self.update();
-        // } else if (d.isExpanded && d !==root) {
-        //     // self.collapse_node(d);
-        //     self.make_root(d);
-        //     self.update();
+            // } else if (d.isExpanded && d !==root) {
+            //     // self.collapseNode(d);
+            //     self.makeRoot(d);
+            //     self.update();
         } else {
-            self.make_root(d);
+            self.makeRoot(d);
             self.center(d);
         }
     },
@@ -161,7 +175,7 @@ Graph.prototype = {
         var self = this;
         self.formatter = jsonFormatter(json);
         self.parentToChildMap = self.formatter.parentToChildMap;
-        self.make_root(self.formatter.createNode('Seres', self.nodes.length));
+        self.makeRoot(self.formatter.createNode('Seres', self.nodes.length));
         self.links = [];
         self.nodes = [self.root];
         self.root.x = self.width / 2;
@@ -170,7 +184,7 @@ Graph.prototype = {
         self.root.stroke = self.utilities.getColor(self.root);
         self.force.nodes(self.nodes);
         self.force.links(self.links);
-        self.expand_node(self.root);
+        self.expandNode(self.root);
         self.update();
     },
 
@@ -236,13 +250,13 @@ Graph.prototype = {
     },
 
 
-    expand_node: function(d) {
+    expandNode: function(d) {
         var n,
             self = this,
             deltaX = d.x + 75,
             deltaY = d.y + 75;
         d.color = self.utilities.getColor(d);
-        var node_id_to_update = [];
+        var nodeIdToUpdate = [];
         d.children.map(function(subject) {
             n = self.formatter.createNode(subject, self.nodes.length);
             n.x = deltaX;
@@ -250,9 +264,9 @@ Graph.prototype = {
             n.color = d.color.brighter();
             n.stroke = d.color;
             self.nodes.push(n);
-            node_id_to_update.push(n.index);
+            nodeIdToUpdate.push(n.index);
         });
-        node_id_to_update.map(function(index) {
+        nodeIdToUpdate.map(function(index) {
             self.links = self.links.concat(self.formatter.createLink(index, self.nodes));
         });
 
@@ -262,14 +276,14 @@ Graph.prototype = {
             self.handleCollisions();
             self.force.tick();
         }
-        self.updateNodeAndLinkPositions(100);
+        self.updateNodeAndLinkPositions();
         self.force.start();
 
         d.isExpanded = true;
     },
 
 
-    collapse_node: function(d) {
+    collapseNode: function(d) {
         // var n,
         //     self = this,
         //     children = d.children;
@@ -318,7 +332,7 @@ Graph.prototype = {
             var node = nameToNodeMap[parent],
                 h,
                 ballR,
-                deltaX,
+                delatX,
                 deltaY;
 
             if (node == d || typeof(node) === 'undefined') return;
@@ -338,7 +352,7 @@ Graph.prototype = {
         };
     },
 
-    make_root: function(d) {
+    makeRoot: function(d) {
         if (this.root === d) {
             return;
         }
@@ -347,9 +361,9 @@ Graph.prototype = {
         d.fixed = true;
     },
 
-    center: function(node_to_center) {
-        var deltaX = this.width / 2 - node_to_center.x,
-            deltaY = this.height / 2 - node_to_center.y,
+    center: function(nodeToCenter) {
+        var deltaX = this.width / 2 - nodeToCenter.x,
+            deltaY = this.height / 2 - nodeToCenter.y,
             self = this;
 
 
@@ -408,8 +422,8 @@ Graph.prototype = {
         d3.select(self.el).selectAll('#' + d.name)
             .style("stroke-width", 10)
             .style("stroke", function(d) {
-            return d.stroke;
-        });
+                return d.stroke;
+            });
     }
 };
 

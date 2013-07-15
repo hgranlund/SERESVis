@@ -11,6 +11,7 @@ var startSeres = function(query) {
 
 
 
+
 		// var ex = []
 		// for (f in json ){
 		// 	ex.push(f);

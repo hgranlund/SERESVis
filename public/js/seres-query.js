@@ -13,14 +13,20 @@ window.seres.query = function() {
 
     query.queryEndpoint = function(queryString, host, output, stylesheet) {
         var data = {};
-        if (queryString === "" | queryString === null) return data;
-        if (typeof(host) === 'undefined') host = "http://localhost:3030/ds/query?";
-        if (typeof(output) === 'undefined') output = "json";
-        if (typeof(stylesheet) === 'undefined') stylesheet = "%2Fxml-to-html.xsl";
+        if (queryString === "" | queryString === null) {
+            return data;
+        }
+        host = host || "http://localhost:3030/ds/query?";
+        output = output || "json";
+        stylesheet = stylesheet || "%2Fxml-to-html.xsl";
 
         $.ajax({
             dataType: output,
-            data: {'query' : queryString, 'output' : output, 'stylesheet': stylesheet},
+            data: {
+                'query': queryString,
+                'output': output,
+                'stylesheet': stylesheet
+            },
             url: 'http://localhost:3030/ds/query?',
             async: false,
             success: function(fusekiJson) {
@@ -28,7 +34,7 @@ window.seres.query = function() {
             },
             error: function(e) {
                 new Error('Error connecting to endpoint');
-                alert('Error connecting to endpoint: ' +host+ '\n with query: '+ queryString);
+                alert('Error connecting to endpoint: ' + host + '\n with query: ' + queryString);
             }
         });
 
@@ -36,7 +42,9 @@ window.seres.query = function() {
     };
 
     query.sparqlQueryParser = function(queryString, host, output, stylesheet) {
-        if (!query.endsWith(host, '/')) host += '/';
+        if (!query.endsWith(host, '/')) {
+            host += '/';
+        }
         var url = [host, 'query?query=', queryString, '&output=', output, '&stylesheet=', stylesheet];
         return url.join('');
     };
@@ -45,9 +53,11 @@ window.seres.query = function() {
         if (url === "" | url === null | (typeof url) != "string") {
             return "Unknown";
         }
-        var url_split = url.split('#');
-        if (url_split.length < 2) return url;
-        return url_split[url_split.length - 1];
+        var urlSplit = url.split('#');
+        if (urlSplit.length < 2) {
+            return url;
+        }
+        return urlSplit[urlSplit.length - 1];
     };
 
     query.parseSelectJson = function(fusekiJson) {
@@ -56,7 +66,9 @@ window.seres.query = function() {
             return elements;
         }
         var vars = fusekiJson.head.vars;
-        if (vars.length < 3) throw new Error("Should contain tripels");
+        if (vars.length < 3) {
+            throw new Error("Should contain tripels");
+        }
 
         function getValue(index, triple) {
             return query.getElementNameFromUri(triple[vars[index]].value);
@@ -113,7 +125,7 @@ window.seres.query = function() {
     query.execute = function(queryString, host, output, stylesheet) {
         if (queryString === null | queryString === "") return;
         var json = query.queryEndpoint(queryString, host);
-        if (queryString.toLowerCase().match("\bselect\b")) {
+        if (queryString.toLowerCase().match("select")) {
             return query.parseSelectJson(json);
         }
         return query.parseGraphJson(json);
