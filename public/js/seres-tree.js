@@ -322,7 +322,6 @@ Tree.prototype = {
     mouseOut : function(id) {
         var self = this,
             d = self.getNode(id);
-        debugger;
         if (d.isInduvidual) {
             return;
         }

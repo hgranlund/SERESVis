@@ -45,15 +45,15 @@ describe('EventController', function() {
     });
 
     describe('fireClick', function() {
-        it('should be defind in graph', function(done) {
+        it('should be defined in graph', function(done) {
             expect(graph.click).toBeDefined();
         });
 
-        it('should be defind in tree', function(done) {
+        it('should be defined in tree', function(done) {
             expect(tree.click).toBeDefined();
         });
 
-        it('should be defind in event controller', function(done) {
+        it('should be defined in event controller', function(done) {
             expect(controller.fireClick).toBeDefined();
         });
 
@@ -73,15 +73,15 @@ describe('EventController', function() {
 
 
     describe('fireMouseOver', function() {
-        it('should be defind in graph', function(done) {
+        it('should be defined in graph', function(done) {
             expect(graph.mouseOver).toBeDefined();
         });
 
-        it('should be defind in tree', function(done) {
+        it('should be defined in tree', function(done) {
             expect(tree.mouseOver).toBeDefined();
         });
 
-        it('should be defind in event controller', function(done) {
+        it('should be defined in event controller', function(done) {
             expect(controller.fireMouseOver).toBeDefined();
         });
 
@@ -100,15 +100,15 @@ describe('EventController', function() {
     });
 
         describe('fireMouseOut', function() {
-        it('should be defind in graph', function(done) {
+        it('should be defined in graph', function(done) {
             expect(graph.mouseOut).toBeDefined();
         });
 
-        it('should be defind in tree', function(done) {
+        it('should be defined in tree', function(done) {
             expect(tree.mouseOut).toBeDefined();
         });
 
-        it('should be defind in event controller', function(done) {
+        it('should be defined in event controller', function(done) {
             expect(controller.fireMouseOut).toBeDefined();
         });
 

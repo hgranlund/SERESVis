@@ -1,7 +1,7 @@
-function jsonFormatter(json_arg) {
-    var json = json_arg,
+function jsonFormatter(jsonArg) {
+    var json = jsonArg,
         parentToChildMap,
-        auto_id =0;
+        autoId = 0;
 
 
 
@@ -19,9 +19,9 @@ function jsonFormatter(json_arg) {
         parentToChildMap = {};
         var parent;
         for (var child in json) {
-            parentToChildMap[child]=[];
+            parentToChildMap[child] = [];
         }
-        for (var child in json) {
+        for (child in json) {
             if (json[child].object.subClassOf) {
                 parent = json[child].object.subClassOf;
                 if (!(parent in parentToChildMap)) parentToChildMap[parent] = [];
@@ -36,11 +36,11 @@ function jsonFormatter(json_arg) {
         return parentToChildMap;
     };
 
-    var toGraphObject = function(expanded_nodes) {
+    var toGraphObject = function(expandNodes) {
         var links = [];
         var nodes = [];
         var node;
-        expanded_nodes.map(function(subject) {
+        expandNodes.map(function(subject) {
             nodes.push(createNode(subject, nodes.length));
         });
         for (var i = 0; i < nodes.length; i++) {
@@ -85,7 +85,9 @@ function jsonFormatter(json_arg) {
             }
             if (json[child].object.type !== "Class") {
                 parentToInduvidual = json[child].object.type;
-                if (!(parentToInduvidual in parentToInduvidualsMap)) parentToInduvidualsMap[parentToInduvidual] = [];
+                if (!(parentToInduvidual in parentToInduvidualsMap)) {
+                    parentToInduvidualsMap[parentToInduvidual] = [];
+                }
                 parentToInduvidualsMap[parentToInduvidual].push(child);
             }
         }
@@ -100,52 +102,55 @@ function jsonFormatter(json_arg) {
 
 
     var createNode = function(subject, index) {
-        var subject_obj = (json.hasOwnProperty(subject) ? json[subject] : {
+        var subjectObj = (json.hasOwnProperty(subject) ? json[subject] : {
             'data': {},
             'object': {}
         });
-        if (json.hasOwnProperty(subject)) json[subject].id = index;
-        var node = $.extend({}, subject_obj);
+        if (json.hasOwnProperty(subject)) {
+            json[subject].id = index;
+        }
+        var node = $.extend({}, subjectObj);
         subject = subject || node.data.type || node.data['xmi.lapel'] || '';
         node.size = 10;
         node.name = subject;
-        node.id=subject || auto_id++;
+        node.id = subject || autoId++;
         node.index = index;
         node.isInduvidual = false;
         node.isExpanded = false;
-        node.children=this.parentToChildMap[subject] || [];
+        node.children = this.parentToChildMap[subject] || [];
         if (node.object.type) {
             if (node.object.type !== "Class") {
                 if (node.object.type in parentToChildMap) {
                     node.isInduvidual = true;
-                    node.size=5;
-                    node.name= "";
+                    node.size = 5;
+                    node.name = "";
                 }
             }
         }
-        if (node.object.type === "Class") node.size = 30;
-        node.x=500;
-        node.y=500;
+        if (node.object.type === "Class") {
+            node.size = 30;
+        }
+        node.x = 500;
+        node.y = 500;
         return node;
     };
 
     var createLink = function(index, nodes) {
         var object,
-            object_id,
-            subject_id = index,
+            subjectId = index,
             links = [];
-        var object_name = nodes[subject_id].object.subClassOf || nodes[subject_id].object.type || false;
-        if (object_name && object_name !== "Class") {
+        var objectName = nodes[subjectId].object.subClassOf || nodes[subjectId].object.type || false;
+        if (objectName && objectName !== "Class") {
             nodes.map(function(object) {
-                if (object.name === object_name) {
+                if (object.name === objectName) {
                     links.push({
-                        'source': nodes[subject_id].index,
+                        'source': nodes[subjectId].index,
                         'target': object.index
                     });
-                                        // links.push([nodes[subject_id].id, object.id]);
-                };
+                    // links.push([nodes[subjectId].id, object.id]);
+                }
             });
-        };
+        }
         return links;
     };
 
