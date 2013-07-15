@@ -31,6 +31,7 @@ Tree.prototype = {
 
     init: function(el) {
         var self = this;
+        self.utilites = window.seres.utilities;
         self.l = el;
         self.tree = d3.layout.tree()
             .size([self.h, 100]);
@@ -178,7 +179,7 @@ Tree.prototype = {
             .style("opacity", 1)
             .select("rect")
             .attr("rx", "10")
-            .style("fill", self.color);
+            .style("fill", self.utilites.getColor);
 
         // Transition exiting nodes to the parent's new position.
         node.exit().transition()
