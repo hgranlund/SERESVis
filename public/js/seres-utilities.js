@@ -4,7 +4,6 @@ window.seres.utilities = function(d3) {
 
     var getColor = function(d) {
         var children = d.children || d.individuals || [];
-        console.log(d.name + ' ' + children.length);
         var colorNum = d.name.split('').length + children.length;
         colorNum = colorNum * 123;
         colorNum = colorNum % 21;
