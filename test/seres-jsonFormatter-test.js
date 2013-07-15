@@ -28,12 +28,22 @@ var json_orig = {
             'subClassOf': 'SERESelement'
         }
     },
-    'test': {
+    'test_sereselement': {
         'data': {
             'xmi.uuid': 'fsadf23r3f98h978sfhsdfs98'
         },
         'object': {
-            'type': 'SERESelement'
+            'type': 'SERESelement',
+            "begrep": "test_begrep"
+        }
+    },
+    'test_begrep': {
+        'data': {
+            'xmi.uuid': 'fsadf23r3f98h978sfhsdfs98'
+        },
+        'object': {
+            'type': 'SERESelement',
+            "sereselement": "test_sereselement"
         }
     }
 };
@@ -101,21 +111,31 @@ describe('seres-jsonformatter:', function() {
             expect(parsedJson[0].children.length).toEqual(3);
             expect(parsedJson[0].children[2].name).toEqual("SERESelement");
             expect(parsedJson[0].children[1].name).toEqual("Forvaltingselement");
-            expect(parsedJson[0].children[2].individuals[0].id).toEqual("test");
+            expect(parsedJson[0].children[2].individuals[0].id).toEqual("test-sereselement");
         });
 
     });
 
 
     describe('createNode', function() {
-        it('should create a node with correct values', function() {
-            var node = formatter.createNode('test', 0);
-            expect(node.name).toEqual('');
+        it('should create a individual with correct values', function() {
+            var node = formatter.createNode('test_sereselement', 0);
             expect(node.index).toEqual(0);
-            expect(node.id).toEqual('test');
+            expect(node.id).toEqual('test-sereselement');
             expect(node.data['xmi.uuid']).toEqual('fsadf23r3f98h978sfhsdfs98');
             expect(node.object.type).toEqual('SERESelement');
             expect(node.isExpanded).toEqual(false);
+        });
+
+        it('should create a class/m induvituals with correct values', function() {
+            var node = formatter.createNode('SERESelement', 0);
+            expect(node.name).toEqual('SERESelement');
+            expect(node.index).toEqual(0);
+            expect(node.id).toEqual('sereselement');
+            expect(node.object.subClassOf).toEqual('Seres');
+            expect(node.isExpanded).toEqual(false);
+            expect(node.children.length).toEqual(3);
+            expect(node.children[2]).toEqual('test_begrep');
         });
 
         it('should create a standard node if json does not contain subject', function(done) {
@@ -132,7 +152,7 @@ describe('seres-jsonformatter:', function() {
             expect(node.children.length).toEqual(3);
         });
 
-        it('should add an empty children array if no children exist', function () {
+        it('should add an empty children array if no children exist', function() {
             var node = formatter.createNode('Forvaltingselement', 0);
             expect(node.children.length).toEqual(0);
         });

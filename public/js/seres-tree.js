@@ -1,16 +1,15 @@
 function Tree(el, json) {
     var self = this;
     self.legends = [{
-            "color": "#3c3c3c",
-            "text": "Superklasser"
-        }, {
-            "color": "#c2bcbc",
-            "text": "Subklasser"
-        }, {
-            "color": "#ffffff",
-            "text": "Subsubklasser"
-        }
-    ];
+        "color": "#3c3c3c",
+        "text": "Superklasser"
+    }, {
+        "color": "#c2bcbc",
+        "text": "Subklasser"
+    }, {
+        "color": "#ffffff",
+        "text": "Subsubklasser"
+    }];
 
     self.w = 960;
     self.h = 5300;
@@ -31,14 +30,15 @@ Tree.prototype = {
 
     init: function(el) {
         var self = this;
+        self.util = window.seres.utilities;
         self.l = el;
         self.tree = d3.layout.tree()
             .size([self.h, 100]);
 
         self.diagonal = d3.svg.diagonal()
             .projection(function(d) {
-            return [d.y, d.x];
-        });
+                return [d.y, d.x];
+            });
 
         self.vis = d3.select(el).append("svg:svg")
             .attr("width", self.w)
@@ -62,28 +62,28 @@ Tree.prototype = {
             .enter()
             .append("rect")
             .attr("x", function(d, i) {
-            return i * 125 + 50;
-        })
+                return i * 125 + 50;
+            })
             .attr("y", 10)
             .attr("width", 10)
             .attr("height", 10)
             .style("fill", function(d) {
-            var color = d.color;
-            return color;
-        });
+                var color = d.color;
+                return color;
+            });
 
         self.legend.selectAll('text')
             .data(self.legends)
             .enter()
             .append("text")
             .attr("x", function(d, i) {
-            return i * 125 + 65;
-        })
+                return i * 125 + 65;
+            })
             .attr("y", 20)
             .text(function(d) {
-            var text = d.text;
-            return text;
-        });
+                var text = d.text;
+                return text;
+            });
 
 
         d3.select("#expand-all").on("click", function() {
@@ -131,14 +131,14 @@ Tree.prototype = {
         // Update the nodes…
         var node = self.vis.selectAll("g.node")
             .data(self.nodes, function(d) {
-            return d.id || (d.id = ++self.i);
-        });
+                return d.id || (d.id = ++self.i);
+            });
 
         var nodeEnter = node.enter().append("svg:g")
             .attr("class", "node")
             .attr("transform", function(d) {
-            return "translate(" + source.y0 + "," + source.x0 + ")";
-        })
+                return "translate(" + source.y0 + "," + source.x0 + ")";
+            })
             .style("opacity", 1e-6);
 
         // Enter any new nodes at the parent's previous position.
@@ -146,8 +146,8 @@ Tree.prototype = {
             .attr("y", -self.barHeight / 2)
             .attr("height", self.barHeight)
             .attr("id", function(d) {
-            return d.name;
-        })
+                return self.util.toLegalClassName(d.id);
+            })
             .attr("width", self.barWidth)
             .style("fill", self.color)
             .on("click", fireClick)
@@ -159,22 +159,22 @@ Tree.prototype = {
             .attr("dy", 3.5)
             .attr("dx", 5.5)
             .text(function(d) {
-            return d.name;
-        });
+                return d.name;
+            });
 
         // Transition nodes to their new position.
         nodeEnter.transition()
             .duration(self.duration)
             .attr("transform", function(d) {
-            return "translate(" + d.y + "," + d.x + ")";
-        })
+                return "translate(" + d.y + "," + d.x + ")";
+            })
             .style("opacity", 1);
 
         node.transition()
             .duration(self.duration)
             .attr("transform", function(d) {
-            return "translate(" + d.y + "," + d.x + ")";
-        })
+                return "translate(" + d.y + "," + d.x + ")";
+            })
             .style("opacity", 1)
             .select("rect")
             .attr("rx", "10")
@@ -184,30 +184,30 @@ Tree.prototype = {
         node.exit().transition()
             .duration(self.duration)
             .attr("transform", function(d) {
-            return "translate(" + source.y + "," + source.x + ")";
-        })
+                return "translate(" + source.y + "," + source.x + ")";
+            })
             .style("opacity", 1e-6)
             .remove();
 
         // Update the links…
         var link = self.vis.selectAll("path.link")
             .data(self.tree.links(self.nodes), function(d) {
-            return d.target.id;
-        });
+                return d.target.id;
+            });
 
         // Enter any new links at the parent's previous position.
         link.enter().insert("svg:path", "g")
             .attr("class", "link")
             .attr("d", function(d) {
-            var o = {
-                x: source.x0,
-                y: source.y0
-            };
-            return self.diagonal({
-                source: o,
-                target: o
-            });
-        })
+                var o = {
+                    x: source.x0,
+                    y: source.y0
+                };
+                return self.diagonal({
+                    source: o,
+                    target: o
+                });
+            })
             .transition()
             .duration(self.duration)
             .attr("d", self.diagonal);
@@ -221,15 +221,15 @@ Tree.prototype = {
         link.exit().transition()
             .duration(self.duration)
             .attr("d", function(d) {
-            var o = {
-                x: source.x,
-                y: source.y
-            };
-            return self.diagonal({
-                source: o,
-                target: o
-            });
-        })
+                var o = {
+                    x: source.x,
+                    y: source.y
+                };
+                return self.diagonal({
+                    source: o,
+                    target: o
+                });
+            })
             .remove();
 
         // Stash the old positions for transition.
@@ -292,7 +292,7 @@ Tree.prototype = {
     },
 
     setColors: function() {
-        
+
     },
 
     mapNodes: function(callback) {
@@ -311,31 +311,25 @@ Tree.prototype = {
         var nodes = self.nodes.filter(function(d) {
             return d.id === id;
         });
-        return nodes[0];
+        return nodes[0] || false;
     },
 
     mouseOver: function(id) {
-        var self = this,
-            d = self.getNode(id);
-        if (d.isInduvidual) {
-            return; 
-        }
-        self.vis.selectAll('#' + d.name)
+        var self = this;
+        var className = self.util.toLegalClassName(id);
+        self.vis.selectAll('#' + className)
             .style("stroke-width", 5)
             .style("stroke", "red");
     },
 
-    mouseOut : function(id) {
-        var self = this,
-            d = self.getNode(id);
-        if (d.isInduvidual) {
-            return;
-        }
-        self.vis.selectAll('#' + d.name)
+    mouseOut: function(id) {
+        var self = this;
+        var className = self.util.toLegalClassName(id);
+        self.vis.selectAll('#' + className)
             .style("stroke-width", 1)
             .style("stroke", function(d) {
-            return d.stroke;
-        });
+                return d.stroke;
+            });
     }
 
 };

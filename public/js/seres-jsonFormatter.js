@@ -2,6 +2,8 @@ function jsonFormatter(jsonArg) {
     var json = jsonArg,
         parentToChildMap,
         autoId = 0;
+        util = window.seres.utilities;
+
 
 
 
@@ -113,7 +115,7 @@ function jsonFormatter(jsonArg) {
         subject = subject || node.data.type || node.data['xmi.lapel'] || '';
         node.size = 10;
         node.name = subject;
-        node.id = subject || autoId++;
+        node.id = self.util.toLegalClassName(subject) || autoId++;
         node.index = index;
         node.isInduvidual = false;
         node.isExpanded = false;

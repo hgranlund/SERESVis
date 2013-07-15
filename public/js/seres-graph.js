@@ -1,18 +1,10 @@
-function Graph(el, json, expandNode) {
-    this.formatter;
+function Graph(el, json) {
+    'use strict';
     this.width = 1250;
     this.height = 900;
     this.root = {};
-    this.nodes;
-    this.links;
-    this.force;
-    this.svg;
-    this.autoId = 0;
-    this.updateNodeAndLinkPositions;
-    this.parentToChildMap;
     this.init(el);
-    this.nodeId;
-    this.compute(json, expandNode);
+    this.compute(json);
 }
 // console.log(d.name +" : " + d.isExpanded);
 // .alpha(0)
@@ -22,7 +14,7 @@ Graph.prototype = {
 
     init: function(el) {
         var self = this;
-        self.utilities = window.seres.utilities;
+        self.util = window.seres.utilities;
         self.el = el;
         self.nodeId = {};
 
@@ -111,13 +103,13 @@ Graph.prototype = {
                 return d.color;
             })
             .attr("id", function(d) {
-                return d.name;
+                return self.util.toLegalClassName(d.id);
             })
             .attr("r", function(d) {
                 return d.size;
             })
             .style("fill", function(d) {
-                return self.utilities.getColor.toString();
+                return self.util.getColor.toString();
             })
             .style("stroke-width", 10)
             .style("stroke", function(d) {
@@ -152,7 +144,7 @@ Graph.prototype = {
     click: function(id) {
         var self = this;
         var d = self.getNode(id);
-        // console.log("LOG:", d.name, "--", d);
+        console.log("LOG:", d.name, "--", d);
         if (d.isInduvidual) {
             return;
         }
@@ -180,8 +172,8 @@ Graph.prototype = {
         self.nodes = [self.root];
         self.root.x = self.width / 2;
         self.root.y = self.height / 2;
-        self.root.color = self.utilities.getColor(self.root);
-        self.root.stroke = self.utilities.getColor(self.root);
+        self.root.color = self.util.getColor(self.root);
+        self.root.stroke = self.util.getColor(self.root);
         self.force.nodes(self.nodes);
         self.force.links(self.links);
         self.expandNode(self.root);
@@ -255,7 +247,7 @@ Graph.prototype = {
             self = this,
             deltaX = d.x + 75,
             deltaY = d.y + 75;
-        d.color = self.utilities.getColor(d);
+        d.color = self.util.getColor(d);
         var nodeIdToUpdate = [];
         d.children.map(function(subject) {
             n = self.formatter.createNode(subject, self.nodes.length);
@@ -311,6 +303,11 @@ Graph.prototype = {
 
         // d.isExpanded = false;
     },
+
+    expandIndividual: function(d) {
+        var self = this;
+    },
+
 
     updatePositions: function(alpha) {
         var self = this;
@@ -409,17 +406,17 @@ Graph.prototype = {
     // },
 
     mouseOver: function(id) {
-        var self = this,
-            d = self.getNode(id);
-        d3.select(self.el).selectAll('#' + d.name)
+        var self = this;
+        var className = self.util.toLegalClassName(id);
+        d3.select(self.el).selectAll('#' + className)
             .style("stroke-width", 10)
             .style("stroke", "red");
     },
 
     mouseOut: function(id) {
-        var self = this,
-            d = self.getNode(id);
-        d3.select(self.el).selectAll('#' + d.name)
+        var self = this;
+        var className = self.util.toLegalClassName(id);
+        d3.select(self.el).selectAll('#' + className)
             .style("stroke-width", 10)
             .style("stroke", function(d) {
                 return d.stroke;
