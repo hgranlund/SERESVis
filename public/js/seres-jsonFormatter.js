@@ -37,7 +37,9 @@ function jsonFormatter(jsonArg) {
         var nodes = [];
         var node;
         expandNodes.map(function (subject) {
-            nodes.push(createNode(subject, nodes.length));
+            node = createNode(subject, nodes.length);
+            node.children = node.children || [];
+            nodes.push(node);
         });
         for (var i = 0; i < nodes.length; i++) {
             links = links.concat(createLink(i, nodes));
@@ -61,6 +63,7 @@ function jsonFormatter(jsonArg) {
             elm.children = [];
             parentsToChildMap[parent].map(function (child) {
                 elm.children.push(populateElement(child, parentsToChildMap, parentToInduvidualsMap));
+
             });
         }
         return elm;
@@ -114,7 +117,7 @@ function jsonFormatter(jsonArg) {
         node.index = index;
         node.isInduvidual = false;
         node.isExpanded = false;
-        node.children = this.parentToChildMap[subject] || [];
+        node.children = this.parentToChildMap[subject] || null;
         if (node.object.type) {
             if (node.object.type !== "Class") {
                 if (node.object.type in parentToChildMap) {

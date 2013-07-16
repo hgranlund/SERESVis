@@ -111,11 +111,15 @@ Tree.prototype = {
         self.root = self.formatter.toTreeObject()[0];
         self.root.x0 = 0;
         self.root.y0 = 0;
-        debugger;
         self.root.color = self.util.getColor(self.root);
+        self.text = "";
         self.nodes = self.root;
+        self.mapNodes(function(d) {
+            if (d.children.length === 0) {
+                d.children = null;
+            }
+        });
         self.resetTree();
-        self.setColors();
         self.update(self.root);
     },
 
@@ -163,6 +167,22 @@ Tree.prototype = {
             .text(function(d) {
                 return d.name;
             });
+
+        nodeEnter.append("svg:text")
+            .attr("dy", ".35em")
+            .attr("dx", "22.5em")
+            .style("text-anchor", "start")
+            .text(function(d) {
+                if (d.children){
+                    return "+";
+                }
+                else
+                    return;
+            })
+            ////////////////////
+            //DET VAR HER DU HOLDT PÅ MED Å FÅ +'ene vist korrekt
+            ////////////////////////
+            .style("font-size", "12px");
 
         // Transition nodes to their new position.
         nodeEnter.transition()
@@ -297,14 +317,11 @@ Tree.prototype = {
         self.toggle(self.root);
     },
 
-    setColors: function() {
-
-    },
 
     mapNodes: function(callback) {
         var self = this;
 
-        function mapL(d) {
+         function mapL(d) {
             if (d.children) {
                 d.children.map(mapL);
                 callback(d);
@@ -312,6 +329,7 @@ Tree.prototype = {
         }
         mapL((self.root));
     },
+    
     getNode: function(id) {
         var self = this;
         var nodes = self.nodes.filter(function(d) {
@@ -332,7 +350,7 @@ Tree.prototype = {
         var self = this;
         var className = self.util.toLegalClassName(id);
         self.vis.selectAll('#' + className)
-            .style("stroke-width", 1)
+            .style("stroke-width", 1.5)
             .style("stroke", function(d) {
                 return d.stroke;
             });
