@@ -6,22 +6,22 @@ function EventController(tree, graph) {
 
 EventController.prototype = {
 
-    fireClick: function(d) {
+    fireClick: function (d) {
         var self = this;
         self.tree.click(d.id);
         self.graph.click(d.id);
     },
 
-    fireMouseOver: function(d) {
+    fireMouseOver: function (d) {
         var self = this;
-        self.tree.mouseOver (d.id);
-        self.graph.mouseOver(d.id);
+        self.tree.mouseOver(d.class);
+        self.graph.mouseOver(d.class);
     },
 
-    fireMouseOut: function(d) {
+    fireMouseOut: function (d) {
         var self = this;
-        self.tree.mouseOut(d.id);
-        self.graph.mouseOut(d.id);
+        self.tree.mouseOut(d.class);
+        self.graph.mouseOut(d.class);
     }
 };
 

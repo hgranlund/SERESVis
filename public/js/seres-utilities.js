@@ -10,8 +10,15 @@ window.seres.utilities = function(d3) {
         return color[colorNum];
     };
 
+    var toLegalClassName = function(className) {
+        className = className || '';
+        className= className.replace(/[!\"#$%&_'\(\)\*\+,\.\/:;<=>\?\@\[\\\]\^`\{\|\}~]/g, '-');
+        return className.toLowerCase();
+    };
+
     return {
-        'getColor': getColor
+        'getColor': getColor,
+        'toLegalClassName': toLegalClassName
     };
 
 }(window.d3);
