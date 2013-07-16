@@ -171,18 +171,15 @@ Tree.prototype = {
 
         nodeEnter.append("svg:text")
             .attr("dy", ".35em")
-            .attr("dx", "22.5em")
+            .attr("dx", "11em")
             .style("text-anchor", "start")
+            .style("font-size", "24px")
             .text(function (d) {
-            if (d.children) {
+            if (d.children || d._children) {
                 return "+";
             } else
                 return;
-        })
-        ////////////////////
-        //DET VAR HER DU HOLDT PÅ MED Å FÅ +'ene vist korrekt
-        ////////////////////////
-        .style("font-size", "12px");
+        });
 
         // Transition nodes to their new position.
         nodeEnter.transition()
