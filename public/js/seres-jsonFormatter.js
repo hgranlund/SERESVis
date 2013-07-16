@@ -38,7 +38,6 @@ function jsonFormatter(jsonArg) {
         var node;
         expandNodes.map(function (subject) {
             node = createNode(subject, nodes.length);
-            node.children = node.children || [];
             nodes.push(node);
         });
         for (var i = 0; i < nodes.length; i++) {
@@ -54,17 +53,20 @@ function jsonFormatter(jsonArg) {
     var populateElement = function (parent, parentsToChildMap, parentToInduvidualsMap) {
         var elm = createNode(parent, 0);
         elm.name = parent;
+        elm.children = [];
         if (parent in parentToInduvidualsMap) {
             elm.individuals = parentToInduvidualsMap[parent].map(function (individual) {
                 return createNode(individual);
             });
         }
         if (parent in parentsToChildMap) {
-            elm.children = [];
             parentsToChildMap[parent].map(function (child) {
                 elm.children.push(populateElement(child, parentsToChildMap, parentToInduvidualsMap));
 
             });
+        }
+        if (elm.children.length === 0) {
+            elm.children = null;
         }
         return elm;
     };
@@ -117,7 +119,7 @@ function jsonFormatter(jsonArg) {
         node.index = index;
         node.isInduvidual = false;
         node.isExpanded = false;
-        node.children = this.parentToChildMap[subject] || null;
+        node.children = this.parentToChildMap[subject] || [];
         if (node.object.type) {
             if (node.object.type !== "Class") {
                 if (node.object.type in parentToChildMap) {

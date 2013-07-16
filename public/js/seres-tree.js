@@ -1,15 +1,16 @@
 function Tree(el, json) {
     var self = this;
     self.legends = [{
-        "color": "#3c3c3c",
-        "text": "Superklasser"
-    }, {
-        "color": "#c2bcbc",
-        "text": "Subklasser"
-    }, {
-        "color": "#ffffff",
-        "text": "Subsubklasser"
-    }];
+            "color": "#3c3c3c",
+            "text": "Superklasser"
+        }, {
+            "color": "#c2bcbc",
+            "text": "Subklasser"
+        }, {
+            "color": "#ffffff",
+            "text": "Subsubklasser"
+        }
+    ];
 
     self.w = 960;
     self.h = 5300;
@@ -28,7 +29,7 @@ function Tree(el, json) {
 Tree.prototype = {
 
 
-    init: function(el) {
+    init: function (el) {
         var self = this;
         self.util = window.seres.utilities;
         self.l = el;
@@ -36,9 +37,9 @@ Tree.prototype = {
             .size([self.h, 100]);
 
         self.diagonal = d3.svg.diagonal()
-            .projection(function(d) {
-                return [d.y, d.x];
-            });
+            .projection(function (d) {
+            return [d.y, d.x];
+        });
 
         self.vis = d3.select(el).append("svg:svg")
             .attr("width", self.w)
@@ -61,32 +62,32 @@ Tree.prototype = {
             .data(self.legends)
             .enter()
             .append("rect")
-            .attr("x", function(d, i) {
-                return i * 125 + 50;
-            })
+            .attr("x", function (d, i) {
+            return i * 125 + 50;
+        })
             .attr("y", 10)
             .attr("width", 10)
             .attr("height", 10)
-            .style("fill", function(d) {
-                var color = d.color;
-                return color;
-            });
+            .style("fill", function (d) {
+            var color = d.color;
+            return color;
+        });
 
         self.legend.selectAll('text')
             .data(self.legends)
             .enter()
             .append("text")
-            .attr("x", function(d, i) {
-                return i * 125 + 65;
-            })
+            .attr("x", function (d, i) {
+            return i * 125 + 65;
+        })
             .attr("y", 20)
-            .text(function(d) {
-                var text = d.text;
-                return text;
-            });
+            .text(function (d) {
+            var text = d.text;
+            return text;
+        });
 
 
-        d3.select("#expand-all").on("click", function() {
+        d3.select("#expand-all").on("click", function () {
             function expand(d) {
                 if (d.children) {
                     d._children = d.children;
@@ -105,7 +106,7 @@ Tree.prototype = {
 
     },
 
-    compute: function(json) {
+    compute: function (json) {
         var self = this;
         self.formatter = jsonFormatter(json);
         self.root = self.formatter.toTreeObject()[0];
@@ -114,7 +115,7 @@ Tree.prototype = {
         self.root.color = self.util.getColor(self.root);
         self.text = "";
         self.nodes = self.root;
-        self.mapNodes(function(d) {
+        self.mapNodes(function (d) {
             if (d.children.length === 0) {
                 d.children = null;
             }
@@ -125,35 +126,35 @@ Tree.prototype = {
 
 
 
-    update: function(source) {
+    update: function (source) {
         var self = this;
         self.nodes = self.tree.nodes(self.root);
 
         // Compute the "layout".
-        self.nodes.forEach(function(n, i) {
+        self.nodes.forEach(function (n, i) {
             n.x = i * self.barHeight;
         });
 
         // Update the nodes…
         var node = self.vis.selectAll("g.node")
-            .data(self.nodes, function(d) {
-                return d.id || (d.id = ++self.i);
-            });
+            .data(self.nodes, function (d) {
+            return d.id || (d.id = ++self.i);
+        });
 
         var nodeEnter = node.enter().append("svg:g")
             .attr("class", "node")
-            .attr("transform", function(d) {
-                return "translate(" + source.y0 + "," + source.x0 + ")";
-            })
+            .attr("transform", function (d) {
+            return "translate(" + source.y0 + "," + source.x0 + ")";
+        })
             .style("opacity", 1e-6);
 
         // Enter any new nodes at the parent's previous position.
         nodeEnter.append("svg:rect")
             .attr("y", -self.barHeight / 2)
             .attr("height", self.barHeight)
-            .attr("id", function(d) {
-                return self.util.toLegalClassName(d.id);
-            })
+            .attr("id", function (d) {
+            return self.util.toLegalClassName(d.id);
+        })
             .attr("width", self.barWidth)
             .style("fill", self.color)
             .on("click", fireClick)
@@ -164,74 +165,73 @@ Tree.prototype = {
         nodeEnter.append("svg:text")
             .attr("dy", 3.5)
             .attr("dx", 5.5)
-            .text(function(d) {
-                return d.name;
-            });
+            .text(function (d) {
+            return d.name;
+        });
 
         nodeEnter.append("svg:text")
             .attr("dy", ".35em")
             .attr("dx", "22.5em")
             .style("text-anchor", "start")
-            .text(function(d) {
-                if (d.children){
-                    return "+";
-                }
-                else
-                    return;
-            })
-            ////////////////////
-            //DET VAR HER DU HOLDT PÅ MED Å FÅ +'ene vist korrekt
-            ////////////////////////
-            .style("font-size", "12px");
+            .text(function (d) {
+            if (d.children) {
+                return "+";
+            } else
+                return;
+        })
+        ////////////////////
+        //DET VAR HER DU HOLDT PÅ MED Å FÅ +'ene vist korrekt
+        ////////////////////////
+        .style("font-size", "12px");
 
         // Transition nodes to their new position.
         nodeEnter.transition()
             .duration(self.duration)
-            .attr("transform", function(d) {
-                return "translate(" + d.y + "," + d.x + ")";
-            })
+            .attr("transform", function (d) {
+            return "translate(" + d.y + "," + d.x + ")";
+        })
             .style("opacity", 1);
 
         node.transition()
             .duration(self.duration)
-            .attr("transform", function(d) {
-                return "translate(" + d.y + "," + d.x + ")";
-            })
+            .attr("transform", function (d) {
+            return "translate(" + d.y + "," + d.x + ")";
+        })
             .style("opacity", 1)
             .select("rect")
             .attr("rx", "10")
-            .style("fill", function(d){
-                return d.color;
-            });
+            .style("fill", function (d) {
+            return d.color;
+        });
 
         // Transition exiting nodes to the parent's new position.
         node.exit().transition()
             .duration(self.duration)
-            .attr("transform", function(d) {
-                return "translate(" + source.y + "," + source.x + ")";
-            })
+            .attr("transform", function (d) {
+            return "translate(" + source.y + "," + source.x + ")";
+        })
             .style("opacity", 1e-6)
             .remove();
 
         // Update the links…
         var link = self.vis.selectAll("path.link")
-            .data(self.tree.links(self.nodes), function(d) {
-                return d.target.id;
-            });
+            .data(self.tree.links(self.nodes), function (d) {
+            return d.target.id;
+        });
 
         // Enter any new links at the parent's previous position.
         link.enter().insert("svg:path", "g")
             .attr("class", "link")
-            .attr("d", function(d) {
-                var o = {
-                    x: source.x0,
-                    y: source.y0
-                };
-                return self.diagonal({
-                    source: o,
-                    target: o
-                });
-            })
+            .attr("d", function (d) {
+            var o = {
+                x: source.x0,
+                y: source.y0
+            };
+            return self.diagonal({
+                source: o,
+                target: o
+            });
+        })
             .transition()
             .duration(self.duration)
             .attr("d", self.diagonal);
@@ -244,20 +244,20 @@ Tree.prototype = {
         // Transition exiting nodes to the parent's new position.
         link.exit().transition()
             .duration(self.duration)
-            .attr("d", function(d) {
-                var o = {
-                    x: source.x,
-                    y: source.y
-                };
-                return self.diagonal({
-                    source: o,
-                    target: o
-                });
-            })
+            .attr("d", function (d) {
+            var o = {
+                x: source.x,
+                y: source.y
+            };
+            return self.diagonal({
+                source: o,
+                target: o
+            });
+        })
             .remove();
 
         // Stash the old positions for transition.
-        self.nodes.forEach(function(d) {
+        self.nodes.forEach(function (d) {
             d.x0 = d.x;
             d.y0 = d.y;
         });
@@ -276,7 +276,7 @@ Tree.prototype = {
     },
 
 
-    click: function(id) {
+    click: function (id) {
         var self = this;
         var d = self.getNode(id);
         self.toggle(d);
@@ -284,31 +284,31 @@ Tree.prototype = {
     },
 
 
-    toggle: function(d) {
+    toggle: function (d) {
         var self = this;
         if (d.children) {
             d._children = d.children;
             d.children = null;
-        } else {
+        } else if (d._children) {
             d.children = d._children;
             d._children = null;
             d.color = self.util.getColor(d);
-            d.children.map(function(node){
+            d.children.map(function (node) {
                 node.color = d.color.brighter();
             });
         }
     },
 
-    toggleAll: function(d) {
+    toggleAll: function (d) {
         if (d.children) {
             d.children.forEach(toggleAll);
             toggle(d);
         }
     },
 
-    resetTree: function() {
+    resetTree: function () {
         var self = this;
-        self.mapNodes(function(d) {
+        self.mapNodes(function (d) {
             if (d.children) {
                 d._children = d.children;
                 d.children = null;
@@ -318,10 +318,10 @@ Tree.prototype = {
     },
 
 
-    mapNodes: function(callback) {
+    mapNodes: function (callback) {
         var self = this;
 
-         function mapL(d) {
+        function mapL(d) {
             if (d.children) {
                 d.children.map(mapL);
                 callback(d);
@@ -329,16 +329,16 @@ Tree.prototype = {
         }
         mapL((self.root));
     },
-    
-    getNode: function(id) {
+
+    getNode: function (id) {
         var self = this;
-        var nodes = self.nodes.filter(function(d) {
+        var nodes = self.nodes.filter(function (d) {
             return d.id === id;
         });
         return nodes[0] || false;
     },
 
-    mouseOver: function(id) {
+    mouseOver: function (id) {
         var self = this;
         var className = self.util.toLegalClassName(id);
         self.vis.selectAll('#' + className)
@@ -346,14 +346,14 @@ Tree.prototype = {
             .style("stroke", "red");
     },
 
-    mouseOut: function(id) {
+    mouseOut: function (id) {
         var self = this;
         var className = self.util.toLegalClassName(id);
         self.vis.selectAll('#' + className)
             .style("stroke-width", 1.5)
-            .style("stroke", function(d) {
-                return d.stroke;
-            });
+            .style("stroke", function (d) {
+            return d.stroke;
+        });
     }
 
 };
