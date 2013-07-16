@@ -146,6 +146,7 @@ describe('seres-jsonformatter:', function () {
       expect(node.class).toEqual('test-sereselement');
       expect(node.data['xmi.uuid']).toEqual('fsadf23r3f98h978sfhsdfs98');
       expect(node.object.type).toEqual('SERESelement');
+      expect(node.isIndividual).toBeTruthy('it is not marked as an individual');
       expect(node.isExpanded).toEqual(false);
     });
 
