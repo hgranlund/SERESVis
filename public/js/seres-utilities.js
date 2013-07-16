@@ -12,7 +12,7 @@ window.seres.utilities = function (d3) {
 
     var toLegalClassName = function (className) {
         className = className || '';
-        className = className.replace(/[!\"#$%&_'\(\)\*\+,\.\/:;<=>\?\@\[\\\]\^`\{\|\}~]/g, '-');
+        className = className.toString().replace(/[!\"#$%&_'\(\)\*\+,\.\/:;<=>\?\@\[\\\]\^`\{\|\}~]/g, '-');
         return className.toLowerCase();
     };
 
