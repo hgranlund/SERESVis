@@ -18,28 +18,27 @@ Graph.prototype = {
         self.el = el;
         self.nodeId = {};
 
-
         self.force = d3.layout.force()
             .size([self.width, self.height])
             .friction(0.9)
             .linkDistance(function (d) {
-            var dist = d.source.size / 2;
-            if (d.source.isExpanded) {
-                dist *= 2;
-            }
-            // console.log(d.source.name + "--" + d.target.name + " : " + dist);
-            return dist;
-        })
+                var dist = d.source.size / 2;
+                if (d.source.isExpanded) {
+                    dist *= 2;
+                }
+                // console.log(d.source.name + "--" + d.target.name + " : " + dist);
+                return dist;
+            })
             .charge(function (d) {
-            if (d.isIndividual) {
-                return -200;
-            }
-            if (d === self.root) {
-                return -5000;
-            } else {
-                return -5000;
-            }
-        })
+                if (d.isIndividual) {
+                    return -200;
+                }
+                if (d === self.root) {
+                    return -5000;
+                } else {
+                    return -5000;
+                }
+            })
             .on("tick", tick)
             .gravity(0.006)
             .start();
@@ -85,8 +84,8 @@ Graph.prototype = {
             .style("opacity", 0.5)
             .attr('class', "link")
             .attr('id', function (d) {
-            return ("link-" + self.util.toLegalClassName(d.target.id));
-        });
+                return ("link-" + self.util.toLegalClassName(d.target.id));
+            });
 
         self.node.enter().insert("g")
             .attr("class", "node");
@@ -98,30 +97,36 @@ Graph.prototype = {
             .on("mouseover", fireMouseOver)
             .on("mouseout", fireMouseOut)
             .style("fill", function (d) {
-            return d.color;
-        })
+                return d.color;
+            })
             .attr("id", function (d) {
-            return self.util.toLegalClassName(d.id);
-        })
+                return self.util.toLegalClassName(d.id);
+            })
             .attr("r", function (d) {
-            return d.size;
-        })
+                return d.size;
+            })
             .style("stroke-width", 10)
             .style("stroke", function (d) {
-            return d.stroke;
-        });
+                return d.stroke;
+            });
 
         self.node.insert("title")
             .text(function (d) {
-            return d.name;
-        });
+                if (d.isIndividual) {
+                    return 'uuid: ' + d.data['xmi.uuid'];
+                }
+                return d.name;
+            });
 
         self.node.insert("text")
             .attr("text-anchor", "middle")
             .attr("dy", ".35em")
             .text(function (d) {
-            return d.name;
-        });
+                if (d.isIndividual) {
+                    return "";
+                }
+                return d.name;
+            });
 
         function fireClick(d) {
             window.seres.eventController.fireClick(d);
@@ -140,18 +145,13 @@ Graph.prototype = {
         var self = this;
         var d = self.getNode(id);
         console.log("LOG:", d.name, "--", d);
-        // if (d.isInduvidual) {
-        //     return;
-        // }
-        if (!d.isExpanded && d.children.length > 0) {
-            self.expandNode(d);
-            self.root.fixed = false;
-            self.makeRoot(d);
-            self.update();
-            // } else if (d.isExpanded && d !==root) {
-            //     // self.collapseNode(d);
-            //     self.makeRoot(d);
-            //     self.update();
+        if (!d.isExpanded) {
+            if (d.children.length > 0 || d.parents.length > 0) {
+                self.expandNode(d);
+                self.root.fixed = false;
+                self.makeRoot(d);
+                self.update();
+            }
         } else {
             self.makeRoot(d);
             self.center(d);
@@ -235,18 +235,27 @@ Graph.prototype = {
             deltaY = d.y + 75;
         d.color = self.util.getColor(d);
         var nodeIdToUpdate = [];
-        d.children.map(function (subject) {
-            n = self.formatter.createNode(subject, self.nodes.length);
+
+        function expand(n) {
             n.x = deltaX;
             n.y = deltaY;
             n.color = d.color.brighter();
             n.stroke = d.color;
-            self.nodes.push(n);
-            nodeIdToUpdate.push(n.index);
-            debugger;
-            if (d.isIndividual) {
-                self.expandClassToIndividual(n);
+            if (self.util.addNodeToNodes(n, self.nodes)) {
+                nodeIdToUpdate.push(n.index);
+                if (d.isIndividual) {
+                    self.expandClassToIndividual(n);
+                }
             }
+        }
+        if (d.isIndividual) {
+            d.parents.map(function (link) {
+                expand(self.formatter.createNode(link.parent, self.nodes.length));
+            });
+        }
+
+        d.children.map(function (subject) {
+            expand(self.formatter.createNode(subject, self.nodes.length));
         });
         nodeIdToUpdate.map(function (index) {
             self.links = self.links.concat(self.formatter.createLink(index, self.nodes));
@@ -254,13 +263,12 @@ Graph.prototype = {
 
         self.updateNodeAndLinkPositions(0);
         self.force.stop();
-        for (var i = 0; i < d.children.length * 10; ++i) {
+        for (var i = 0; i < d.children.length; ++i) {
             self.handleCollisions();
             self.force.tick();
         }
         self.updateNodeAndLinkPositions();
         self.force.start();
-
         d.isExpanded = true;
     },
 
@@ -277,12 +285,16 @@ Graph.prototype = {
             if (parent) {
                 n.stroke = self.util.getColor((self.formatter.createNode(parent, 0)));
             }
-            self.nodes.push(n);
-            self.links = self.links.concat(self.formatter.createLink(n.index, self.nodes));
+            if (self.util.addNodeToNodes(n, self.nodes)) {
+                self.links.push({
+                    source: d.index,
+                    target: n.index,
+                    name: 'subClassOf'
+                });
+            }
         }
 
     },
-
 
 
     collapseNode: function (d) {
@@ -385,22 +397,21 @@ Graph.prototype = {
 
     },
 
-    updateLinks: function () {
-        var self = this,
-            links = [];
-        self.nodes.map(function () {
-            if (node.isExpanded) {
-                node.children.map(function (child) {
-                    links.push({
-                        'source': node,
-                        'target': self.nodes[self.nodeId[child]],
-                        'value': objectProperty
-                    });
-                });
-            }
-        });
-    },
-
+    // updateLinks: function () {
+    //     var self = this,
+    //         links = [];
+    //     self.nodes.map(function () {
+    //         if (node.isExpanded) {
+    //             node.children.map(function (child) {
+    //                 links.push({
+    //                     'source': node,
+    //                     'target': self.nodes[self.nodeId[child]],
+    //                     'value': objectProperty
+    //                 });
+    //             });
+    //         }
+    //     });
+    // },
     getNode: function (id) {
         var self = this;
         if (!id) {
@@ -427,8 +438,8 @@ Graph.prototype = {
         d3.select(self.el).selectAll('#link-' + className)
             .style("stroke-width", 10)
             .style("stroke", function (d) {
-            return d.target.color;
-        });
+                return d.target.color;
+            });
 
     },
 
@@ -438,8 +449,8 @@ Graph.prototype = {
         d3.select(self.el).selectAll('#' + className)
             .style("stroke-width", 10)
             .style("stroke", function (d) {
-            return d.stroke;
-        });
+                return d.stroke;
+            });
         d3.select(self.el).selectAll('#link-' + className)
             .style("stroke-width", 4)
             .style("stroke", "lightgrey");
