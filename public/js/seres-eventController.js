@@ -14,14 +14,14 @@ EventController.prototype = {
 
     fireMouseOver: function (d) {
         var self = this;
-        self.tree.mouseOver(d.class);
-        self.graph.mouseOver(d.class);
+        self.tree.mouseOver(d.id);
+        self.graph.mouseOver(d.id);
     },
 
     fireMouseOut: function (d) {
         var self = this;
-        self.tree.mouseOut(d.class);
-        self.graph.mouseOut(d.class);
+        self.tree.mouseOut(d.id);
+        self.graph.mouseOut(d.id);
     }
 };
 
