@@ -243,6 +243,10 @@ Graph.prototype = {
             n.stroke = d.color;
             self.nodes.push(n);
             nodeIdToUpdate.push(n.index);
+            debugger;
+            if (d.isIndividual) {
+                self.expandClassToIndividual(n);
+            }
         });
         nodeIdToUpdate.map(function (index) {
             self.links = self.links.concat(self.formatter.createLink(index, self.nodes));
@@ -259,6 +263,26 @@ Graph.prototype = {
 
         d.isExpanded = true;
     },
+
+    expandClassToIndividual: function (d) {
+        var self = this,
+            parentClass = self.util.getPropertyValue('type', d.object);
+        if (parentClass && !self.getNode(parentClass)) {
+            var n = self.formatter.createNode(parentClass, self.nodes.length);
+            n.x = d.x;
+            n.y = d.y;
+            n.color = self.util.getColor(n);
+            n.stroke = self.util.getColor(n);
+            var parent = self.util.getPropertyValue('subClassOf', n.object);
+            if (parent) {
+                n.stroke = self.util.getColor((self.formatter.createNode(parent, 0)));
+            }
+            self.nodes.push(n);
+            self.links = self.links.concat(self.formatter.createLink(n.index, self.nodes));
+        }
+
+    },
+
 
 
     collapseNode: function (d) {
@@ -379,6 +403,9 @@ Graph.prototype = {
 
     getNode: function (id) {
         var self = this;
+        if (!id) {
+            return;
+        }
         var nodes = self.nodes.filter(function (d) {
             return d.id === id;
         });

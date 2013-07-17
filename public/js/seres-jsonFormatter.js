@@ -117,13 +117,13 @@ function jsonFormatter(jsonArg) {
         node.id = subject;
         node.class = self.util.toLegalClassName(subject) || autoId++;
         node.index = index;
-        node.isInduvidual = false;
+        node.isIndividual = false;
         node.isExpanded = false;
         node.children = this.parentToChildMap[subject] || [];
         if (node.object.type) {
             if (node.object.type !== "Class") {
                 if (node.object.type in parentToChildMap) {
-                    node.isInduvidual = true;
+                    node.isIndividual = true;
                     node.size = 5;
                     node.name = "";
                 }

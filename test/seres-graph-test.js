@@ -5,8 +5,9 @@ function getNode(id, nodes) {
     return n[0] || false;
 }
 describe('graph', function () {
-    var el;
-    var graph;
+    var el,
+        graph,
+        indi;
     var json = {
         'Seres': {
             'data': {},
@@ -56,7 +57,16 @@ describe('graph', function () {
             },
             'object': {
                 'type': 'SERESelement',
-                "sereselement": "test_sereselement"
+                "sereselement": "test_sereselement",
+                'dokumentasjon': 'test_nivå'
+            }
+        },
+        'test_nivå': {
+            'data': {
+                'xmi.uuid': 'fsadf23r3f98h978sddddd'
+            },
+            'object': {
+                'type': 'Nivå'
             }
         }
     };
@@ -66,22 +76,15 @@ describe('graph', function () {
         },
         object: {
             type: 'SERESelement',
-            begrep: 'test_begrep'
+            nivå: 'test_nivå'
         },
         id: 'test-sereselement',
         size: 5,
         name: '',
         index: 0,
-        isInduvidual: true,
+        isIndividual: true,
         isExpanded: true,
-        children: ['test_begrep'],
-        x: 500,
-        y: 500,
-        color: {
-            r: 23,
-            g: 190,
-            b: 207
-        }
+        children: ['test_nivå']
     };
 
 
@@ -114,12 +117,51 @@ describe('graph', function () {
         });
 
         it("should expand all children/links of an individual", function () {
-            var indi = individual;
-            graph.expandNode(indi);
-            var expandedInduvidual = getNode(indi.object.sereselement, graph.nodes);
-            expect(expandedInduvidual.id).toEqual(indi.object.sereselement);
+            var indiLinkedToSeres = individual;
+            var lengthBeforeExpantion = graph.nodes.length;
+            graph.expandNode(indiLinkedToSeres);
+            var expandedInduvidual = getNode(indiLinkedToSeres.object.sereselement, graph.nodes);
+            expect(expandedInduvidual.id).toEqual(indiLinkedToSeres.object.sereselement);
+            var lengthAfterExpantion = lengthBeforeExpantion + Object.keys(indiLinkedToSeres.object).length;
+            expect(graph.nodes.length).toEqual(lengthAfterExpantion);
+        });
+
+
+        it("should call expandClassToIndividual when an individual is expanded", function () {
+            var expandClassToIndividual = spyOn(graph, "expandClassToIndividual");
+            var indiLinkedToSeres = individual;
+            graph.expandNode(indiLinkedToSeres);
+            expect(expandClassToIndividual).wasCalled();
+            expect(expandClassToIndividual.mostRecentCall.args[0].id).toBe(indiLinkedToSeres.children[0]);
         });
     });
+
+    describe("expandClassToIndividual", function () {
+
+        it("should add the class corresponding to the induvidual", function () {
+            var indi = individual;
+            indi.object['type'] = 'Nivå';
+            indi.index = graph.nodes.length;
+            graph.nodes.push(indi);
+            graph.expandClassToIndividual(indi);
+            seresElement = graph.nodes.pop();
+            expect(seresElement).toBeTruthy('Nivå was not expanded');
+            expect(seresElement.id).toEqual(indi.object['type'], 'The documentation node was not correct ');
+        });
+
+
+        it("should to nothing of class already is visable", function () {
+            var indi = individual;
+            indi.object['type'] = 'SERESelement';
+            indi.isIndividual = true;
+            indi.index = graph.nodes.length;
+            graph.nodes.push(indi);
+            graph.expandClassToIndividual(indi);
+            expect(graph.nodes.length).toEqual(indi.index + 1);
+        });
+
+    });
+
 
     describe('collapseNode', function () {
         // it('should remove all children from the dom', function() {
