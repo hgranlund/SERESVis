@@ -35,7 +35,7 @@ Graph.prototype = {
                     return -5000;
                 }
             })
-            .on("tick", tick)
+            .on('tick', tick)
             .gravity(0.006)
             .start();
 
@@ -139,7 +139,7 @@ Graph.prototype = {
     click: function (id) {
         var self = this;
         var d = self.util.getNode(id, self.nodes);
-        console.log("LOG:", d.name, "--", d);
+        // console.log("LOG:", d.name, "--", d);
         if (!d.isExpanded) {
             if (d.children.length > 0 || d.parents.length > 0) {
                 self.expandNode(d);
@@ -148,6 +148,7 @@ Graph.prototype = {
                 self.update();
             }
         } else {
+            self.collapseNode(d);
             self.makeRoot(d);
             self.center(d);
         }
@@ -294,32 +295,71 @@ Graph.prototype = {
 
 
     collapseNode: function (d) {
-        // var n,
-        //     self = this,
-        //     children = d.children;
+        var n,
+            self = this,
+            node,
+            children = d.children;
+        if (d.children.length === 0) {
+            return;
+        };
+        var indexesToRemove = [];
+        getIndexesOfExpandedChildren(d);
+        self.removeIndexesFromGraph(indexesToRemove);
+        d.color = d.stroke.brighter();
+        d.isExpanded = false;
 
-        // self.nodes.filter(function(node) {
-        //     return node.id in children;
-        // });
+        function getIndexesOfExpandedChildren(d) {
+            var tailRec = [];
+            for (var j = 0; j < self.nodes.length; j++) {
+                node = self.nodes[j];
+                if (d.children.indexOf(node.id) !== -1) {
+                    indexesToRemove.push(node.index);
+                    if (node.isExpanded && d.children.length !== 0) {
+                        node.isExpanded = false;
+                        tailRec.push(node);
+                    }
+                }
+            };
+            tailRec.map(function (node) {
+                getIndexesOfExpandedChildren(node);
+            });
+        };
+    },
 
-        // self.links.filter(function(l) {
-        //     if (l.target.name in self.parentToChildMap) {
-        //         if (l.source.name in self.parentToChildMap) {
-        //             return true;
-        //         };
-        //     }
-        //     return false;
-        // })
+    removeIndexesFromGraph: function (indexesToRemove) {
+        var self = this,
+            indexUpdate = {};
+        indexesToRemove.sort(function (a, b) {
+            return a - b;
+        });
+        var indexesToRemove_ = indexesToRemove.slice(0);
+        var newIndex = self.nodes.length - 1;
+        var indexRemove = indexesToRemove_.pop();
+        for (var i = self.nodes.length - 1; i >= 0; i--) {
+            if (indexRemove === i) {
+                indexRemove = indexesToRemove_.pop();
+            } else {
+                indexUpdate[i] = newIndex;
+            }
+            newIndex--;
+        };
+        self.nodes = self.nodes.filter(function (elem, index) {
+            if (index in indexUpdate) {
+                elem.index = indexUpdate[elem.index];
+                return true;
+            };
+        })
 
-        // self.force.stop();
-        // self.updateNodeAndLinkPositions(0);
-        // for (var i = 0; i < d.children.length * 10; ++i)
-        //     self.handleCollisions();
-        // self.force.tick();
-        // self.updateNodeAndLinkPositions(100);
-        // self.force.start();
-
-        // d.isExpanded = false;
+        self.links = self.links.filter(function (l) {
+            if (l.target.index in indexUpdate) {
+                if (l.source.index in indexUpdate) {
+                    l.target.index = indexUpdate[l.target.index];
+                    l.source.index = indexUpdate[l.source.index];
+                    return true;
+                };
+            }
+            return false;
+        });
     },
 
     expandIndividual: function (d) {

@@ -99,18 +99,51 @@ describe('graph', function () {
 
     });
 
+    describe("Integration tests", function () {
+        it('it should render 4 initial nodes and  3 initial paths.', function () {
+            var node = el.getElementsByClassName("node");
+            var paths = el.getElementsByTagName("path");
+            expect(node.length).toEqual(4);
+            expect(paths.length).toEqual(3);
+        });
+    });
 
-    it('it should render 4 initial nodes and  3 initial paths.', function () {
-        var node = el.getElementsByClassName("node");
-        var paths = el.getElementsByTagName("path");
-        expect(node.length).toEqual(4);
-        expect(paths.length).toEqual(3);
+    describe("click", function () {
+        var center, makeRoot, expandNode, collapseNode, node;
+
+        beforeEach(function () {
+            center = spyOn(graph, "center");
+            makeRoot = spyOn(graph, "makeRoot");
+            expandNode = spyOn(graph, "expandNode");
+            collapseNode = spyOn(graph, "collapseNode");
+            node = graph.nodes[0];
+        });
+
+
+        it("should call center and makeRoot if node is expanded ", function () {
+            node.isExpanded = true;
+            graph.click(node.id);
+            expect(center).wasCalled();
+            expect(makeRoot).wasCalled();
+            expect(center).wasCalledWith(node);
+            expect(makeRoot).wasCalledWith(node);
+        });
+
+        it("should call expandNode and makeRoot if node is not expanded ", function () {
+            node.isExpanded = true;
+            graph.click(node.id);
+            expect(center).wasCalled();
+            expect(makeRoot).wasCalled();
+            expect(center).wasCalledWith(node);
+            expect(makeRoot).wasCalledWith(node);
+        });
+
+
     });
 
     describe('expandNode', function () {
-        it('should add all children to grapg.nodes and additional links', function () {
+        it('should add all children to nodes and additional links', function () {
             graph.expandNode(graph.nodes[3]);
-            graph.update();
             var nodes = graph.nodes;
             var links = graph.links;
             expect(nodes.length).toEqual(7);
@@ -171,19 +204,54 @@ describe('graph', function () {
 
 
     describe('collapseNode', function () {
-        // it('should remove all children from the dom', function() {
-        //     graph.collapseNode(graph.nodes[3]);
-        //     graph.update();
-        //     var node = el.getElementsByClassName("node");
-        //     var paths = el.getElementsByTagName("path");
-        //     expect(node.length).toEqual(4);
-        //     expect(paths.length).toEqual(3);
-        // });
+        it('should remove all children from nodes', function () {
+            var seres = graph.nodes[0];
+            graph.collapseNode(seres);
+            expect(graph.nodes.length).toEqual(1);
+            expect(getNode(seres.id, graph.nodes)).toMatch(seres);
+        });
 
-        // it('should mark the node as expanded', function() {
-        //     graph.expandNode(graph.nodes[3]);
-        //     expect(graph.nodes[3].isExpanded).toEqual(true);
-        // });
+        it('should remove all links connected to removed nodes', function () {
+            var seres = graph.nodes[0];
+            graph.collapseNode(seres);
+            expect(graph.links.length).toEqual(0);
+        });
+
+        it('should remove all links connected to removed nodes (dep: test uses expandNode() and update())', function () {
+            var linksLength = graph.links.length;
+            var seresElement = graph.nodes[3];
+            graph.expandNode(seresElement);
+            graph.update();
+            graph.collapseNode(seresElement);
+            expect(graph.links.length).toEqual(linksLength);
+        });
+
+        it('should remove all nodes connected to removed nodes (dep: test uses expandNode() and update())', function () {
+            var nodesLength = graph.nodes.length;
+            var seresElement = graph.nodes[3];
+            graph.expandNode(seresElement);
+            graph.update();
+            graph.collapseNode(seresElement);
+            expect(graph.nodes.length).toEqual(nodesLength);
+        });
+
+        it('should mark the node as not expanded', function () {
+            var seres = graph.nodes[0];
+            seres.isExpanded = true;
+            graph.collapseNode(seres);
+            expect(seres.isExpanded).toBeFalsy();
+        });
+
+        it('should get back rigth colors (dep: test uses expandNode() and update())', function () {
+            var seresElement = graph.nodes[3];
+            var color = seresElement.color;
+            var stroke = seresElement.stroke;
+            graph.expandNode(seresElement);
+            graph.update();
+            graph.collapseNode(seresElement);
+            expect(seresElement.color).toEqual(color);
+            expect(seresElement.stroke).toEqual(stroke);
+        });
     });
 
 
