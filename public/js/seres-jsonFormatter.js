@@ -24,7 +24,7 @@ function jsonFormatter(jsonArg) {
         for (child in json) {
             for (var link in json[child].object) {
                 parent = json[child].object[link];
-                if (parentToChildMap.hasOwnProperty(parent)) {
+                if (json.hasOwnProperty(parent)) {
                     parentToChildMap[parent].push(child);
                 }
             }
@@ -107,9 +107,6 @@ function jsonFormatter(jsonArg) {
             'data': {},
             'object': {}
         });
-        if (json.hasOwnProperty(subject)) {
-            json[subject].id = index;
-        }
         var node = $.extend({}, subjectObj);
         subject = subject || node.data.type || node.data['xmi.lapel'] || '';
         node.size = 10;
@@ -117,24 +114,43 @@ function jsonFormatter(jsonArg) {
         node.id = subject;
         node.class = self.util.toLegalClassName(subject) || autoId++;
         node.index = index;
+        node.x = 500;
+        node.y = 500;
         node.isIndividual = false;
         node.isExpanded = false;
         node.children = this.parentToChildMap[subject] || [];
-        if (node.object.type) {
-            if (node.object.type !== "Class") {
-                if (node.object.type in parentToChildMap) {
-                    node.isIndividual = true;
-                    node.size = 5;
-                    node.name = "";
-                }
-            }
-        }
         if (node.object.type === "Class") {
             node.size = 30;
         }
-        node.x = 500;
-        node.y = 500;
+        populateParents(node);
+        var type = util.getPropertyValue('type', node.object);
+        if (type && type !== "Class") {
+            if (node.object.type in parentToChildMap) {
+                addIndividualAttributes(node);
+            }
+        }
         return node;
+    };
+
+    var populateParents = function (node) {
+        var parent;
+        node.parents = [];
+        for (var link in node.object) {
+            parent = node.object[link];
+            if (json.hasOwnProperty(parent)) {
+                node.parents.push({
+                    'parent': parent,
+                    'link': link
+                });
+            }
+        }
+    };
+
+    var addIndividualAttributes = function (node) {
+        var parent;
+        node.isIndividual = true;
+        node.size = 5;
+        node.name = "";
     };
 
     var createLink = function (index, nodes) {
@@ -166,6 +182,8 @@ function jsonFormatter(jsonArg) {
         'parentToChildMap': this.parentToChildMap,
         'toTreeObject': toTreeObject,
         'createNode': createNode,
-        'createLink': createLink
+        'createLink': createLink,
+        'addIndividualAttributes': addIndividualAttributes,
+        'populateParents': populateParents
     };
 }
