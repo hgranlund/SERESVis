@@ -35,8 +35,7 @@ describe('EventController', function () {
         controller,
         tree,
         nodeData = {
-            class: 123,
-            id: 456,
+            id: 123,
             isInduvidual: false
         };
 
@@ -66,8 +65,8 @@ describe('EventController', function () {
             controller.fireClick(nodeData);
             expect(graphClick.wasCalled).toBeTruthy();
             expect(treeClick.wasCalled).toBeTruthy();
-            expect(treeClick.mostRecentCall.args[0]).toBe(456);
-            expect(graphClick.mostRecentCall.args[0]).toBe(456);
+            expect(treeClick.mostRecentCall.args[0]).toBe(123);
+            expect(graphClick.mostRecentCall.args[0]).toBe(123);
         });
 
     });
