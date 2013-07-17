@@ -1,4 +1,4 @@
-.node rect {
+ .node rect {
     cursor: pointer;
     fill: #fff;
     fill-opacity: .6;
@@ -6,7 +6,7 @@
     stroke-width: 1.5px;
   }
 
-  .node text {
+ .node text {
     font: 12px sans-serif;
     font-weight: bold;
     pointer-events: none;
@@ -16,9 +16,10 @@
     fill: none;
     stroke: #3c3c3c;
     stroke-width: 1.5px;
+    opacity: 0.3;
   }
 
-  .link {
+  .indented_tree .link {
   stroke: #999;
   stroke-opacity: .3;
 }
