@@ -6,10 +6,7 @@ function Graph(el, json) {
     this.init(el);
     this.compute(json);
 }
-// console.log(d.name +" : " + d.isExpanded);
-// .alpha(0)
-// console.log("LOG:", "this");
-//
+
 Graph.prototype = {
 
     init: function (el) {
@@ -26,7 +23,6 @@ Graph.prototype = {
                 if (d.source.isExpanded) {
                     dist *= 2;
                 }
-                // console.log(d.source.name + "--" + d.target.name + " : " + dist);
                 return dist;
             })
             .charge(function (d) {
@@ -56,7 +52,6 @@ Graph.prototype = {
         self.link = self.svg.selectAll(".link");
 
         function tick(e) {
-            // console.log("LOG:", e.alpha);
             if (e.alpha > 0.05) {
                 self.updateNodeAndLinkPositions();
                 self.updatePositions(e.alpha);
@@ -143,7 +138,7 @@ Graph.prototype = {
 
     click: function (id) {
         var self = this;
-        var d = self.getNode(id);
+        var d = self.util.getNode(id, self.nodes);
         console.log("LOG:", d.name, "--", d);
         if (!d.isExpanded) {
             if (d.children.length > 0 || d.parents.length > 0) {
@@ -275,7 +270,7 @@ Graph.prototype = {
     expandClassToIndividual: function (d) {
         var self = this,
             parentClass = self.util.getPropertyValue('type', d.object);
-        if (parentClass && !self.getNode(parentClass)) {
+        if (parentClass && !self.util.getNode(parentClass, self.nodes)) {
             var n = self.formatter.createNode(parentClass, self.nodes.length);
             n.x = d.x;
             n.y = d.y;
@@ -397,37 +392,6 @@ Graph.prototype = {
 
     },
 
-    // updateLinks: function () {
-    //     var self = this,
-    //         links = [];
-    //     self.nodes.map(function () {
-    //         if (node.isExpanded) {
-    //             node.children.map(function (child) {
-    //                 links.push({
-    //                     'source': node,
-    //                     'target': self.nodes[self.nodeId[child]],
-    //                     'value': objectProperty
-    //                 });
-    //             });
-    //         }
-    //     });
-    // },
-    getNode: function (id) {
-        var self = this;
-        if (!id) {
-            return;
-        }
-        var nodes = self.nodes.filter(function (d) {
-            return d.id === id;
-        });
-        return nodes[0] || false;
-    },
-
-    // nodeExist: function(d) {
-    //     return (getNode(id)) {
-
-    //     };
-    // },
 
     mouseOver: function (id) {
         var self = this;

@@ -26,22 +26,31 @@ window.seres.utilities = function (d3) {
         }
     };
 
-    var addNodeToNodes = function (elm, nodes) {
-        var equalNodes = nodes.filter(function (node) {
-            return node.id === elm.id;
-        });
-        if (equalNodes.length === 0) {
-            nodes.push(elm);
+    var addNodeToNodes = function (node, nodes) {
+        var equalNode = getNode(node.id, nodes);
+        if (!equalNode) {
+            nodes.push(node);
             return true;
         }
         return false;
+    };
+
+    var getNode = function (id, nodes) {
+        if (!id) {
+            return;
+        }
+        var equalNodes = nodes.filter(function (d) {
+            return d.id === id;
+        });
+        return equalNodes[0] || false;
     };
 
     return {
         getColor: getColor,
         toLegalClassName: toLegalClassName,
         getPropertyValue: getPropertyValue,
-        addNodeToNodes: addNodeToNodes
+        addNodeToNodes: addNodeToNodes,
+        getNode: getNode
     };
 
 
