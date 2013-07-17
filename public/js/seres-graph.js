@@ -23,23 +23,23 @@ Graph.prototype = {
             .size([self.width, self.height])
             .friction(0.9)
             .linkDistance(function (d) {
-                var dist = d.source.size / 2;
-                if (d.source.isExpanded) {
-                    dist *= 2;
-                }
-                // console.log(d.source.name + "--" + d.target.name + " : " + dist);
-                return dist;
-            })
+            var dist = d.source.size / 2;
+            if (d.source.isExpanded) {
+                dist *= 2;
+            }
+            // console.log(d.source.name + "--" + d.target.name + " : " + dist);
+            return dist;
+        })
             .charge(function (d) {
-                if (d.isIndividual) {
-                    return -200;
-                }
-                if (d === self.root) {
-                    return -5000;
-                } else {
-                    return -5000;
-                }
-            })
+            if (d.isIndividual) {
+                return -200;
+            }
+            if (d === self.root) {
+                return -5000;
+            } else {
+                return -5000;
+            }
+        })
             .on("tick", tick)
             .gravity(0.006)
             .start();
@@ -80,14 +80,13 @@ Graph.prototype = {
         self.link.exit().remove();
         self.node.exit().remove();
         self.link.enter().insert("svg:path")
-            .attr("stroke-width", 0.3).on('click', fireClick)
-            .call(self.force.drag)
-            .on("mouseover", fireMouseOver)
-            .on("mouseout", fireMouseOut)
-            .style("fill", function (d) {
-                return d.color;
-            })
-            .attr('class', "link");
+            .style("stroke", "lightgrey")
+            .style("stroke-width", 4)
+            .style("opacity", 0.5)
+            .attr('class', "link")
+            .attr('id', function (d) {
+            return ("link-" + self.util.toLegalClassName(d.target.id));
+        });
 
         self.node.enter().insert("g")
             .attr("class", "node");
@@ -99,30 +98,30 @@ Graph.prototype = {
             .on("mouseover", fireMouseOver)
             .on("mouseout", fireMouseOut)
             .style("fill", function (d) {
-                return d.color;
-            })
+            return d.color;
+        })
             .attr("id", function (d) {
-                return self.util.toLegalClassName(d.id);
-            })
+            return self.util.toLegalClassName(d.id);
+        })
             .attr("r", function (d) {
-                return d.size;
-            })
+            return d.size;
+        })
             .style("stroke-width", 10)
             .style("stroke", function (d) {
-                return d.stroke;
-            });
+            return d.stroke;
+        });
 
         self.node.insert("title")
             .text(function (d) {
-                return d.name;
-            });
+            return d.name;
+        });
 
         self.node.insert("text")
             .attr("text-anchor", "middle")
             .attr("dy", ".35em")
             .text(function (d) {
-                return d.name;
-            });
+            return d.name;
+        });
 
         function fireClick(d) {
             window.seres.eventController.fireClick(d);
@@ -175,15 +174,6 @@ Graph.prototype = {
         self.expandNode(self.root);
         self.update();
     },
-
-    // getColor: function(d) {
-    //     var self = this;
-    //     var color_num = d.name.split('').length + d.children.length;
-    //     color_num = color_num*123;
-    //     color_num = color_num%21;
-
-    //     return this.color[color_num];
-    // },
 
     collide: function (node, alpha) {
         var self = this,
@@ -434,6 +424,12 @@ Graph.prototype = {
         d3.select(self.el).selectAll('#' + className)
             .style("stroke-width", 10)
             .style("stroke", "red");
+        d3.select(self.el).selectAll('#link-' + className)
+            .style("stroke-width", 10)
+            .style("stroke", function (d) {
+            return d.target.color;
+        });
+
     },
 
     mouseOut: function (id) {
@@ -442,8 +438,11 @@ Graph.prototype = {
         d3.select(self.el).selectAll('#' + className)
             .style("stroke-width", 10)
             .style("stroke", function (d) {
-                return d.stroke;
-            });
+            return d.stroke;
+        });
+        d3.select(self.el).selectAll('#link-' + className)
+            .style("stroke-width", 4)
+            .style("stroke", "lightgrey");
     }
 };
 
