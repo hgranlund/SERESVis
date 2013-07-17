@@ -281,6 +281,7 @@ Graph.prototype = {
                 n.stroke = self.util.getColor((self.formatter.createNode(parent, 0)));
             }
             if (self.util.addNodeToNodes(n, self.nodes)) {
+                self.formatter.createLink(n.index, self.nodes);
                 self.links.push({
                     source: d.index,
                     target: n.index,
