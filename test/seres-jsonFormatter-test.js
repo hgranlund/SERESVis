@@ -194,9 +194,11 @@ describe('seres-jsonformatter:', function () {
       expect(node.children.length).toEqual(3);
     });
 
-    it('should add an empty children array if no children exist', function () {
+    it('should add an empty children/parents array if no children/parents exist', function () {
       var node = formatter.createNode('Forvaltingselement', 0);
-      expect(node.children.length).toEqual(0);
+      expect(node.children.length).toEqual(0, 'did not add empty children list');
+      node = formatter.createNode('Seres', 0);
+      expect(node.parents.length).toEqual(0, 'did not add empty parents list');
     });
 
     xit("should call addIndividualAttributes when an individual is created", function () {
@@ -265,7 +267,7 @@ describe('seres-jsonformatter:', function () {
     });
 
 
-    it("should add links/children for induviduals", function () {
+    it("should add parents/children for induviduals", function () {
       var nodes = formatter.toGraphObject(['test_begrep', 'test_sereselement', 'SERESelement'])
         .nodes;
       var links = formatter.createLink(0, nodes);
@@ -273,9 +275,13 @@ describe('seres-jsonformatter:', function () {
       expect(links[0].target).toEqual(1);
       expect(links[0].name).toEqual('sereselement');
 
-      expect(links[1].source).toEqual(0);
-      expect(links[1].target).toEqual(2);
-      expect(links[1].name).toEqual('type');
+      expect(links[1].source).toEqual(1);
+      expect(links[1].target).toEqual(0);
+      expect(links[1].name).toEqual('subClassOf');
+
+      expect(links[2].source).toEqual(0);
+      expect(links[2].target).toEqual(2);
+      expect(links[2].name).toEqual('type');
 
     });
   });

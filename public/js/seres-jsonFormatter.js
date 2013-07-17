@@ -108,9 +108,8 @@ function jsonFormatter(jsonArg) {
             'object': {}
         });
         var node = $.extend({}, subjectObj);
-        subject = subject || node.data.type || node.data['xmi.lapel'] || '';
+        node.name = subject || node.data.type || node.data['xmi.lapel'] || '';
         node.size = 10;
-        node.name = subject;
         node.id = subject;
         node.class = self.util.toLegalClassName(subject) || autoId++;
         node.index = index;
@@ -119,10 +118,10 @@ function jsonFormatter(jsonArg) {
         node.isIndividual = false;
         node.isExpanded = false;
         node.children = this.parentToChildMap[subject] || [];
+        node.parents = populateParents(node) || [];
         if (node.object.type === "Class") {
             node.size = 30;
         }
-        populateParents(node);
         var type = util.getPropertyValue('type', node.object);
         if (type && type !== "Class") {
             if (node.object.type in parentToChildMap) {
@@ -134,23 +133,23 @@ function jsonFormatter(jsonArg) {
 
     var populateParents = function (node) {
         var parent;
-        node.parents = [];
+        parents = [];
         for (var link in node.object) {
             parent = node.object[link];
             if (json.hasOwnProperty(parent)) {
-                node.parents.push({
+                parents.push({
                     'parent': parent,
                     'link': link
                 });
             }
         }
+        return parents;
     };
 
     var addIndividualAttributes = function (node) {
         var parent;
         node.isIndividual = true;
         node.size = 5;
-        node.name = "";
     };
 
     var createLink = function (index, nodes) {
@@ -167,7 +166,13 @@ function jsonFormatter(jsonArg) {
                     source: nodes[subjectId].index,
                     target: object.index,
                     name: children[object.id]
-                    // links.push([nodes[subjectId].id, object.id]);
+                });
+            }
+            if (subject.children.indexOf(object.id) !== -1) {
+                links.push({
+                    source: object.index,
+                    target: nodes[subjectId].index,
+                    name: 'subClassOf'
                 });
             }
         });
