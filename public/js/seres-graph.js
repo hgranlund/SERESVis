@@ -426,7 +426,9 @@ Graph.prototype = {
             .style("stroke", "red");
         d3.select(self.el).selectAll('#link-' + className)
             .style("stroke-width", 10)
-            .style("stroke", "red");
+            .style("stroke", function (d) {
+            return d.target.color;
+        });
 
     },
 
