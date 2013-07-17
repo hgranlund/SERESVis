@@ -243,7 +243,6 @@ Graph.prototype = {
             n.stroke = d.color;
             self.nodes.push(n);
             nodeIdToUpdate.push(n.index);
-            debugger;
             if (d.isIndividual) {
                 self.expandClassToIndividual(n);
             }
@@ -425,7 +424,7 @@ Graph.prototype = {
             .style("stroke-width", 10)
             .style("stroke", "red");
         d3.select(self.el).selectAll('#link-' + className)
-            .style("stroke-width", 10)
+            .style("stroke-width", 6)
             .style("stroke", function (d) {
             return d.target.color;
         });
