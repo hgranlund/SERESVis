@@ -26,10 +26,22 @@ window.seres.utilities = function (d3) {
         }
     };
 
+    var addNodeToNodes = function (elm, nodes) {
+        var equalNodes = nodes.filter(function (node) {
+            return node.id === elm.id;
+        });
+        if (equalNodes.length === 0) {
+            nodes.push(elm);
+            return true;
+        }
+        return false;
+    };
+
     return {
         getColor: getColor,
         toLegalClassName: toLegalClassName,
-        getPropertyValue: getPropertyValue
+        getPropertyValue: getPropertyValue,
+        addNodeToNodes: addNodeToNodes
     };
 
 
