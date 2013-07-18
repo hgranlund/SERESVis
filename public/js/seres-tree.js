@@ -141,7 +141,7 @@ Tree.prototype = {
                 return d.id || (d.id = ++self.i);
             });
 
-        var nodeEnter = node.enter().append("svg:g")
+        self.nodeEnter = node.enter().append("svg:g")
             .attr("class", "node")
             .attr("transform", function (d) {
                 return "translate(" + source.y0 + "," + source.x0 + ")";
@@ -149,7 +149,7 @@ Tree.prototype = {
             .style("opacity", 1e-6);
 
         // Enter any new nodes at the parent's previous position.
-        nodeEnter.append("svg:rect")
+        self.nodeEnter.append("svg:rect")
             .attr("y", -self.barHeight / 2)
             .attr("height", self.barHeight)
             .attr("id", function (d) {
@@ -162,14 +162,14 @@ Tree.prototype = {
             .on("mouseover", fireMouseOver)
             .on("mouseout", fireMouseOut);
 
-        nodeEnter.append("svg:text")
+        self.nodeEnter.append("svg:text")
             .attr("dy", 3.5)
             .attr("dx", 5.5)
             .text(function (d) {
                 return d.name;
             });
 
-        nodeEnter.append("svg:text")
+        self.nodeEnter.append("svg:text")
             .attr("dy", ".35em")
             .attr("dx", "11em")
             .style("text-anchor", "start")
@@ -188,7 +188,7 @@ Tree.prototype = {
             });
 
         // Transition nodes to their new position.
-        nodeEnter.transition()
+        self.nodeEnter.transition()
             .duration(self.duration)
             .attr("transform", function (d) {
                 return "translate(" + d.y + "," + d.x + ")";
@@ -279,6 +279,16 @@ Tree.prototype = {
 
         function click(d) {
             self.toggle(d);
+            d3.select(this).text(function (d) {
+                //TODO: add icon for individuals
+                if (d._children || d.individuals) {
+                    return "+";
+                } else if (d.children) {
+                    return "-";
+                } else {
+                    return;
+                }
+            });
             self.update(d);
         }
     },
