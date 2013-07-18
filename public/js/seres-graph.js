@@ -138,15 +138,14 @@ Graph.prototype = {
 
     click: function (id) {
         var self = this;
-        var d = self.util.getNode(id, self.nodes);
-        // console.log("LOG:", d.name, "--", d);
-        if (d.isIndividual) {
-
-        } else {
-            if (d !== self.root) {
-                self.clickNode(d);
-            };
-        }
+        var d = self.util.getNode(id, self.nodes) || self.formatter.createNode(id, self.nodes.length);
+        if (d && !d.isExpanded) {
+            if (d.isIndividual) {
+                self.clickIndividual(d);
+            } else {
+                self.clickClass(d);
+            }
+        };
         // if (!d.isExpanded) {
         //     if (d.children.length > 0 || d.parents.length > 0) {
         //         self.expandNode(d);
@@ -161,7 +160,7 @@ Graph.prototype = {
         // }
     },
 
-    clickNode: function (d) {
+    clickClass: function (d) {
         var self = this;
         self.makeRoot(d);
         self.nodes = [];
@@ -172,7 +171,27 @@ Graph.prototype = {
         self.expandNode(d);
         self.center(d);
         self.update();
+    },
 
+    clickIndividual: function (d) {
+        var self = this,
+            subClassOfId = self.util.getPropertyValue('type', d.object);
+        if (!subClassOfId) {
+            return;
+        }
+        if (self.root.id === subClassOfId) {
+            self.expandNode(d);
+
+        } else {
+            var node = self.util.getNode(subClassOfId, self.nodes);
+            self.collapseNode(self.root);
+            self.update();
+            self.makeRoot(node);
+            self.expandNode(node);
+            self.center(node);
+            self.expandNode(d);
+        }
+        self.update();
     },
 
 
@@ -326,14 +345,13 @@ Graph.prototype = {
         var indexesToRemove = [];
         getIndexesOfExpandedChildren(d);
         self.removeIndexesFromGraph(indexesToRemove);
-        d.color = d.stroke.brighter();
+        d.color = d.stroke.brighter() || self.util.getColor(d);
         d.isExpanded = false;
 
         function getIndexesOfExpandedChildren(d) {
             var tailRec = [];
             for (var j = 0; j < self.nodes.length; j++) {
                 node = self.nodes[j];
-                //TODO: collapse individual links
                 if (util.getNodeInRelatedList(node.id, d.parents)) {
                     if (!node.isExpanded) {
                         indexesToRemove.push(node.index);
