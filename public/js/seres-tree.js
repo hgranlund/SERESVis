@@ -114,6 +114,7 @@ Tree.prototype = {
         self.root.color = self.util.getColor(self.root);
         self.text = "";
         self.nodes = self.root;
+        self.focusedNode = self.root;
         self.mapNodes(function (d) {
             if (d.children.length === 0) {
                 d.children = null;
@@ -173,6 +174,9 @@ Tree.prototype = {
             .attr("dx", "11em")
             .style("text-anchor", "start")
             .style("font-size", "24px")
+            .style("pointer-events", "all")
+            .style("cursor", "pointer")
+            .on("click", click)
             .text(function (d) {
                 if (d._children || d.individuals) {
                     return "+";
@@ -219,7 +223,7 @@ Tree.prototype = {
             });
 
         // Enter any new links at the parent's previous position.
-        link.enter().insert("svg:path", "g")
+        link.enter().append("svg:path", "g")
             .attr("class", "link")
             .attr("d", function (d) {
                 var o = {
@@ -272,14 +276,18 @@ Tree.prototype = {
         function fireMouseOut(d) {
             window.seres.eventController.fireMouseOut(d);
         }
+
+        function click(d) {
+            self.toggle(d);
+            self.update(d);
+        }
     },
 
 
     click: function (id) {
         var self = this;
         var d = self.util.getNode(id, self.nodes);
-        self.toggle(d);
-        self.update(d);
+        self.focusedNode = d;
     },
 
 
@@ -327,7 +335,7 @@ Tree.prototype = {
                 d.children.map(mapL);
                 callback(d);
             }
-        };
+        }
         mapL(d);
     },
 
