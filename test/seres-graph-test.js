@@ -39,16 +39,16 @@ describe('graph', function () {
         },
         'test_sereselement': {
             'data': {
-                "type": "kommentar",
-                "xmi.uuid": "3333VkUhCEeKYVYkXVtHdsQ",
-                "språk": "bokmål",
-                "xmi.label": "Unknown",
-                "tekst": "Allergi er definert i \"Definisjon\"-attributtet",
-                "xmi.id": "a14"
+                'type': 'kommentar',
+                'xmi.uuid': '3333VkUhCEeKYVYkXVtHdsQ',
+                'språk': 'bokmål',
+                'xmi.label': 'Unknown',
+                'tekst': 'Allergi er definert i \'Definisjon\'-attributtet',
+                'xmi.id': 'a14'
             },
             'object': {
-                "sereselement": "test_begrep",
-                "type": "SERESelement"
+                'sereselement': 'test_begrep',
+                'type': 'SERESelement'
             }
         },
         'test_begrep': {
@@ -57,7 +57,7 @@ describe('graph', function () {
             },
             'object': {
                 'type': 'SERESelement',
-                "sereselement": "test_sereselement",
+                'sereselement': 'test_sereselement',
                 'dokumentasjon': 'test_nivå'
             }
         },
@@ -74,7 +74,7 @@ describe('graph', function () {
     var individual;
 
     beforeEach(function () {
-        el = document.createElement("div");
+        el = document.createElement('div');
         graph = new Graph(el, json);
         individual = {
             data: {
@@ -99,29 +99,29 @@ describe('graph', function () {
 
     });
 
-    describe("Integration tests", function () {
+    describe('Integration tests', function () {
         it('it should render 4 initial nodes and  3 initial paths.', function () {
-            var node = el.getElementsByClassName("node");
-            var paths = el.getElementsByTagName("path");
+            var node = el.getElementsByClassName('node');
+            var paths = el.getElementsByTagName('path');
             expect(node.length).toEqual(4);
             expect(paths.length).toEqual(3);
         });
     });
 
-    describe("click", function () {
+    describe('click', function () {
         var center, makeRoot, expandNode, collapseNode, node;
 
         beforeEach(function () {
-            center = spyOn(graph, "center");
-            makeRoot = spyOn(graph, "makeRoot");
-            expandNode = spyOn(graph, "expandNode");
-            collapseNode = spyOn(graph, "collapseNode");
-            clickClass = spyOn(graph, "clickClass");
-            clickIndividual = spyOn(graph, "clickIndividual");
+            center = spyOn(graph, 'center');
+            makeRoot = spyOn(graph, 'makeRoot');
+            expandNode = spyOn(graph, 'expandNode');
+            collapseNode = spyOn(graph, 'collapseNode');
+            clickClass = spyOn(graph, 'clickClass');
+            clickIndividual = spyOn(graph, 'clickIndividual');
             node = graph.nodes[0];
         });
 
-        it("should call clickClass and if node is a class and not expanded  ", function () {
+        it('should call clickClass and if node is a class and not expanded  ', function () {
             node.isExpanded = false;
             node.isIndividual = false;
             graph.click(node.id);
@@ -129,7 +129,7 @@ describe('graph', function () {
             // expect(clickClass).wasCalledWith(node);
         });
 
-        it("should not do anything if node is a class and  expanded  ", function () {
+        it('should not do anything if node is a class and  expanded  ', function () {
             node.isExpanded = true;
             node.isIndividual = false;
             graph.click(node.id);
@@ -137,7 +137,7 @@ describe('graph', function () {
             // expect(clickIndividual.wasCalled).toBeFalsy();
         });
 
-        it("should call clickIndividual and if node is a individual and not expanded  ", function () {
+        it('should call clickIndividual and if node is a individual and not expanded  ', function () {
             node.isExpanded = false;
             node.isIndividual = true;
             graph.click(node.id);
@@ -145,7 +145,7 @@ describe('graph', function () {
             // expect(clickIndividual).wasCalledWith(node);
         });
 
-        it("should not do anything if node is a individual and  expanded  ", function () {
+        it('should not do anything if node is a individual and  expanded  ', function () {
             node.isIndividual = true;
             node.isExpanded = true;
             graph.click(node.id);
@@ -153,7 +153,7 @@ describe('graph', function () {
             // expect(clickClass.wasCalled).toBeFalsy();
         });
 
-        xit("should call center and makeRoot if node is expanded ", function () {
+        xit('should call center and makeRoot if node is expanded ', function () {
             node.isExpanded = true;
             graph.click(node.id);
             expect(center).wasCalled();
@@ -162,7 +162,7 @@ describe('graph', function () {
             expect(makeRoot).wasCalledWith(node);
         });
 
-        xit("should call expandNode and makeRoot if node is not expanded ", function () {
+        xit('should call expandNode and makeRoot if node is not expanded ', function () {
             node.isExpanded = true;
             graph.click(node.id);
             expect(center).wasCalled();
@@ -189,8 +189,8 @@ describe('graph', function () {
         });
 
 
-        it("should call expandClassToIndividual when an individual is opened", function () {
-            var expandClassToIndividual = spyOn(graph, "expandClassToIndividual");
+        it('should call expandClassToIndividual when an individual is opened', function () {
+            var expandClassToIndividual = spyOn(graph, 'expandClassToIndividual');
             var indiLinkedToSeres = individual;
             graph.expandNode(indiLinkedToSeres);
             expect(expandClassToIndividual).wasCalled();
@@ -198,7 +198,7 @@ describe('graph', function () {
         });
 
 
-        it("should create parent and children (links and nodes), when a individual is expanded", function () {
+        it('should create parent and children (links and nodes), when a individual is expanded', function () {
             graph.expandNode(graph.nodes[3]);
             var nodesLength = graph.nodes.length;
             var linksLength = graph.links.length;
@@ -211,9 +211,9 @@ describe('graph', function () {
         });
     });
 
-    describe("expandClassToIndividual", function () {
+    describe('expandClassToIndividual', function () {
 
-        it("should add the class corresponding to the induvidual", function () {
+        it('should add the class corresponding to the induvidual', function () {
             var indi = individual;
             indi.object['type'] = 'Nivå';
             indi.index = graph.nodes.length;
@@ -225,7 +225,7 @@ describe('graph', function () {
         });
 
 
-        it("should to nothing of class already is visable", function () {
+        it('should to nothing of class already is visable', function () {
             var indi = individual;
             indi.isIndividual = true;
             indi.index = graph.nodes.length;
@@ -302,7 +302,7 @@ describe('graph', function () {
 
     describe('compute', function () {
         it('should make seres to root', function () {
-            expect(graph.root.name).toBe("Seres");
+            expect(graph.root.name).toBe('Seres');
         });
         it('should define formater', function () {
             expect(graph.formatter).toBeDefined();

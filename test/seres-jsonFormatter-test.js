@@ -34,7 +34,7 @@ var jsonOrig = {
     },
     'object': {
       'type': 'SERESelement',
-      "begrep": "test_begrep"
+      'begrep': 'test_begrep'
     }
   },
   'test_begrep': {
@@ -43,7 +43,7 @@ var jsonOrig = {
     },
     'object': {
       'type': 'SERESelement',
-      "sereselement": "test_sereselement"
+      'sereselement': 'test_sereselement'
     }
   }
 };
@@ -80,17 +80,17 @@ describe('seres-jsonformatter:', function () {
       expect(formatter.toGraphObject).toBeDefined();
     });
 
-    it("should return json", function () {
+    it('should return json', function () {
       expect(formatter.toGraphObject(['SERESelement'])).toEqual(jasmine.any(Object));
     });
 
-    it("should have the right format", function () {
+    it('should have the right format', function () {
       var parsedJson = formatter.toGraphObject(['SERESelement']);
       expect(parsedJson.links).toBeDefined();
       expect(parsedJson.nodes).toBeDefined();
     });
 
-    it("should create and links with rigth id's", function () {
+    it('should create and links with rigth ids', function () {
       expand = [];
       for (var subject in jsonOrig) {
         expand.push(subject);
@@ -98,7 +98,7 @@ describe('seres-jsonformatter:', function () {
       var parsedJson = formatter.toGraphObject(expand);
       expect(parsedJson.links[0].source).toEqual(1);
       expect(parsedJson.links[0].target).toEqual(0);
-      expect(parsedJson.nodes[2].name).toEqual("Forvaltingselement");
+      expect(parsedJson.nodes[2].name).toEqual('Forvaltingselement');
     });
 
   });
@@ -118,22 +118,22 @@ describe('seres-jsonformatter:', function () {
       expect(formatter.toTreeObject).toBeDefined();
     });
 
-    it("should return object", function () {
+    it('should return object', function () {
       expect(formatter.toTreeObject()).toEqual(jasmine.any(Object));
     });
 
-    it("should have the right format", function () {
+    it('should have the right format', function () {
       var parsedJson = formatter.toTreeObject();
       expect(parsedJson[0].name).toBeDefined();
       expect(parsedJson[0].children).toBeDefined();
     });
 
-    it("should add children to nodes ", function () {
+    it('should add children to nodes ', function () {
       var parsedJson = formatter.toTreeObject();
       expect(parsedJson[0].name).toEqual('Seres');
       expect(parsedJson[0].children.length).toEqual(3);
-      expect(parsedJson[0].children[2].name).toEqual("SERESelement");
-      expect(parsedJson[0].children[2].individuals[0].class).toEqual("test-sereselement");
+      expect(parsedJson[0].children[2].name).toEqual('SERESelement');
+      expect(parsedJson[0].children[2].individuals[0].class).toEqual('test-sereselement');
     });
 
   });
@@ -162,7 +162,7 @@ describe('seres-jsonformatter:', function () {
     });
 
     it('should create a standard node if json does not contain subject', function (done) {
-      // console.log("LOG:",node);
+      // console.log('LOG:',node);
       var node = formatter.createNode('', 0);
       expect(node.size).toBeDefined();
       expect(node.isExpanded).toEqual(false);
@@ -171,7 +171,7 @@ describe('seres-jsonformatter:', function () {
     });
 
 
-    it("should auto increment default class", function () {
+    it('should auto increment default class', function () {
       var node = formatter.createNode('', 0);
       expect(node.class).toEqual(0);
       node = formatter.createNode('', 0);
@@ -181,7 +181,7 @@ describe('seres-jsonformatter:', function () {
 
     });
 
-    it("should create individuals with all children", function () {
+    it('should create individuals with all children', function () {
       var node = formatter.createNode('test_sereselement', 0);
       expect(node.children.length).toEqual(1);
       expect(node.children[0].nodeId).toEqual('test_begrep');
@@ -201,45 +201,45 @@ describe('seres-jsonformatter:', function () {
       expect(node.parents.length).toEqual(0, 'did not add empty parents list');
     });
 
-    xit("should call addIndividualAttributes when an individual is created", function () {
-      var addIndividualAttributes = spyOn(formatter, "addIndividualAttributes");
+    xit('should call addIndividualAttributes when an individual is created', function () {
+      var addIndividualAttributes = spyOn(formatter, 'addIndividualAttributes');
       var node = formatter.createNode('test_sereselement', 0);
       expect(addIndividualAttributes).wasCalled();
       expect(addIndividualAttributes.mostRecentCall.args[0].id).toBe(node.id);
     });
 
-    xit("should call populateParents", function () {
-      var populateParents = spyOn(formatter, "populateParents");
+    xit('should call populateParents', function () {
+      var populateParents = spyOn(formatter, 'populateParents');
       var node = formatter.createNode('test_sereselement', 0);
-      console.log("LOG:", populateParents);
+      console.log('LOG:', populateParents);
       expect(populateParents).wasCalled();
       expect(populateParents.mostRecentCall.args[0].id).toBe(node.id);
     });
   });
 
 
-  describe("addIndividualAttributes", function () {
+  describe('addIndividualAttributes', function () {
     var indi;
 
     beforeEach(function () {
       indi = individual;
     });
 
-    it("should set isIndividual to true", function () {
+    it('should set isIndividual to true', function () {
       indi.isIndividual = false;
       formatter.addIndividualAttributes(indi);
       expect(indi.isIndividual).toBeTruthy();
     });
   });
 
-  describe("populateParents", function () {
+  describe('populateParents', function () {
     var indi;
 
     beforeEach(function () {
       indi = individual;
     });
 
-    it("should add all parents to node", function () {
+    it('should add all parents to node', function () {
       var node = formatter.createNode('test_sereselement', 0);
       expect(node.parents.length).toEqual(2);
       expect(node.parents[1]).toMatch({
@@ -267,7 +267,7 @@ describe('seres-jsonformatter:', function () {
     });
 
 
-    it("should add parents/children for induviduals", function () {
+    it('should add parents/children for induviduals', function () {
       var nodes = formatter.toGraphObject(['test_begrep', 'test_sereselement', 'SERESelement'])
         .nodes;
       var links = formatter.createLink(0, nodes);
