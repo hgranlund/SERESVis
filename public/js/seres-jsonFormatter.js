@@ -25,7 +25,10 @@ function jsonFormatter(jsonArg) {
             for (var link in json[child].object) {
                 parent = json[child].object[link];
                 if (json.hasOwnProperty(parent)) {
-                    parentToChildMap[parent].push(child);
+                    parentToChildMap[parent].push({
+                        'nodeId': child,
+                        'link': link
+                    });
                 }
             }
         }
@@ -138,7 +141,7 @@ function jsonFormatter(jsonArg) {
             parent = node.object[link];
             if (json.hasOwnProperty(parent)) {
                 parents.push({
-                    'parent': parent,
+                    'nodeId': parent,
                     'link': link
                 });
             }
@@ -156,8 +159,9 @@ function jsonFormatter(jsonArg) {
         var subjectId = index,
             subject = nodes[subjectId],
             children = {},
+            link,
             links = [];
-        for (var link in subject.object) {
+        for (link in subject.object) {
             children[subject.object[link]] = link;
         }
         nodes.map(function (object) {
@@ -168,11 +172,12 @@ function jsonFormatter(jsonArg) {
                     name: children[object.id]
                 });
             }
-            if (subject.children.indexOf(object.id) !== -1) {
+            link = util.getNodeInRelatedList(object.id, subject.children);
+            if (link) {
                 links.push({
                     source: object.index,
                     target: nodes[subjectId].index,
-                    name: 'subClassOf'
+                    name: link.link
                 });
             }
         });

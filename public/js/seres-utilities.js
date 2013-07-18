@@ -45,12 +45,22 @@ window.seres.utilities = function (d3) {
         return equalNodes[0] || false;
     };
 
+    var getNodeInRelatedList = function (id, relList) {
+        for (var i = 0; i < relList.length; i++) {
+            if (relList[i].nodeId === id) {
+                return relList[i];
+            }
+        }
+        return false;
+    };
+
     return {
         getColor: getColor,
         toLegalClassName: toLegalClassName,
         getPropertyValue: getPropertyValue,
         addNodeToNodes: addNodeToNodes,
-        getNode: getNode
+        getNode: getNode,
+        getNodeInRelatedList: getNodeInRelatedList
     };
 
 

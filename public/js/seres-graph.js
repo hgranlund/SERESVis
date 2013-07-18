@@ -246,12 +246,12 @@ Graph.prototype = {
         }
         if (d.isIndividual) {
             d.parents.map(function (link) {
-                expand(self.formatter.createNode(link.parent, self.nodes.length));
+                expand(self.formatter.createNode(link.nodeId, self.nodes.length));
             });
         }
 
-        d.children.map(function (subject) {
-            expand(self.formatter.createNode(subject, self.nodes.length));
+        d.children.map(function (link) {
+            expand(self.formatter.createNode(link.nodeId, self.nodes.length));
         });
         nodeIdToUpdate.map(function (index) {
             self.links = self.links.concat(self.formatter.createLink(index, self.nodes));
@@ -282,6 +282,7 @@ Graph.prototype = {
                 n.stroke = self.util.getColor((self.formatter.createNode(parent, 0)));
             }
             if (self.util.addNodeToNodes(n, self.nodes)) {
+                d.color = n.color.brighter();
                 self.formatter.createLink(n.index, self.nodes);
                 self.links.push({
                     source: d.index,
@@ -301,7 +302,7 @@ Graph.prototype = {
             children = d.children;
         if (d.children.length === 0) {
             return;
-        };
+        }
         var indexesToRemove = [];
         getIndexesOfExpandedChildren(d);
         self.removeIndexesFromGraph(indexesToRemove);
@@ -312,7 +313,8 @@ Graph.prototype = {
             var tailRec = [];
             for (var j = 0; j < self.nodes.length; j++) {
                 node = self.nodes[j];
-                if (d.children.indexOf(node.id) !== -1) {
+                //TODO: collapse individual links
+                if (util.getNodeInRelatedList(node.id, d.children)) {
                     indexesToRemove.push(node.index);
                     if (node.isExpanded && d.children.length !== 0) {
                         node.isExpanded = false;

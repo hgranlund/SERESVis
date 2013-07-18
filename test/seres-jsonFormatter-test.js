@@ -150,7 +150,7 @@ describe('seres-jsonformatter:', function () {
       expect(node.isExpanded).toEqual(false);
     });
 
-    it('should create a class/m induvituals with correct values', function () {
+    it('should create a class/w induvituals with correct values', function () {
       var node = formatter.createNode('SERESelement', 0);
       expect(node.name).toEqual('SERESelement');
       expect(node.index).toEqual(0);
@@ -158,7 +158,7 @@ describe('seres-jsonformatter:', function () {
       expect(node.object.subClassOf).toEqual('Seres');
       expect(node.isExpanded).toEqual(false);
       expect(node.children.length).toEqual(3);
-      expect(node.children[2]).toEqual('test_begrep');
+      expect(node.children[2].nodeId).toEqual('test_begrep');
     });
 
     it('should create a standard node if json does not contain subject', function (done) {
@@ -181,11 +181,11 @@ describe('seres-jsonformatter:', function () {
 
     });
 
-    //TODO: change format to [[child, linkName],[...]]
     it("should create individuals with all children", function () {
       var node = formatter.createNode('test_sereselement', 0);
       expect(node.children.length).toEqual(1);
-      expect(node.children[0]).toEqual('test_begrep');
+      expect(node.children[0].nodeId).toEqual('test_begrep');
+      expect(node.children[0].link).toEqual('sereselement');
     });
 
 
@@ -277,7 +277,7 @@ describe('seres-jsonformatter:', function () {
 
       expect(links[1].source).toEqual(1);
       expect(links[1].target).toEqual(0);
-      expect(links[1].name).toEqual('subClassOf');
+      expect(links[1].name).toEqual('begrep');
 
       expect(links[2].source).toEqual(0);
       expect(links[2].target).toEqual(2);

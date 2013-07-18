@@ -161,11 +161,11 @@ describe('graph', function () {
             var indiLinkedToSeres = individual;
             graph.expandNode(indiLinkedToSeres);
             expect(expandClassToIndividual).wasCalled();
-            expect(expandClassToIndividual.mostRecentCall.args[0].id).toBe(indiLinkedToSeres.children[0]);
+            expect(expandClassToIndividual.mostRecentCall.args[0].id).toBe(indiLinkedToSeres.children[0].nodeId);
         });
 
 
-        it("should create parent and children, links and nodes, when a individual is expanded", function () {
+        it("should create parent and children (links and nodes), when a individual is expanded", function () {
             graph.expandNode(graph.nodes[3]);
             var nodesLength = graph.nodes.length;
             var linksLength = graph.links.length;
