@@ -87,7 +87,7 @@ function jsonFormatter(jsonArg) {
                 parentsToChildMap[parent].push(child);
                 childs[child] = parent;
             }
-            if (json[child].object.type !== "Class") {
+            if (json[child].object.type !== 'Class') {
                 parentToInduvidual = json[child].object.type;
                 if (!(parentToInduvidual in parentToInduvidualsMap)) {
                     parentToInduvidualsMap[parentToInduvidual] = [];
@@ -122,11 +122,11 @@ function jsonFormatter(jsonArg) {
         node.isExpanded = false;
         node.children = this.parentToChildMap[subject] || [];
         node.parents = populateParents(node) || [];
-        if (node.object.type === "Class") {
+        if (node.object.type === 'Class') {
             node.size = 30;
         }
         var type = util.getPropertyValue('type', node.object);
-        if (type && type !== "Class") {
+        if (type && type !== 'Class') {
             if (node.object.type in parentToChildMap) {
                 addIndividualAttributes(node);
             }

@@ -40,7 +40,7 @@ describe('EventController', function () {
         };
 
     beforeEach(function () {
-        el = document.createElement("div");
+        el = document.createElement('div');
         graph = new Graph(el, json);
         tree = new Tree(el, json);
         controller = new EventController(tree, graph);
@@ -60,8 +60,8 @@ describe('EventController', function () {
         });
 
         it('should fire click in both tree and graph', function (done) {
-            var graphClick = spyOn(graph, "click");
-            var treeClick = spyOn(tree, "click");
+            var graphClick = spyOn(graph, 'click');
+            var treeClick = spyOn(tree, 'click');
             controller.fireClick(nodeData);
             expect(graphClick.wasCalled).toBeTruthy();
             expect(treeClick.wasCalled).toBeTruthy();
@@ -86,8 +86,8 @@ describe('EventController', function () {
         });
 
         it('should fire mouseOver in both tree and graph', function (done) {
-            var graphClick = spyOn(graph, "mouseOver");
-            var treeClick = spyOn(tree, "mouseOver");
+            var graphClick = spyOn(graph, 'mouseOver');
+            var treeClick = spyOn(tree, 'mouseOver');
             controller.fireMouseOver(nodeData);
             expect(graphClick.wasCalled).toBeTruthy();
             expect(treeClick.wasCalled).toBeTruthy();
@@ -111,9 +111,9 @@ describe('EventController', function () {
         });
 
         it('should fire mouseOut in both tree and graph', function (done) {
-            var graphClick = spyOn(graph, "mouseOut");
-            var treeClick = spyOn(tree, "mouseOut");
-            var getNode = spyOn(util, "getNode").andReturn(nodeData);
+            var graphClick = spyOn(graph, 'mouseOut');
+            var treeClick = spyOn(tree, 'mouseOut');
+            var getNode = spyOn(util, 'getNode').andReturn(nodeData);
             controller.fireMouseOut(nodeData);
             expect(graphClick.wasCalled).toBeTruthy();
             expect(treeClick.wasCalled).toBeTruthy();

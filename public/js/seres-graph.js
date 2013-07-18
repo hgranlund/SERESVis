@@ -40,16 +40,16 @@ Graph.prototype = {
             .start();
 
 
-        self.svg = d3.select(el).append("svg")
-            .attr("width", self.width)
-            .attr("class", "svg")
-            .attr("height", self.height);
+        self.svg = d3.select(el).append('svg')
+            .attr('width', self.width)
+            .attr('class', 'svg')
+            .attr('height', self.height);
 
 
         self.nodes = self.force.nodes();
         self.links = self.force.links();
-        self.node = self.svg.selectAll(".node");
-        self.link = self.svg.selectAll(".link");
+        self.node = self.svg.selectAll('.node');
+        self.link = self.svg.selectAll('.link');
 
         function tick(e) {
             if (e.alpha > 0.05) {
@@ -73,39 +73,39 @@ Graph.prototype = {
         self.node = self.node.data(self.force.nodes());
         self.link.exit().remove();
         self.node.exit().remove();
-        self.link.enter().append("svg:path")
-            .style("stroke", "lightgrey")
-            .style("stroke-width", 4)
-            .style("opacity", 0.5)
-            .attr('class', "link")
+        self.link.enter().append('svg:path')
+            .style('stroke', 'lightgrey')
+            .style('stroke-width', 4)
+            .style('opacity', 0.5)
+            .attr('class', 'link')
             .attr('id', function (d) {
-                return ("link-" + self.util.toLegalClassName(d.target.id));
+                return ('link-' + self.util.toLegalClassName(d.target.id));
             });
 
-        self.node.enter().append("g")
-            .attr("class", "node");
+        self.node.enter().append('g')
+            .attr('class', 'node');
 
 
-        self.circle = self.node.append("circle")
+        self.circle = self.node.append('circle')
             .on('click', fireClick)
             .call(self.force.drag)
-            .on("mouseover", fireMouseOver)
-            .on("mouseout", fireMouseOut)
-            .style("fill", function (d) {
+            .on('mouseover', fireMouseOver)
+            .on('mouseout', fireMouseOut)
+            .style('fill', function (d) {
                 return d.color;
             })
-            .attr("id", function (d) {
+            .attr('id', function (d) {
                 return self.util.toLegalClassName(d.id);
             })
-            .attr("r", function (d) {
+            .attr('r', function (d) {
                 return d.size;
             })
-            .style("stroke-width", 10)
-            .style("stroke", function (d) {
+            .style('stroke-width', 10)
+            .style('stroke', function (d) {
                 return d.stroke;
             });
 
-        self.node.append("title")
+        self.node.append('title')
             .text(function (d) {
                 if (d.isIndividual) {
                     return 'uuid: ' + d.data['xmi.uuid'];
@@ -113,12 +113,12 @@ Graph.prototype = {
                 return d.name;
             });
 
-        self.node.append("text")
-            .attr("text-anchor", "middle")
-            .attr("dy", ".35em")
+        self.node.append('text')
+            .attr('text-anchor', 'middle')
+            .attr('dy', '.35em')
             .text(function (d) {
                 if (d.isIndividual) {
-                    return "";
+                    return '';
                 }
                 return d.name;
             });
@@ -250,17 +250,17 @@ Graph.prototype = {
 
     updateNodeAndLinkPositions: function (duration) {
         duration = duration || 0;
-        this.link.transition().duration(duration).attr("d", function (d) {
+        this.link.transition().duration(duration).attr('d', function (d) {
             var dx = d.target.x - d.source.x,
                 dy = d.target.y - d.source.y,
                 dr = Math.sqrt(dx * dx + dy * dy);
-            return "M" + d.source.x + "," + d.source.y + "A" + dr + "," + dr + " 0 0,1 " + d.target.x + "," + d.target.y;
+            return 'M' + d.source.x + ',' + d.source.y + 'A' + dr + ',' + dr + ' 0 0,1 ' + d.target.x + ',' + d.target.y;
         });
 
-        this.node.transition().duration(duration).attr("transform", function (d) {
+        this.node.transition().duration(duration).attr('transform', function (d) {
             // d.x = Math.max(d.size, Math.min(self.width - d.size, d.x));
             // d.y = Math.max(d.size, Math.min(self.height - d.size, d.y));
-            return "translate(" + d.x + "," + d.y + ")";
+            return 'translate(' + d.x + ',' + d.y + ')';
         });
     },
 
@@ -359,7 +359,7 @@ Graph.prototype = {
                             node.isExpanded = false;
                             tailRec.push(node);
                         }
-                    };
+                    }
                 }
                 if (util.getNodeInRelatedList(node.id, d.children)) {
                     indexesToRemove.push(node.index);
@@ -487,11 +487,11 @@ Graph.prototype = {
         var self = this;
         var className = self.util.toLegalClassName(id);
         d3.select(self.el).selectAll('#' + className)
-            .style("stroke-width", 10)
-            .style("stroke", "red");
+            .style('stroke-width', 10)
+            .style('stroke', 'red');
         d3.select(self.el).selectAll('#link-' + className)
-            .style("stroke-width", 10)
-            .style("stroke", function (d) {
+            .style('stroke-width', 10)
+            .style('stroke', function (d) {
                 return d.target.color;
             });
 
@@ -501,13 +501,13 @@ Graph.prototype = {
         var self = this;
         var className = self.util.toLegalClassName(id);
         d3.select(self.el).selectAll('#' + className)
-            .style("stroke-width", 10)
-            .style("stroke", function (d) {
+            .style('stroke-width', 10)
+            .style('stroke', function (d) {
                 return d.stroke;
             });
         d3.select(self.el).selectAll('#link-' + className)
-            .style("stroke-width", 4)
-            .style("stroke", "lightgrey");
+            .style('stroke-width', 4)
+            .style('stroke', 'lightgrey');
     }
 };
 
