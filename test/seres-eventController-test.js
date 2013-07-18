@@ -113,7 +113,7 @@ describe('EventController', function () {
         it('should fire mouseOut in both tree and graph', function (done) {
             var graphClick = spyOn(graph, "mouseOut");
             var treeClick = spyOn(tree, "mouseOut");
-            var getNode = spyOn(tree, "getNode").andReturn(nodeData);
+            var getNode = spyOn(util, "getNode").andReturn(nodeData);
             controller.fireMouseOut(nodeData);
             expect(graphClick.wasCalled).toBeTruthy();
             expect(treeClick.wasCalled).toBeTruthy();

@@ -36,7 +36,7 @@ Graph.prototype = {
             }
         })
             .on('tick', tick)
-            .gravity(0.006)
+            .gravity(0.06)
             .start();
 
 
@@ -72,7 +72,7 @@ Graph.prototype = {
         self.node = self.node.data(self.force.nodes());
         self.link.exit().remove();
         self.node.exit().remove();
-        self.link.enter().insert("svg:path")
+        self.link.enter().append("svg:path")
             .style("stroke", "lightgrey")
             .style("stroke-width", 4)
             .style("opacity", 0.5)
@@ -82,7 +82,7 @@ Graph.prototype = {
             return ("link-" + self.util.toLegalClassName(d.source.id) + self.util.toLegalClassName(d.target.id));
         });
 
-        self.node.enter().insert("g")
+        self.node.enter().append("g")
             .attr("class", "node");
 
         self.circle = self.node.insert("circle")
@@ -105,7 +105,7 @@ Graph.prototype = {
             return d.stroke;
         });
 
-        self.node.insert("title")
+        self.node.append("title")
             .text(function (d) {
             if (d.isIndividual) {
                 return 'uuid: ' + d.data['xmi.uuid'];
@@ -113,7 +113,7 @@ Graph.prototype = {
             return d.name;
         });
 
-        self.node.insert("text")
+        self.node.append("text")
             .attr("text-anchor", "middle")
             .attr("dy", ".35em")
             .text(function (d) {
@@ -144,21 +144,62 @@ Graph.prototype = {
 
     click: function (id) {
         var self = this;
-        var d = self.util.getNode(id, self.nodes);
-        // console.log("LOG:", d.name, "--", d);
-        if (!d.isExpanded) {
-            if (d.children.length > 0 || d.parents.length > 0) {
-                self.expandNode(d);
-                self.root.fixed = false;
-                self.makeRoot(d);
-                self.update();
+        var d = self.util.getNode(id, self.nodes) || self.formatter.createNode(id, self.nodes.length);
+        if (d && !d.isExpanded) {
+            if (d.isIndividual) {
+                self.clickIndividual(d);
+            } else {
+                self.clickClass(d);
             }
-        } else {
-            self.collapseNode(d);
-            self.makeRoot(d);
-            self.center(d);
-        }
+        };
+        // if (!d.isExpanded) {
+        //     if (d.children.length > 0 || d.parents.length > 0) {
+        //         self.expandNode(d);
+        //         self.root.fixed = false;
+        //         self.makeRoot(d);
+        //         self.update();
+        //     }
+        // } else {
+        //     self.collapseNode(d);
+        //     self.makeRoot(d);
+        //     self.center(d);
+        // }
     },
+
+    clickClass: function (d) {
+        var self = this;
+        self.makeRoot(d);
+        self.nodes = [];
+        self.links = [];
+        self.update();
+        d.index = 0;
+        self.util.addNodeToNodes(d, self.nodes);
+        self.expandNode(d);
+        self.center(d);
+        self.update();
+    },
+
+    clickIndividual: function (d) {
+        var self = this,
+            subClassOfId = self.util.getPropertyValue('type', d.object);
+        if (!subClassOfId) {
+            return;
+        }
+        if (self.root.id === subClassOfId) {
+            self.expandNode(d);
+
+        } else {
+            var node = self.util.getNode(subClassOfId, self.nodes);
+            self.collapseNode(self.root);
+            self.update();
+            self.makeRoot(node);
+            self.expandNode(node);
+            self.center(node);
+            self.expandNode(d);
+        }
+        self.update();
+    },
+
 
     compute: function (json) {
         var self = this;
@@ -238,7 +279,7 @@ Graph.prototype = {
         d.color = self.util.getColor(d);
         var nodeIdToUpdate = [];
 
-        function expand(n) {
+        function add(n) {
             n.x = deltaX;
             n.y = deltaY;
             n.color = d.color.brighter();
@@ -250,14 +291,12 @@ Graph.prototype = {
                 }
             }
         }
-        if (d.isIndividual) {
-            d.parents.map(function (link) {
-                expand(self.formatter.createNode(link.nodeId, self.nodes.length));
-            });
-        }
+        d.parents.map(function (link) {
+            add(self.formatter.createNode(link.nodeId, self.nodes.length));
+        });
 
         d.children.map(function (link) {
-            expand(self.formatter.createNode(link.nodeId, self.nodes.length));
+            add(self.formatter.createNode(link.nodeId, self.nodes.length));
         });
         nodeIdToUpdate.map(function (index) {
             self.links = self.links.concat(self.formatter.createLink(index, self.nodes));
@@ -306,20 +345,28 @@ Graph.prototype = {
             self = this,
             node,
             children = d.children;
-        if (d.children.length === 0) {
+        if (d.children.length === 0 && d.parents.length === 0) {
             return;
         }
         var indexesToRemove = [];
         getIndexesOfExpandedChildren(d);
         self.removeIndexesFromGraph(indexesToRemove);
-        d.color = d.stroke.brighter();
+        d.color = d.stroke.brighter() || self.util.getColor(d);
         d.isExpanded = false;
 
         function getIndexesOfExpandedChildren(d) {
             var tailRec = [];
             for (var j = 0; j < self.nodes.length; j++) {
                 node = self.nodes[j];
-                //TODO: collapse individual links
+                if (util.getNodeInRelatedList(node.id, d.parents)) {
+                    if (!node.isExpanded) {
+                        indexesToRemove.push(node.index);
+                        if (node.isExpanded && d.parents.length !== 0) {
+                            node.isExpanded = false;
+                            tailRec.push(node);
+                        }
+                    };
+                }
                 if (util.getNodeInRelatedList(node.id, d.children)) {
                     indexesToRemove.push(node.index);
                     if (node.isExpanded && d.children.length !== 0) {
@@ -355,8 +402,8 @@ Graph.prototype = {
             if (index in indexUpdate) {
                 elem.index = indexUpdate[elem.index];
                 return true;
-            };
-        })
+            }
+        });
 
         self.links = self.links.filter(function (l) {
             if (l.target.index in indexUpdate) {

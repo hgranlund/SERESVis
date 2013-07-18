@@ -116,11 +116,44 @@ describe('graph', function () {
             makeRoot = spyOn(graph, "makeRoot");
             expandNode = spyOn(graph, "expandNode");
             collapseNode = spyOn(graph, "collapseNode");
+            clickClass = spyOn(graph, "clickClass");
+            clickIndividual = spyOn(graph, "clickIndividual");
             node = graph.nodes[0];
         });
 
+        it("should call clickClass and if node is a class and not expanded  ", function () {
+            node.isExpanded = false;
+            node.isIndividual = false;
+            graph.click(node.id);
+            expect(clickClass).wasCalled();
+            // expect(clickClass).wasCalledWith(node);
+        });
 
-        it("should call center and makeRoot if node is expanded ", function () {
+        it("should not do anything if node is a class and  expanded  ", function () {
+            node.isExpanded = true;
+            node.isIndividual = false;
+            graph.click(node.id);
+            expect(clickClass.wasCalled).toBeFalsy();
+            // expect(clickIndividual.wasCalled).toBeFalsy();
+        });
+
+        it("should call clickIndividual and if node is a individual and not expanded  ", function () {
+            node.isExpanded = false;
+            node.isIndividual = true;
+            graph.click(node.id);
+            expect(clickIndividual).wasCalled();
+            // expect(clickIndividual).wasCalledWith(node);
+        });
+
+        it("should not do anything if node is a individual and  expanded  ", function () {
+            node.isIndividual = true;
+            node.isExpanded = true;
+            graph.click(node.id);
+            expect(clickIndividual.wasCalled).toBeFalsy();
+            // expect(clickClass.wasCalled).toBeFalsy();
+        });
+
+        xit("should call center and makeRoot if node is expanded ", function () {
             node.isExpanded = true;
             graph.click(node.id);
             expect(center).wasCalled();
@@ -129,7 +162,7 @@ describe('graph', function () {
             expect(makeRoot).wasCalledWith(node);
         });
 
-        it("should call expandNode and makeRoot if node is not expanded ", function () {
+        xit("should call expandNode and makeRoot if node is not expanded ", function () {
             node.isExpanded = true;
             graph.click(node.id);
             expect(center).wasCalled();
