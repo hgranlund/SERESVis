@@ -504,7 +504,7 @@ Graph.prototype = {
             d3.select(self.el).selectAll('#link-' + className + self.util.toLegalClassName(link.nodeId))
                 .style("stroke-width", 6)
                 .style("stroke", function (d) {
-                return d3.rgb(d.target.color).darker();
+                return d3.rgb(d.source.color).darker();
             });
         });
 
