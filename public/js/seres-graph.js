@@ -36,7 +36,7 @@ Graph.prototype = {
                 }
             })
             .on('tick', tick)
-            .gravity(0.006)
+            .gravity(0.06)
             .start();
 
 
@@ -73,7 +73,7 @@ Graph.prototype = {
         self.node = self.node.data(self.force.nodes());
         self.link.exit().remove();
         self.node.exit().remove();
-        self.link.enter().insert("svg:path")
+        self.link.enter().append("svg:path")
             .style("stroke", "lightgrey")
             .style("stroke-width", 4)
             .style("opacity", 0.5)
@@ -82,11 +82,11 @@ Graph.prototype = {
                 return ("link-" + self.util.toLegalClassName(d.target.id));
             });
 
-        self.node.enter().insert("g")
+        self.node.enter().append("g")
             .attr("class", "node");
 
 
-        self.circle = self.node.insert("circle")
+        self.circle = self.node.append("circle")
             .on('click', fireClick)
             .call(self.force.drag)
             .on("mouseover", fireMouseOver)
@@ -105,7 +105,7 @@ Graph.prototype = {
                 return d.stroke;
             });
 
-        self.node.insert("title")
+        self.node.append("title")
             .text(function (d) {
                 if (d.isIndividual) {
                     return 'uuid: ' + d.data['xmi.uuid'];
@@ -113,7 +113,7 @@ Graph.prototype = {
                 return d.name;
             });
 
-        self.node.insert("text")
+        self.node.append("text")
             .attr("text-anchor", "middle")
             .attr("dy", ".35em")
             .text(function (d) {
@@ -140,19 +140,41 @@ Graph.prototype = {
         var self = this;
         var d = self.util.getNode(id, self.nodes);
         // console.log("LOG:", d.name, "--", d);
-        if (!d.isExpanded) {
-            if (d.children.length > 0 || d.parents.length > 0) {
-                self.expandNode(d);
-                self.root.fixed = false;
-                self.makeRoot(d);
-                self.update();
-            }
+        if (d.isIndividual) {
+
         } else {
-            self.collapseNode(d);
-            self.makeRoot(d);
-            self.center(d);
+            if (d !== self.root) {
+                self.clickNode(d);
+            };
         }
+        // if (!d.isExpanded) {
+        //     if (d.children.length > 0 || d.parents.length > 0) {
+        //         self.expandNode(d);
+        //         self.root.fixed = false;
+        //         self.makeRoot(d);
+        //         self.update();
+        //     }
+        // } else {
+        //     self.collapseNode(d);
+        //     self.makeRoot(d);
+        //     self.center(d);
+        // }
     },
+
+    clickNode: function (d) {
+        var self = this;
+        self.makeRoot(d);
+        self.nodes = [];
+        self.links = [];
+        self.update();
+        d.index = 0;
+        self.util.addNodeToNodes(d, self.nodes);
+        self.expandNode(d);
+        self.center(d);
+        self.update();
+
+    },
+
 
     compute: function (json) {
         var self = this;
@@ -232,7 +254,7 @@ Graph.prototype = {
         d.color = self.util.getColor(d);
         var nodeIdToUpdate = [];
 
-        function expand(n) {
+        function add(n) {
             n.x = deltaX;
             n.y = deltaY;
             n.color = d.color.brighter();
@@ -244,14 +266,12 @@ Graph.prototype = {
                 }
             }
         }
-        if (d.isIndividual) {
-            d.parents.map(function (link) {
-                expand(self.formatter.createNode(link.nodeId, self.nodes.length));
-            });
-        }
+        d.parents.map(function (link) {
+            add(self.formatter.createNode(link.nodeId, self.nodes.length));
+        });
 
         d.children.map(function (link) {
-            expand(self.formatter.createNode(link.nodeId, self.nodes.length));
+            add(self.formatter.createNode(link.nodeId, self.nodes.length));
         });
         nodeIdToUpdate.map(function (index) {
             self.links = self.links.concat(self.formatter.createLink(index, self.nodes));

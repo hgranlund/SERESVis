@@ -120,7 +120,7 @@ describe('graph', function () {
         });
 
 
-        it("should call center and makeRoot if node is expanded ", function () {
+        xit("should call center and makeRoot if node is expanded ", function () {
             node.isExpanded = true;
             graph.click(node.id);
             expect(center).wasCalled();
@@ -129,7 +129,7 @@ describe('graph', function () {
             expect(makeRoot).wasCalledWith(node);
         });
 
-        it("should call expandNode and makeRoot if node is not expanded ", function () {
+        xit("should call expandNode and makeRoot if node is not expanded ", function () {
             node.isExpanded = true;
             graph.click(node.id);
             expect(center).wasCalled();
