@@ -133,7 +133,7 @@ describe('seres-jsonformatter:', function () {
       expect(parsedJson[0].name).toEqual('Seres');
       expect(parsedJson[0].children.length).toEqual(3);
       expect(parsedJson[0].children[2].name).toEqual('SERESelement');
-      expect(parsedJson[0].children[2].individuals[0].class).toEqual('test-sereselement');
+      expect(parsedJson[0].children[2].individuals[0].id).toEqual('test_sereselement');
     });
 
   });
@@ -143,7 +143,7 @@ describe('seres-jsonformatter:', function () {
     it('should create a individual with correct values', function () {
       var node = formatter.createNode('test_sereselement', 0);
       expect(node.index).toEqual(0);
-      expect(node.class).toEqual('test-sereselement');
+      expect(node.id).toEqual('test_sereselement');
       expect(node.data['xmi.uuid']).toEqual('fsadf23r3f98h978sfhsdfs98');
       expect(node.object.type).toEqual('SERESelement');
       expect(node.isIndividual).toBeTruthy('it is not marked as an individual');
@@ -154,7 +154,7 @@ describe('seres-jsonformatter:', function () {
       var node = formatter.createNode('SERESelement', 0);
       expect(node.name).toEqual('SERESelement');
       expect(node.index).toEqual(0);
-      expect(node.class).toEqual('sereselement');
+      expect(node.id).toEqual('SERESelement');
       expect(node.object.subClassOf).toEqual('Seres');
       expect(node.isExpanded).toEqual(false);
       expect(node.children.length).toEqual(3);
@@ -167,19 +167,8 @@ describe('seres-jsonformatter:', function () {
       expect(node.size).toBeDefined();
       expect(node.isExpanded).toEqual(false);
       expect(node.index).toEqual(0);
-      expect(node.class).toEqual(0);
     });
 
-
-    it('should auto increment default class', function () {
-      var node = formatter.createNode('', 0);
-      expect(node.class).toEqual(0);
-      node = formatter.createNode('', 0);
-      expect(node.class).toEqual(1);
-      node = formatter.createNode('', 0);
-      expect(node.class).toEqual(2);
-
-    });
 
     it('should create individuals with all children', function () {
       var node = formatter.createNode('test_sereselement', 0);

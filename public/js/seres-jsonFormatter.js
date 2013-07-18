@@ -114,10 +114,8 @@ function jsonFormatter(jsonArg) {
         node.name = subject || node.data.type || node.data['xmi.lapel'] || '';
         node.size = 10;
         node.id = subject;
-        node.class = self.util.toLegalClassName(subject) || autoId++;
         node.index = index;
-        node.x = 500;
-        node.y = 500;
+        node.x = 50
         node.isIndividual = false;
         node.isExpanded = false;
         node.children = this.parentToChildMap[subject] || [];
