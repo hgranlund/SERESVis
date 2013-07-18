@@ -68,7 +68,6 @@ Graph.prototype = {
             .links(self.links)
             .start();
 
-
         self.link = self.link.data(self.force.links());
         self.node = self.node.data(self.force.nodes());
         self.link.exit().remove();
@@ -78,18 +77,18 @@ Graph.prototype = {
             .style('stroke-width', 4)
             .style('opacity', 0.5)
             .attr('class', 'link')
+            .attr('drawOrder', '2')
             .attr('id', function (d) {
-                return ('link-' + self.util.toLegalClassName(d.target.id));
+                return ('link-' + self.util.toLegalClassName(d.source.id) + self.util.toLegalClassName(d.target.id));
             });
 
         self.node.enter().append('g')
             .attr('class', 'node');
 
-
         self.circle = self.node.append('circle')
             .on('click', fireClick)
             .call(self.force.drag)
-            .on('mouseover', fireMouseOver)
+            .attr('drawOrder', '1')
             .on('mouseout', fireMouseOut)
             .style('fill', function (d) {
                 return d.color;
@@ -100,7 +99,7 @@ Graph.prototype = {
             .attr('r', function (d) {
                 return d.size;
             })
-            .style('stroke-width', 10)
+            .style('stroke-width', 6)
             .style('stroke', function (d) {
                 return d.stroke;
             });
@@ -123,6 +122,7 @@ Graph.prototype = {
                 return d.name;
             });
 
+
         function fireClick(d) {
             window.seres.eventController.fireClick(d);
         }
@@ -134,6 +134,11 @@ Graph.prototype = {
         function fireMouseOut(d) {
             window.seres.eventController.fireMouseOut(d);
         }
+
+        // d3.selectAll('.graphNode, .graphLink')
+        //     .sort(function (a, b) {
+        //     return d3.descending(a.drawOrder, b.drawOrder);
+        // });
     },
 
     click: function (id) {
@@ -486,26 +491,48 @@ Graph.prototype = {
     mouseOver: function (id) {
         var self = this;
         var className = self.util.toLegalClassName(id);
+        var node = self.util.getNode(id, self.nodes);
+        node.children.map(function (link) {
+            d3.select(self.el).selectAll('#link-' + self.util.toLegalClassName(link.nodeId) + className)
+                .style('stroke-width', 6)
+                .style('stroke', function (d) {
+                    return d3.rgb(d.target.color).darker();
+                });
+        });
+        node.parents.map(function (link) {
+            d3.select(self.el).selectAll('#link-' + className + self.util.toLegalClassName(link.nodeId))
+                .style('stroke-width', 6)
+                .style('stroke', function (d) {
+                    return d3.rgb(d.target.color).darker();
+                });
+        });
+
         d3.select(self.el).selectAll('#' + className)
-            .style('stroke-width', 10)
+            .style('stroke-width', 6)
             .style('stroke', 'red');
-        d3.select(self.el).selectAll('#link-' + className)
-            .style('stroke-width', 10)
-            .style('stroke', function (d) {
-                return d.target.color;
-            });
 
     },
 
     mouseOut: function (id) {
         var self = this;
         var className = self.util.toLegalClassName(id);
+        var node = self.util.getNode(id, self.nodes);
+        node.children.map(function (link) {
+            d3.select(self.el).selectAll('#link-' + self.util.toLegalClassName(link.nodeId) + className)
+                .style('stroke-width', 4)
+                .style('stroke', 'lightgrey');
+        });
+        node.parents.map(function (link) {
+            d3.select(self.el).selectAll('#link-' + className + self.util.toLegalClassName(link.nodeId))
+                .style('stroke-width', 4)
+                .style('stroke', 'lightgrey');
+        });
+
         d3.select(self.el).selectAll('#' + className)
             .style('stroke-width', 10)
             .style('stroke', function (d) {
                 return d.stroke;
-            });
-        d3.select(self.el).selectAll('#link-' + className)
+            })
             .style('stroke-width', 4)
             .style('stroke', 'lightgrey');
     }
