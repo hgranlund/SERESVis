@@ -89,6 +89,7 @@ Graph.prototype = {
             .on('click', fireClick)
             .call(self.force.drag)
             .attr('drawOrder', '1')
+            .on('mouseover', fireMouseOver)
             .on('mouseout', fireMouseOut)
             .style('fill', function (d) {
             return d.color;
@@ -530,12 +531,10 @@ Graph.prototype = {
         });
 
         d3.select(self.el).selectAll('#' + className)
-            .style('stroke-width', 10)
+            .style('stroke-width', 6)
             .style('stroke', function (d) {
             return d.stroke;
-        })
-            .style('stroke-width', 4)
-            .style('stroke', 'lightgrey');
+        });
     }
 };
 
