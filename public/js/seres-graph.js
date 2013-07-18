@@ -6,10 +6,7 @@ function Graph(el, json) {
     this.init(el);
     this.compute(json);
 }
-// console.log(d.name +" : " + d.isExpanded);
-// .alpha(0)
-// console.log("LOG:", "this");
-//
+
 Graph.prototype = {
 
     init: function (el) {
@@ -17,7 +14,6 @@ Graph.prototype = {
         self.util = window.seres.utilities;
         self.el = el;
         self.nodeId = {};
-
 
         self.force = d3.layout.force()
             .size([self.width, self.height])
@@ -27,7 +23,6 @@ Graph.prototype = {
             if (d.source.isExpanded) {
                 dist *= 2;
             }
-            // console.log(d.source.name + "--" + d.target.name + " : " + dist);
             return dist;
         })
             .charge(function (d) {
@@ -40,7 +35,7 @@ Graph.prototype = {
                 return -5000;
             }
         })
-            .on("tick", tick)
+            .on('tick', tick)
             .gravity(0.006)
             .start();
 
@@ -57,7 +52,6 @@ Graph.prototype = {
         self.link = self.svg.selectAll(".link");
 
         function tick(e) {
-            // console.log("LOG:", e.alpha);
             if (e.alpha > 0.05) {
                 self.updateNodeAndLinkPositions();
                 self.updatePositions(e.alpha);
@@ -85,7 +79,7 @@ Graph.prototype = {
             .attr('class', "link")
             .attr('drawOrder', "2")
             .attr('id', function (d) {
-            return ("link-" + self.util.toLegalClassName(d.target.id));
+            return ("link-" + self.util.toLegalClassName(d.source.id) + self.util.toLegalClassName(d.target.id));
         });
 
         self.node.enter().insert("g")
@@ -113,6 +107,9 @@ Graph.prototype = {
 
         self.node.insert("title")
             .text(function (d) {
+            if (d.isIndividual) {
+                return 'uuid: ' + d.data['xmi.uuid'];
+            }
             return d.name;
         });
 
@@ -120,6 +117,9 @@ Graph.prototype = {
             .attr("text-anchor", "middle")
             .attr("dy", ".35em")
             .text(function (d) {
+            if (d.isIndividual) {
+                return "";
+            }
             return d.name;
         });
 
@@ -144,21 +144,17 @@ Graph.prototype = {
 
     click: function (id) {
         var self = this;
-        var d = self.getNode(id);
-        console.log("LOG:", d.name, "--", d);
-        // if (d.isInduvidual) {
-        //     return;
-        // }
-        if (!d.isExpanded && d.children.length > 0) {
-            self.expandNode(d);
-            self.root.fixed = false;
-            self.makeRoot(d);
-            self.update();
-            // } else if (d.isExpanded && d !==root) {
-            //     // self.collapseNode(d);
-            //     self.makeRoot(d);
-            //     self.update();
+        var d = self.util.getNode(id, self.nodes);
+        // console.log("LOG:", d.name, "--", d);
+        if (!d.isExpanded) {
+            if (d.children.length > 0 || d.parents.length > 0) {
+                self.expandNode(d);
+                self.root.fixed = false;
+                self.makeRoot(d);
+                self.update();
+            }
         } else {
+            self.collapseNode(d);
             self.makeRoot(d);
             self.center(d);
         }
@@ -241,17 +237,27 @@ Graph.prototype = {
             deltaY = d.y + 75;
         d.color = self.util.getColor(d);
         var nodeIdToUpdate = [];
-        d.children.map(function (subject) {
-            n = self.formatter.createNode(subject, self.nodes.length);
+
+        function expand(n) {
             n.x = deltaX;
             n.y = deltaY;
             n.color = d.color.brighter();
             n.stroke = d.color;
-            self.nodes.push(n);
-            nodeIdToUpdate.push(n.index);
-            if (d.isIndividual) {
-                self.expandClassToIndividual(n);
+            if (self.util.addNodeToNodes(n, self.nodes)) {
+                nodeIdToUpdate.push(n.index);
+                if (d.isIndividual) {
+                    self.expandClassToIndividual(n);
+                }
             }
+        }
+        if (d.isIndividual) {
+            d.parents.map(function (link) {
+                expand(self.formatter.createNode(link.nodeId, self.nodes.length));
+            });
+        }
+
+        d.children.map(function (link) {
+            expand(self.formatter.createNode(link.nodeId, self.nodes.length));
         });
         nodeIdToUpdate.map(function (index) {
             self.links = self.links.concat(self.formatter.createLink(index, self.nodes));
@@ -259,20 +265,19 @@ Graph.prototype = {
 
         self.updateNodeAndLinkPositions(0);
         self.force.stop();
-        for (var i = 0; i < d.children.length * 10; ++i) {
+        for (var i = 0; i < d.children.length; ++i) {
             self.handleCollisions();
             self.force.tick();
         }
         self.updateNodeAndLinkPositions();
         self.force.start();
-
         d.isExpanded = true;
     },
 
     expandClassToIndividual: function (d) {
         var self = this,
             parentClass = self.util.getPropertyValue('type', d.object);
-        if (parentClass && !self.getNode(parentClass)) {
+        if (parentClass && !self.util.getNode(parentClass, self.nodes)) {
             var n = self.formatter.createNode(parentClass, self.nodes.length);
             n.x = d.x;
             n.y = d.y;
@@ -282,41 +287,87 @@ Graph.prototype = {
             if (parent) {
                 n.stroke = self.util.getColor((self.formatter.createNode(parent, 0)));
             }
-            self.nodes.push(n);
-            self.links = self.links.concat(self.formatter.createLink(n.index, self.nodes));
+            if (self.util.addNodeToNodes(n, self.nodes)) {
+                d.color = n.color.brighter();
+                self.formatter.createLink(n.index, self.nodes);
+                self.links.push({
+                    source: d.index,
+                    target: n.index,
+                    name: 'subClassOf'
+                });
+            }
         }
 
     },
 
 
-
     collapseNode: function (d) {
-        // var n,
-        //     self = this,
-        //     children = d.children;
+        var n,
+            self = this,
+            node,
+            children = d.children;
+        if (d.children.length === 0) {
+            return;
+        }
+        var indexesToRemove = [];
+        getIndexesOfExpandedChildren(d);
+        self.removeIndexesFromGraph(indexesToRemove);
+        d.color = d.stroke.brighter();
+        d.isExpanded = false;
 
-        // self.nodes.filter(function(node) {
-        //     return node.id in children;
-        // });
+        function getIndexesOfExpandedChildren(d) {
+            var tailRec = [];
+            for (var j = 0; j < self.nodes.length; j++) {
+                node = self.nodes[j];
+                //TODO: collapse individual links
+                if (util.getNodeInRelatedList(node.id, d.children)) {
+                    indexesToRemove.push(node.index);
+                    if (node.isExpanded && d.children.length !== 0) {
+                        node.isExpanded = false;
+                        tailRec.push(node);
+                    }
+                }
+            };
+            tailRec.map(function (node) {
+                getIndexesOfExpandedChildren(node);
+            });
+        };
+    },
 
-        // self.links.filter(function(l) {
-        //     if (l.target.name in self.parentToChildMap) {
-        //         if (l.source.name in self.parentToChildMap) {
-        //             return true;
-        //         };
-        //     }
-        //     return false;
-        // })
+    removeIndexesFromGraph: function (indexesToRemove) {
+        var self = this,
+            indexUpdate = {};
+        indexesToRemove.sort(function (a, b) {
+            return a - b;
+        });
+        var indexesToRemove_ = indexesToRemove.slice(0);
+        var newIndex = self.nodes.length - 1;
+        var indexRemove = indexesToRemove_.pop();
+        for (var i = self.nodes.length - 1; i >= 0; i--) {
+            if (indexRemove === i) {
+                indexRemove = indexesToRemove_.pop();
+            } else {
+                indexUpdate[i] = newIndex;
+            }
+            newIndex--;
+        };
+        self.nodes = self.nodes.filter(function (elem, index) {
+            if (index in indexUpdate) {
+                elem.index = indexUpdate[elem.index];
+                return true;
+            };
+        })
 
-        // self.force.stop();
-        // self.updateNodeAndLinkPositions(0);
-        // for (var i = 0; i < d.children.length * 10; ++i)
-        //     self.handleCollisions();
-        // self.force.tick();
-        // self.updateNodeAndLinkPositions(100);
-        // self.force.start();
-
-        // d.isExpanded = false;
+        self.links = self.links.filter(function (l) {
+            if (l.target.index in indexUpdate) {
+                if (l.source.index in indexUpdate) {
+                    l.target.index = indexUpdate[l.target.index];
+                    l.source.index = indexUpdate[l.source.index];
+                    return true;
+                };
+            }
+            return false;
+        });
     },
 
     expandIndividual: function (d) {
@@ -390,64 +441,52 @@ Graph.prototype = {
 
     },
 
-    updateLinks: function () {
-        var self = this,
-            links = [];
-        self.nodes.map(function () {
-            if (node.isExpanded) {
-                node.children.map(function (child) {
-                    links.push({
-                        'source': node,
-                        'target': self.nodes[self.nodeId[child]],
-                        'value': objectProperty
-                    });
-                });
-            }
-        });
-    },
-
-    getNode: function (id) {
-        var self = this;
-        if (!id) {
-            return;
-        }
-        var nodes = self.nodes.filter(function (d) {
-            return d.id === id;
-        });
-        return nodes[0] || false;
-    },
-
-    // nodeExist: function(d) {
-    //     return (getNode(id)) {
-
-    //     };
-    // },
 
     mouseOver: function (id) {
         var self = this;
         var className = self.util.toLegalClassName(id);
+        var node = self.util.getNode(id, self.nodes);
+        node.children.map(function (link) {
+            d3.select(self.el).selectAll('#link-' + self.util.toLegalClassName(link.nodeId) + className)
+                .style("stroke-width", 6)
+                .style("stroke", function (d) {
+                return d3.rgb(d.target.color).darker();
+            });
+        });
+        node.parents.map(function (link) {
+            d3.select(self.el).selectAll('#link-' + className + self.util.toLegalClassName(link.nodeId))
+                .style("stroke-width", 6)
+                .style("stroke", function (d) {
+                return d3.rgb(d.target.color).darker();
+            });
+        });
+
         d3.select(self.el).selectAll('#' + className)
             .style("stroke-width", 6)
             .style("stroke", "red");
-        d3.select(self.el).selectAll('#link-' + className)
-            .style("stroke-width", 6)
-            .style("stroke", function (d) {
-            return d3.rgb(d.target.color).darker();
-        });
 
     },
 
     mouseOut: function (id) {
         var self = this;
         var className = self.util.toLegalClassName(id);
+        var node = self.util.getNode(id, self.nodes);
+        node.children.map(function (link) {
+            d3.select(self.el).selectAll('#link-' + self.util.toLegalClassName(link.nodeId) + className)
+                .style("stroke-width", 4)
+                .style("stroke", "lightgrey")
+        });
+        node.parents.map(function (link) {
+            d3.select(self.el).selectAll('#link-' + className + self.util.toLegalClassName(link.nodeId))
+                .style("stroke-width", 4)
+                .style("stroke", "lightgrey")
+        });
+
         d3.select(self.el).selectAll('#' + className)
             .style("stroke-width", 6)
             .style("stroke", function (d) {
             return d.stroke;
         });
-        d3.select(self.el).selectAll('#link-' + className)
-            .style("stroke-width", 4)
-            .style("stroke", "lightgrey");
     }
 };
 

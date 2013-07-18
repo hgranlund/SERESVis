@@ -26,10 +26,41 @@ window.seres.utilities = function (d3) {
         }
     };
 
+    var addNodeToNodes = function (node, nodes) {
+        var equalNode = getNode(node.id, nodes);
+        if (!equalNode) {
+            nodes.push(node);
+            return true;
+        }
+        return false;
+    };
+
+    var getNode = function (id, nodes) {
+        if (!id) {
+            return;
+        }
+        var equalNodes = nodes.filter(function (d) {
+            return d.id === id;
+        });
+        return equalNodes[0] || false;
+    };
+
+    var getNodeInRelatedList = function (id, relList) {
+        for (var i = 0; i < relList.length; i++) {
+            if (relList[i].nodeId === id) {
+                return relList[i];
+            }
+        }
+        return false;
+    };
+
     return {
         getColor: getColor,
         toLegalClassName: toLegalClassName,
-        getPropertyValue: getPropertyValue
+        getPropertyValue: getPropertyValue,
+        addNodeToNodes: addNodeToNodes,
+        getNode: getNode,
+        getNodeInRelatedList: getNodeInRelatedList
     };
 
 
