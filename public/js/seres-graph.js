@@ -300,7 +300,7 @@ Graph.prototype = {
             self = this,
             node,
             children = d.children;
-        if (d.children.length === 0) {
+        if (d.children.length === 0 && d.parents.length === 0) {
             return;
         }
         var indexesToRemove = [];
@@ -314,6 +314,15 @@ Graph.prototype = {
             for (var j = 0; j < self.nodes.length; j++) {
                 node = self.nodes[j];
                 //TODO: collapse individual links
+                if (util.getNodeInRelatedList(node.id, d.parents)) {
+                    if (!node.isExpanded) {
+                        indexesToRemove.push(node.index);
+                        if (node.isExpanded && d.parents.length !== 0) {
+                            node.isExpanded = false;
+                            tailRec.push(node);
+                        }
+                    };
+                }
                 if (util.getNodeInRelatedList(node.id, d.children)) {
                     indexesToRemove.push(node.index);
                     if (node.isExpanded && d.children.length !== 0) {
@@ -349,8 +358,8 @@ Graph.prototype = {
             if (index in indexUpdate) {
                 elem.index = indexUpdate[elem.index];
                 return true;
-            };
-        })
+            }
+        });
 
         self.links = self.links.filter(function (l) {
             if (l.target.index in indexUpdate) {
