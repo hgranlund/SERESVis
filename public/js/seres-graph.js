@@ -74,7 +74,6 @@ Graph.prototype = {
             .links(self.links)
             .start();
 
-
         self.link = self.link.data(self.force.links());
         self.node = self.node.data(self.force.nodes());
         self.link.exit().remove();
@@ -84,6 +83,7 @@ Graph.prototype = {
             .style("stroke-width", 4)
             .style("opacity", 0.5)
             .attr('class', "link")
+            .attr('drawOrder', "2")
             .attr('id', function (d) {
             return ("link-" + self.util.toLegalClassName(d.target.id));
         });
@@ -91,10 +91,10 @@ Graph.prototype = {
         self.node.enter().insert("g")
             .attr("class", "node");
 
-
         self.circle = self.node.insert("circle")
             .on('click', fireClick)
             .call(self.force.drag)
+            .attr('drawOrder', "1")
             .on("mouseover", fireMouseOver)
             .on("mouseout", fireMouseOut)
             .style("fill", function (d) {
@@ -106,7 +106,7 @@ Graph.prototype = {
             .attr("r", function (d) {
             return d.size;
         })
-            .style("stroke-width", 10)
+            .style("stroke-width", 6)
             .style("stroke", function (d) {
             return d.stroke;
         });
@@ -123,6 +123,7 @@ Graph.prototype = {
             return d.name;
         });
 
+
         function fireClick(d) {
             window.seres.eventController.fireClick(d);
         }
@@ -134,6 +135,11 @@ Graph.prototype = {
         function fireMouseOut(d) {
             window.seres.eventController.fireMouseOut(d);
         }
+
+        // d3.selectAll(".graphNode, .graphLink")
+        //     .sort(function (a, b) {
+        //     return d3.descending(a.drawOrder, b.drawOrder);
+        // });
     },
 
     click: function (id) {
@@ -421,12 +427,12 @@ Graph.prototype = {
         var self = this;
         var className = self.util.toLegalClassName(id);
         d3.select(self.el).selectAll('#' + className)
-            .style("stroke-width", 10)
+            .style("stroke-width", 6)
             .style("stroke", "red");
         d3.select(self.el).selectAll('#link-' + className)
             .style("stroke-width", 6)
             .style("stroke", function (d) {
-            return d.target.color;
+            return d3.rgb(d.target.color).darker();
         });
 
     },
@@ -435,7 +441,7 @@ Graph.prototype = {
         var self = this;
         var className = self.util.toLegalClassName(id);
         d3.select(self.el).selectAll('#' + className)
-            .style("stroke-width", 10)
+            .style("stroke-width", 6)
             .style("stroke", function (d) {
             return d.stroke;
         });
