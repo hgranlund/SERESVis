@@ -19,7 +19,7 @@ Graph.prototype = {
             .size([self.width, self.height])
             .friction(0.9)
             .linkDistance(function (d) {
-                var dist = d.source.size * 5;
+                var dist = d.source.size * 4;
                 if (d.source.isExpanded) {
                     dist *= 2;
                 }
@@ -83,13 +83,28 @@ Graph.prototype = {
             .style('opacity', 0.5)
             .attr('class', 'link')
             .attr('id', function (d) {
-                return ('link-' + self.util.toLegalHtmlName(d.source.id) + '-' + self.util.toLegalHtmlName(d.target.id));
-            });
+                return ('path-' + self.util.toLegalHtmlName(d.source.id) + '-' + self.util.toLegalHtmlName(d.target.id));
+            })
+            .on('mouseover', fireMouseOverLink)
+            .on('mouseout', fireMouseOutLink);
 
         self.pathText.enter()
             .append("g")
             .attr("class", "pathText")
-            .style("fill", 'black');
+            .attr("id", function (d) {
+                return ('pathText-' + self.util.toLegalHtmlName(d.source.id) + '-' + self.util.toLegalHtmlName(d.target.id));
+            })
+            .style('opacity', 0.7)
+            .style("visibility", 'hidden')
+            .style("fill", 'black')
+            .on('mouseover', function (d) {
+                d3.select(this)
+                    .attr("visibility", 'visible');
+            })
+            .on('mouseout', function (d) {
+                d3.select(this)
+                    .attr("visibility", 'hidden');
+            });
 
         self.pathText.append("text")
             .style("font-size", "14px")
@@ -99,7 +114,7 @@ Graph.prototype = {
                 return d.source.size + 15;
             })
             .attr("xlink:href", function (d) {
-                return ('#link-' + self.util.toLegalHtmlName(d.source.id) + '-' + self.util.toLegalHtmlName(d.target.id));
+                return ('#path-' + self.util.toLegalHtmlName(d.source.id) + '-' + self.util.toLegalHtmlName(d.target.id));
             })
             .text(function (d) {
                 return d.name;
@@ -109,8 +124,8 @@ Graph.prototype = {
             .attr('class', 'node');
 
         self.circle = self.node.append('circle')
-            .on('click', fireClick)
             .call(self.force.drag)
+            .on('click', fireClick)
             .on('mouseover', fireMouseOver)
             .on('mouseout', fireMouseOut)
             .style('fill', function (d) {
@@ -156,6 +171,14 @@ Graph.prototype = {
 
         function fireMouseOut(d) {
             window.seres.eventController.fireMouseOut(d);
+        }
+
+        function fireMouseOverLink(d) {
+            self.mouseOverLink(d);
+        }
+
+        function fireMouseOutLink(d) {
+            self.mouseOutLink(d);
         }
     },
 
@@ -493,24 +516,72 @@ Graph.prototype = {
 
     },
 
+    mouseOverLink: function (d) {
+        var self = this;
+        var sourceClass = self.util.toLegalHtmlName(d.source.id);
+        var targetClass = self.util.toLegalHtmlName(d.target.id);
+        var linkId = sourceClass + '-' + targetClass;
+        d3.select(self.el).selectAll('#path-' + linkId)
+            .style('stroke-width', 6)
+            .style('stroke', function (d) {
+                return d.target.color.darker();
+            });
+        d3.select(self.el).selectAll('#pathText-' + linkId)
+            .style('visibility', 'visible');
+        d3.select(self.el).selectAll('#' + sourceClass)
+            .style('stroke-width', 6)
+            .style('stroke', 'red');
+
+        d3.select(self.el).selectAll('#' + targetClass)
+            .style('stroke-width', 6)
+            .style('stroke', 'red');
+
+    },
+
+    mouseOutLink: function (d) {
+        var self = this;
+        var sourceClass = self.util.toLegalHtmlName(d.source.id);
+        var targetClass = self.util.toLegalHtmlName(d.target.id);
+        var linkId = sourceClass + '-' + targetClass;
+        d3.select(self.el).selectAll('#path-' + linkId)
+            .style('stroke-width', 4)
+            .style('stroke', 'lightgrey');
+        d3.select(self.el).selectAll('#pathText-' + linkId)
+            .style('visibility', 'hidden');
+        d3.select(self.el).selectAll('#' + sourceClass)
+            .style('stroke-width', 6)
+            .style('stroke', function (d) {
+                return d.stroke;
+            });
+        d3.select(self.el).selectAll('#' + targetClass)
+            .style('stroke-width', 6)
+            .style('stroke', function (d) {
+                return d.stroke;
+            });
+    },
+
 
     mouseOver: function (id) {
         var self = this;
         var className = self.util.toLegalHtmlName(id);
         var node = self.util.getNode(id, self.nodes);
         node.children.map(function (link) {
-            d3.select(self.el).selectAll('#link-' + self.util.toLegalHtmlName(link.nodeId) + '-' + className)
+            d3.select(self.el).selectAll('#path-' + self.util.toLegalHtmlName(link.nodeId) + '-' + className)
                 .style('stroke-width', 6)
                 .style('stroke', function (d) {
                     return d.target.color.darker();
                 });
+            d3.select(self.el).selectAll('#pathText-' + self.util.toLegalHtmlName(link.nodeId) + '-' + className)
+                .style('visibility', 'visible');
         });
         node.parents.map(function (link) {
-            d3.select(self.el).selectAll('#link-' + className + '-' + self.util.toLegalHtmlName(link.nodeId))
+            d3.select(self.el).selectAll('#path-' + className + '-' + self.util.toLegalHtmlName(link.nodeId))
                 .style('stroke-width', 6)
                 .style('stroke', function (d) {
                     return d.source.color.darker();
                 });
+            d3.select(self.el).selectAll('#pathText-' + className + '-' + self.util.toLegalHtmlName(link.nodeId))
+                .style('visibility', 'visible');
 
         });
 
@@ -525,14 +596,19 @@ Graph.prototype = {
         var className = self.util.toLegalHtmlName(id);
         var node = self.util.getNode(id, self.nodes);
         node.children.map(function (link) {
-            d3.select(self.el).selectAll('#link-' + self.util.toLegalHtmlName(link.nodeId) + '-' + className)
+            d3.select(self.el).selectAll('#path-' + self.util.toLegalHtmlName(link.nodeId) + '-' + className)
                 .style('stroke-width', 4)
                 .style('stroke', 'lightgrey');
+
+            d3.select(self.el).selectAll('#pathText-' + self.util.toLegalHtmlName(link.nodeId) + '-' + className)
+                .style('visibility', 'hidden');
         });
         node.parents.map(function (link) {
-            d3.select(self.el).selectAll('#link-' + className + '-' + self.util.toLegalHtmlName(link.nodeId))
+            d3.select(self.el).selectAll('#path-' + className + '-' + self.util.toLegalHtmlName(link.nodeId))
                 .style('stroke-width', 4)
                 .style('stroke', 'lightgrey');
+            d3.select(self.el).selectAll('#pathText-' + className + '-' + self.util.toLegalHtmlName(link.nodeId))
+                .style('visibility', 'hidden');
         });
 
         d3.select(self.el).selectAll('#' + className)
