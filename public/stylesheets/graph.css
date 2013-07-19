@@ -19,7 +19,7 @@ rect {
 }
 
 .graph-container text {
-  fill: #44444;
+  /*fill: #44444;*/
   font: 9px sans-serif;
   pointer-events: none;
   text-shadow: -1px 0px 3px white, -1px 0px 9px white;

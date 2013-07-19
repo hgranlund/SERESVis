@@ -19,7 +19,7 @@ Graph.prototype = {
             .size([self.width, self.height])
             .friction(0.9)
             .linkDistance(function (d) {
-                var dist = d.source.size / 2;
+                var dist = d.source.size * 5;
                 if (d.source.isExpanded) {
                     dist *= 2;
                 }
@@ -50,6 +50,7 @@ Graph.prototype = {
         self.links = self.force.links();
         self.node = self.svg.selectAll('.node');
         self.link = self.svg.selectAll('.link');
+        self.pathText = self.svg.selectAll('.pathText');
 
         function tick(e) {
             if (e.alpha > 0.05) {
@@ -70,16 +71,38 @@ Graph.prototype = {
 
         self.link = self.link.data(self.force.links());
         self.node = self.node.data(self.force.nodes());
+        self.pathText = self.pathText.data(self.force.links());
+
         self.link.exit().remove();
         self.node.exit().remove();
+        self.pathText.exit().remove();
+
         self.link.enter().append('svg:path')
             .style('stroke', 'lightgrey')
             .style('stroke-width', 4)
             .style('opacity', 0.5)
             .attr('class', 'link')
-            .attr('drawOrder', '2')
             .attr('id', function (d) {
                 return ('link-' + self.util.toLegalHtmlName(d.source.id) + '-' + self.util.toLegalHtmlName(d.target.id));
+            });
+
+        self.pathText.enter()
+            .append("g")
+            .attr("class", "pathText")
+            .style("fill", 'black');
+
+        self.pathText.append("text")
+            .style("font-size", "14px")
+            .append("textPath")
+            .attr("offset", 30)
+            .attr("startOffset", function (d) {
+                return d.source.size + 15;
+            })
+            .attr("xlink:href", function (d) {
+                return ('#link-' + self.util.toLegalHtmlName(d.source.id) + '-' + self.util.toLegalHtmlName(d.target.id));
+            })
+            .text(function (d) {
+                return d.name;
             });
 
         self.node.enter().append('g')
@@ -88,7 +111,6 @@ Graph.prototype = {
         self.circle = self.node.append('circle')
             .on('click', fireClick)
             .call(self.force.drag)
-            .attr('drawOrder', '1')
             .on('mouseover', fireMouseOver)
             .on('mouseout', fireMouseOut)
             .style('fill', function (d) {
