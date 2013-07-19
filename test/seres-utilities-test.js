@@ -10,7 +10,7 @@ describe('seres-utilities', function () {
 
     it('should return a legall class name', function () {
       var className = util.toLegalHtmlName('Begrep_45s6af46s5dfsdf21');
-      expect(className).toEqual('begrep-45s6af46s5dfsdf21');
+      expect(className).toEqual('Begrep-45s6af46s5dfsdf21');
 
     });
 
@@ -18,7 +18,7 @@ describe('seres-utilities', function () {
     it('should to return the same string ut called twice', function () {
       var className = util.toLegalHtmlName('Begrep_45s6af46s5dfsdf21');
       className = util.toLegalHtmlName(className);
-      expect(className).toEqual('begrep-45s6af46s5dfsdf21');
+      expect(className).toEqual('Begrep-45s6af46s5dfsdf21');
 
     });
   });

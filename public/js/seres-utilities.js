@@ -13,7 +13,7 @@ window.seres.utilities = function (d3) {
     var toLegalHtmlName = function (className) {
         className = className || '';
         className = className.toString().replace(/[!\'#$%&_'\(\)\*\+,\.\/:;<=>\?\@\[\\\]\^`\{\|\}~]/g, '-');
-        return className.toLowerCase();
+        return className;
     };
 
     var getPropertyValue = function (name, object) {
