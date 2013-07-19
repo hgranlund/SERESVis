@@ -19,22 +19,22 @@ Graph.prototype = {
             .size([self.width, self.height])
             .friction(0.9)
             .linkDistance(function (d) {
-                var dist = d.source.size / 2;
-                if (d.source.isExpanded) {
-                    dist *= 2;
-                }
-                return dist;
-            })
+            var dist = d.source.size / 2;
+            if (d.source.isExpanded) {
+                dist *= 2;
+            }
+            return dist;
+        })
             .charge(function (d) {
-                if (d.isIndividual) {
-                    return -200;
-                }
-                if (d === self.root) {
-                    return -5000;
-                } else {
-                    return -5000;
-                }
-            })
+            if (d.isIndividual) {
+                return -200;
+            }
+            if (d === self.root) {
+                return -5000;
+            } else {
+                return -5000;
+            }
+        })
             .on('tick', tick)
             .gravity(0.06)
             .start();
@@ -79,8 +79,8 @@ Graph.prototype = {
             .attr('class', 'link')
             .attr('drawOrder', '2')
             .attr('id', function (d) {
-                return ('link-' + self.util.toLegalHtmlName(d.source.id) + '-' + self.util.toLegalHtmlName(d.target.id));
-            });
+            return ('link-' + self.util.toLegalHtmlName(d.source.id) + '-' + self.util.toLegalHtmlName(d.target.id));
+        });
 
         self.node.enter().append('g')
             .attr('class', 'node');
@@ -92,36 +92,40 @@ Graph.prototype = {
             .on('mouseover', fireMouseOver)
             .on('mouseout', fireMouseOut)
             .style('fill', function (d) {
-                return d.color;
-            })
+            return d.color;
+        })
             .attr('id', function (d) {
-                return self.util.toLegalHtmlName(d.id);
-            })
+            return self.util.toLegalHtmlName(d.id);
+        })
             .attr('r', function (d) {
-                return d.size;
-            })
+            if (d === self.root) {
+                return d.size + 5;
+
+            };
+            return d.size;
+        })
             .style('stroke-width', 6)
             .style('stroke', function (d) {
-                return d.stroke;
-            });
+            return d.stroke;
+        });
 
         self.node.append('title')
             .text(function (d) {
-                if (d.isIndividual) {
-                    return 'uuid: ' + d.data['xmi.uuid'];
-                }
-                return d.name;
-            });
+            if (d.isIndividual) {
+                return 'uuid: ' + d.data['xmi.uuid'];
+            }
+            return d.name;
+        });
 
         self.node.append('text')
             .attr('text-anchor', 'middle')
             .attr('dy', '.35em')
             .text(function (d) {
-                if (d.isIndividual) {
-                    return '';
-                }
-                return d.name;
-            });
+            if (d.isIndividual) {
+                return '';
+            }
+            return d.name;
+        });
 
 
         function fireClick(d) {
@@ -470,15 +474,15 @@ Graph.prototype = {
             d3.select(self.el).selectAll('#link-' + self.util.toLegalHtmlName(link.nodeId) + '-' + className)
                 .style('stroke-width', 6)
                 .style('stroke', function (d) {
-                    return d.target.color.darker();
-                });
+                return d.target.color.darker();
+            });
         });
         node.parents.map(function (link) {
             d3.select(self.el).selectAll('#link-' + className + '-' + self.util.toLegalHtmlName(link.nodeId))
                 .style('stroke-width', 6)
                 .style('stroke', function (d) {
-                    return d.source.color.darker();
-                });
+                return d.source.color.darker();
+            });
 
         });
 
@@ -506,8 +510,8 @@ Graph.prototype = {
         d3.select(self.el).selectAll('#' + className)
             .style('stroke-width', 6)
             .style('stroke', function (d) {
-                return d.stroke;
-            });
+            return d.stroke;
+        });
     }
 };
 

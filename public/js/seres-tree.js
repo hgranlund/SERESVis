@@ -1,21 +1,23 @@
 function Tree(el, json) {
     var self = this;
-    self.legends = [{
-        'color': '#3c3c3c',
-        'text': 'Superklasser'
-    }, {
-        'color': '#c2bcbc',
-        'text': 'Subklasser'
-    }, {
-        'color': '#ffffff',
-        'text': 'Subsubklasser'
-    }];
+    // self.legends = [{
+    //         'text': '+ Klassen kan ekspanderes'
+    //     }, {
+    //         'text': '- Klassen er ekspandert'
+    //     }, {
+    //         'text': 'Instanser av en klasse'
+    //     }, {
+    //         'text': 'Klasse-objekt'
+    //     }, {
+    //         'text': 'Data/Objekt-egenskap'
+    //     }
+    // ];
 
     self.w = 960;
     self.h = 5300;
     self.i = 0;
     self.legendheight = 100;
-    self.legendwidth = 400;
+    self.legendwidth = 1200;
     self.barHeight = 20;
     self.barWidth = self.w * 0.3;
     self.duration = 400;
@@ -37,8 +39,8 @@ Tree.prototype = {
 
         self.diagonal = d3.svg.diagonal()
             .projection(function (d) {
-                return [d.y, d.x];
-            });
+            return [d.y, d.x];
+        });
 
         self.vis = d3.select(el).append('svg:svg')
             .attr("width", self.w)
@@ -46,44 +48,44 @@ Tree.prototype = {
             .append("svg:g")
             .attr("transform", 'translate(20,30)');
 
-        self.svg = d3.select('#legends')
-            .append('svg')
-            .attr('width', self.legendwidth)
-            .attr('height', self.legendheight);
+        // self.svg = d3.select('#legends')
+        //     .append('svg')
+        //     .attr('width', self.legendwidth)
+        //     .attr('height', self.legendheight);
 
-        self.legend = self.svg.append('g')
-            .attr('class', 'legend')
-            .attr('height', 30)
-            .attr('width', 30)
-            .attr('transform', 'translate(-20,50)');
+        // self.legend = self.svg.append('g')
+        //     .attr('class', 'legend')
+        //     .attr('height', 30)
+        //     .attr('width', 30)
+        //     .attr('transform', 'translate(-20,50)');
 
-        self.legend.selectAll('rect')
-            .data(self.legends)
-            .enter()
-            .append('rect')
-            .attr('x', function (d, i) {
-                return i * 125 + 50;
-            })
-            .attr('y', 10)
-            .attr('width', 10)
-            .attr('height', 10)
-            .style('fill', function (d) {
-                var color = d.color;
-                return color;
-            });
+        // self.legend.selectAll('rect')
+        //     .data(self.legends)
+        //     .enter()
+        //     .append('rect')
+        //     .attr('x', function (d, i) {
+        //     return i * 200 + 50;
+        // })
+        //     .attr('y', 10)
+        //     .attr('width', 10)
+        //     .attr('height', 10)
+        //     .style('fill', function (d) {
+        //     var color = d.color;
+        //     return color;
+        // });
 
-        self.legend.selectAll('text')
-            .data(self.legends)
-            .enter()
-            .append('text')
-            .attr('x', function (d, i) {
-                return i * 125 + 65;
-            })
-            .attr('y', 20)
-            .text(function (d) {
-                var text = d.text;
-                return text;
-            });
+        // self.legend.selectAll('text')
+        //     .data(self.legends)
+        //     .enter()
+        //     .append('text')
+        //     .attr('x', function (d, i) {
+        //     return i * 200 + 65;
+        // })
+        //     .attr('y', 20)
+        //     .text(function (d) {
+        //     var text = d.text;
+        //     return text;
+        // });
 
 
         d3.select('#expand-all').on('click', function () {
@@ -138,14 +140,14 @@ Tree.prototype = {
         // Update the nodes…
         var node = self.vis.selectAll('g.node')
             .data(self.nodes, function (d) {
-                return d.id || (d.id = ++self.i);
-            });
+            return d.id || (d.id = ++self.i);
+        });
 
         self.nodeEnter = node.enter().append('svg:g')
             .attr('class', 'node')
             .attr('transform', function (d) {
-                return 'translate(' + source.y0 + ',' + source.x0 + ')';
-            })
+            return 'translate(' + source.y0 + ',' + source.x0 + ')';
+        })
             .style('opacity', 1e-6);
 
         // Enter any new nodes at the parent's previous position.
@@ -153,8 +155,8 @@ Tree.prototype = {
             .attr('y', -self.barHeight / 2)
             .attr('height', self.barHeight)
             .attr('id', function (d) {
-                return self.util.toLegalHtmlName(d.id);
-            })
+            return self.util.toLegalHtmlName(d.id);
+        })
             .attr('width', self.barWidth)
             .style('fill', self.color)
             .on('click', fireClick)
@@ -166,8 +168,8 @@ Tree.prototype = {
             .attr('dy', 3.5)
             .attr('dx', 5.5)
             .text(function (d) {
-                return d.name;
-            });
+            return d.name;
+        });
 
         self.nodeEnter.append('svg:text')
             .attr('dy', '.35em')
@@ -178,63 +180,63 @@ Tree.prototype = {
             .style('cursor', 'pointer')
             .on('click', click)
             .text(function (d) {
-                if (d._children || d.individuals) {
-                    return '+';
-                } else if (d.children) {
-                    return '-';
-                } else {
-                    return;
-                }
-            });
+            if (d._children || d.individuals) {
+                return '+';
+            } else if (d.children) {
+                return '-';
+            } else {
+                return;
+            }
+        });
 
         // Transition nodes to their new position.
         self.nodeEnter.transition()
             .duration(self.duration)
             .attr('transform', function (d) {
-                return 'translate(' + d.y + ',' + d.x + ')';
-            })
+            return 'translate(' + d.y + ',' + d.x + ')';
+        })
             .style('opacity', 1);
 
         node.transition()
             .duration(self.duration)
             .attr('transform', function (d) {
-                return 'translate(' + d.y + ',' + d.x + ')';
-            })
+            return 'translate(' + d.y + ',' + d.x + ')';
+        })
             .style('opacity', 1)
             .select('rect')
             .attr('rx', '10')
             .style('fill', function (d) {
-                return d.color;
-            });
+            return d.color;
+        });
 
         // Transition exiting nodes to the parent's new position.
         node.exit().transition()
             .duration(self.duration)
             .attr('transform', function (d) {
-                return 'translate(' + source.y + ',' + source.x + ')';
-            })
+            return 'translate(' + source.y + ',' + source.x + ')';
+        })
             .style('opacity', 1e-6)
             .remove();
 
         // Update the links…
         var link = self.vis.selectAll('path.link')
             .data(self.tree.links(self.nodes), function (d) {
-                return d.target.id;
-            });
+            return d.target.id;
+        });
 
         // Enter any new links at the parent's previous position.
         link.enter().append('svg:path', 'g')
             .attr('class', 'link')
             .attr('d', function (d) {
-                var o = {
-                    x: source.x0,
-                    y: source.y0
-                };
-                return self.diagonal({
-                    source: o,
-                    target: o
-                });
-            })
+            var o = {
+                x: source.x0,
+                y: source.y0
+            };
+            return self.diagonal({
+                source: o,
+                target: o
+            });
+        })
             .transition()
             .duration(self.duration)
             .attr('d', self.diagonal);
@@ -248,15 +250,15 @@ Tree.prototype = {
         link.exit().transition()
             .duration(self.duration)
             .attr('d', function (d) {
-                var o = {
-                    x: source.x,
-                    y: source.y
-                };
-                return self.diagonal({
-                    source: o,
-                    target: o
-                });
-            })
+            var o = {
+                x: source.x,
+                y: source.y
+            };
+            return self.diagonal({
+                source: o,
+                target: o
+            });
+        })
             .remove();
 
         // Stash the old positions for transition.
@@ -364,8 +366,8 @@ Tree.prototype = {
         self.vis.selectAll('#' + className)
             .style('stroke-width', 1.5)
             .style('stroke', function (d) {
-                return d.stroke;
-            });
+            return d.stroke;
+        });
     }
 
 };
