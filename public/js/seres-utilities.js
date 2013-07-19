@@ -10,7 +10,7 @@ window.seres.utilities = function (d3) {
         return color[colorNum];
     };
 
-    var toLegalClassName = function (className) {
+    var toLegalHtmlName = function (className) {
         className = className || '';
         className = className.toString().replace(/[!\'#$%&_'\(\)\*\+,\.\/:;<=>\?\@\[\\\]\^`\{\|\}~]/g, '-');
         return className.toLowerCase();
@@ -56,7 +56,7 @@ window.seres.utilities = function (d3) {
 
     return {
         getColor: getColor,
-        toLegalClassName: toLegalClassName,
+        toLegalHtmlName: toLegalHtmlName,
         getPropertyValue: getPropertyValue,
         addNodeToNodes: addNodeToNodes,
         getNode: getNode,

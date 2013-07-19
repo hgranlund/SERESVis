@@ -79,7 +79,7 @@ Graph.prototype = {
             .attr('class', 'link')
             .attr('drawOrder', '2')
             .attr('id', function (d) {
-                return ('link-' + self.util.toLegalClassName(d.source.id) + '-' + self.util.toLegalClassName(d.target.id));
+                return ('link-' + self.util.toLegalHtmlName(d.source.id) + '-' + self.util.toLegalHtmlName(d.target.id));
             });
 
         self.node.enter().append('g')
@@ -95,7 +95,7 @@ Graph.prototype = {
                 return d.color;
             })
             .attr('id', function (d) {
-                return self.util.toLegalClassName(d.id);
+                return self.util.toLegalHtmlName(d.id);
             })
             .attr('r', function (d) {
                 return d.size;
@@ -464,17 +464,17 @@ Graph.prototype = {
 
     mouseOver: function (id) {
         var self = this;
-        var className = self.util.toLegalClassName(id);
+        var className = self.util.toLegalHtmlName(id);
         var node = self.util.getNode(id, self.nodes);
         node.children.map(function (link) {
-            d3.select(self.el).selectAll('#link-' + self.util.toLegalClassName(link.nodeId) + '-' + className)
+            d3.select(self.el).selectAll('#link-' + self.util.toLegalHtmlName(link.nodeId) + '-' + className)
                 .style('stroke-width', 6)
                 .style('stroke', function (d) {
                     return d.target.color.darker();
                 });
         });
         node.parents.map(function (link) {
-            d3.select(self.el).selectAll('#link-' + className + '-' + self.util.toLegalClassName(link.nodeId))
+            d3.select(self.el).selectAll('#link-' + className + '-' + self.util.toLegalHtmlName(link.nodeId))
                 .style('stroke-width', 6)
                 .style('stroke', function (d) {
                     return d.source.color.darker();
@@ -490,15 +490,15 @@ Graph.prototype = {
 
     mouseOut: function (id) {
         var self = this;
-        var className = self.util.toLegalClassName(id);
+        var className = self.util.toLegalHtmlName(id);
         var node = self.util.getNode(id, self.nodes);
         node.children.map(function (link) {
-            d3.select(self.el).selectAll('#link-' + self.util.toLegalClassName(link.nodeId) + '-' + className)
+            d3.select(self.el).selectAll('#link-' + self.util.toLegalHtmlName(link.nodeId) + '-' + className)
                 .style('stroke-width', 4)
                 .style('stroke', 'lightgrey');
         });
         node.parents.map(function (link) {
-            d3.select(self.el).selectAll('#link-' + className + '-' + self.util.toLegalClassName(link.nodeId))
+            d3.select(self.el).selectAll('#link-' + className + '-' + self.util.toLegalHtmlName(link.nodeId))
                 .style('stroke-width', 4)
                 .style('stroke', 'lightgrey');
         });

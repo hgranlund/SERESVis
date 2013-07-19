@@ -115,7 +115,7 @@ function jsonFormatter(jsonArg) {
         node.size = 10;
         node.id = subject;
         node.index = index;
-        node.x = 50
+        node.x = 50;
         node.isIndividual = false;
         node.isExpanded = false;
         node.children = this.parentToChildMap[subject] || [];

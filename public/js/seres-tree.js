@@ -153,7 +153,7 @@ Tree.prototype = {
             .attr('y', -self.barHeight / 2)
             .attr('height', self.barHeight)
             .attr('id', function (d) {
-                return self.util.toLegalClassName(d.id);
+                return self.util.toLegalHtmlName(d.id);
             })
             .attr('width', self.barWidth)
             .style('fill', self.color)
@@ -352,7 +352,7 @@ Tree.prototype = {
 
     mouseOver: function (id) {
         var self = this;
-        var className = self.util.toLegalClassName(id);
+        var className = self.util.toLegalHtmlName(id);
         self.vis.selectAll('#' + className)
             .style('stroke-width', 5)
             .style('stroke', 'red');
@@ -360,7 +360,7 @@ Tree.prototype = {
 
     mouseOut: function (id) {
         var self = this;
-        var className = self.util.toLegalClassName(id);
+        var className = self.util.toLegalHtmlName(id);
         self.vis.selectAll('#' + className)
             .style('stroke-width', 1.5)
             .style('stroke', function (d) {
