@@ -45,7 +45,7 @@ window.seres.utilities = function (d3) {
         return equalNodes[0] || false;
     };
 
-    var getNodeInRelatedList = function (id, relList) {
+    var getLinkWithNodeId = function (id, relList) {
         for (var i = 0; i < relList.length; i++) {
             if (relList[i].nodeId === id) {
                 return relList[i];
@@ -54,13 +54,34 @@ window.seres.utilities = function (d3) {
         return false;
     };
 
+    var getLinkWithName = function (name, relList) {
+        for (var i = 0; i < relList.length; i++) {
+            if (relList[i].link === name) {
+                return relList[i];
+            }
+        }
+        return false;
+    };
+
+    var getParentColor = function (d, formatter) {
+        var parentId = getPropertyValue('subClassOf', d.object);
+        if (parentId) {
+            var parentNode = formatter.createNode(parentId, 0);
+            return getColor(parentNode);
+        } else {
+            return getColor(d);
+        }
+    };
+
+
     return {
         getColor: getColor,
         toLegalHtmlName: toLegalHtmlName,
         getPropertyValue: getPropertyValue,
         addNodeToNodes: addNodeToNodes,
         getNode: getNode,
-        getNodeInRelatedList: getNodeInRelatedList
+        getParentColor: getParentColor,
+        getLinkWithNodeId: getLinkWithNodeId
     };
 
 

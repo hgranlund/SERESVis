@@ -146,7 +146,7 @@ Graph.prototype = {
             } else {
                 self.clickClass(d);
             }
-        };
+        }
     },
 
     clickClass: function (d) {
@@ -253,17 +253,19 @@ Graph.prototype = {
 
     expandNode: function (d) {
         var n,
+            node,
+            parent,
             self = this,
             deltaX = d.x + 75,
             deltaY = d.y + 75;
         d.color = self.util.getColor(d);
+        d.stroke = self.util.getParentColor(d, self.formatter);
+
         var nodeIdToUpdate = [];
 
         function add(n) {
             n.x = deltaX;
             n.y = deltaY;
-            n.color = d.color.brighter();
-            n.stroke = d.color;
             if (self.util.addNodeToNodes(n, self.nodes)) {
                 nodeIdToUpdate.push(n.index);
                 if (d.isIndividual) {
@@ -271,9 +273,17 @@ Graph.prototype = {
                 }
             }
         }
-        var nodesToAdd = d.parents.concat(d.children);
-        nodesToAdd.map(function (link) {
-            add(self.formatter.createNode(link.nodeId, self.nodes.length));
+        d.children.map(function (link) {
+            node = self.formatter.createNode(link.nodeId, self.nodes.length);
+            node.color = d.color.brighter();
+            node.stroke = d.color;
+            add(node);
+        });
+        d.parents.map(function (link) {
+            node = self.formatter.createNode(link.nodeId, self.nodes.length);
+            node.color = self.util.getColor(node);
+            node.stroke = self.util.getParentColor(node, self.formatter);
+            add(node);
         });
         nodeIdToUpdate.map(function (index) {
             self.links = self.links.concat(self.formatter.createLink(index, self.nodes));
@@ -335,7 +345,7 @@ Graph.prototype = {
             var tailRec = [];
             for (var j = 0; j < self.nodes.length; j++) {
                 node = self.nodes[j];
-                if (util.getNodeInRelatedList(node.id, d.parents)) {
+                if (util.getLinkWithNodeId(node.id, d.parents)) {
                     if (!node.isExpanded) {
                         indexesToRemove.push(node.index);
                         if (node.isExpanded && d.parents.length !== 0) {
@@ -344,7 +354,7 @@ Graph.prototype = {
                         }
                     }
                 }
-                if (util.getNodeInRelatedList(node.id, d.children)) {
+                if (util.getLinkWithNodeId(node.id, d.children)) {
                     indexesToRemove.push(node.index);
                     if (node.isExpanded && d.children.length !== 0) {
                         node.isExpanded = false;
