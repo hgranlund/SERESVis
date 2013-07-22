@@ -256,7 +256,7 @@ Tree.prototype = {
             d._children = null;
             d.color = self.util.getColor(d);
             d.children.map(function (node) {
-                node.color = d.color.brighter();
+                node.color = self.util.getColor(node);
             });
         }
     },
