@@ -19,7 +19,7 @@ Graph.prototype = {
             .size([self.width, self.height])
             .friction(0.9)
             .linkDistance(function (d) {
-            var dist = d.source.size / 2;
+            var dist = d.source.size * 4;
             if (d.source.isExpanded) {
                 dist *= 2;
             }
@@ -50,6 +50,7 @@ Graph.prototype = {
         self.links = self.force.links();
         self.node = self.svg.selectAll('.node');
         self.link = self.svg.selectAll('.link');
+        self.pathText = self.svg.selectAll('.pathText');
 
         function tick(e) {
             if (e.alpha > 0.05) {
@@ -70,25 +71,61 @@ Graph.prototype = {
 
         self.link = self.link.data(self.force.links());
         self.node = self.node.data(self.force.nodes());
+        self.pathText = self.pathText.data(self.force.links());
+
         self.link.exit().remove();
         self.node.exit().remove();
+        self.pathText.exit().remove();
+
         self.link.enter().append('svg:path')
             .style('stroke', 'lightgrey')
             .style('stroke-width', 4)
             .style('opacity', 0.5)
             .attr('class', 'link')
-            .attr('drawOrder', '2')
             .attr('id', function (d) {
-            return ('link-' + self.util.toLegalHtmlName(d.source.id) + '-' + self.util.toLegalHtmlName(d.target.id));
+            return ('path-' + self.util.toLegalHtmlName(d.source.id) + '-' + self.util.toLegalHtmlName(d.target.id));
+        })
+            .on('mouseover', fireMouseOverLink)
+            .on('mouseout', fireMouseOutLink);
+
+        self.pathText.enter()
+            .append("g")
+            .attr("class", "pathText")
+            .attr("id", function (d) {
+            return ('pathText-' + self.util.toLegalHtmlName(d.source.id) + '-' + self.util.toLegalHtmlName(d.target.id));
+        })
+            .style('opacity', 0.7)
+            .style("visibility", 'hidden')
+            .style("fill", 'black')
+            .on('mouseover', function (d) {
+            d3.select(this)
+                .attr("visibility", 'visible');
+        })
+            .on('mouseout', function (d) {
+            d3.select(this)
+                .attr("visibility", 'hidden');
+        });
+
+        self.pathText.append("text")
+            .style("font-size", "14px")
+            .append("textPath")
+            .attr("offset", 30)
+            .attr("startOffset", function (d) {
+            return d.source.size + 15;
+        })
+            .attr("xlink:href", function (d) {
+            return ('#path-' + self.util.toLegalHtmlName(d.source.id) + '-' + self.util.toLegalHtmlName(d.target.id));
+        })
+            .text(function (d) {
+            return d.name;
         });
 
         self.node.enter().append('g')
             .attr('class', 'node');
 
         self.circle = self.node.append('circle')
-            .on('click', fireClick)
             .call(self.force.drag)
-            .attr('drawOrder', '1')
+            .on('click', fireClick)
             .on('mouseover', fireMouseOver)
             .on('mouseout', fireMouseOut)
             .style('fill', function (d) {
@@ -98,10 +135,6 @@ Graph.prototype = {
             return self.util.toLegalHtmlName(d.id);
         })
             .attr('r', function (d) {
-            if (d === self.root) {
-                return d.size + 5;
-
-            };
             return d.size;
         })
             .style('stroke-width', 6)
@@ -139,6 +172,14 @@ Graph.prototype = {
         function fireMouseOut(d) {
             window.seres.eventController.fireMouseOut(d);
         }
+
+        function fireMouseOverLink(d) {
+            self.mouseOverLink(d);
+        }
+
+        function fireMouseOutLink(d) {
+            self.mouseOutLink(d);
+        }
     },
 
     click: function (id) {
@@ -150,7 +191,7 @@ Graph.prototype = {
             } else {
                 self.clickClass(d);
             }
-        };
+        }
     },
 
     clickClass: function (d) {
@@ -257,17 +298,19 @@ Graph.prototype = {
 
     expandNode: function (d) {
         var n,
+            node,
+            parent,
             self = this,
             deltaX = d.x + 75,
             deltaY = d.y + 75;
         d.color = self.util.getColor(d);
+        d.stroke = self.util.getParentColor(d, self.formatter);
+
         var nodeIdToUpdate = [];
 
         function add(n) {
             n.x = deltaX;
             n.y = deltaY;
-            n.color = d.color.brighter();
-            n.stroke = d.color;
             if (self.util.addNodeToNodes(n, self.nodes)) {
                 nodeIdToUpdate.push(n.index);
                 if (d.isIndividual) {
@@ -275,9 +318,17 @@ Graph.prototype = {
                 }
             }
         }
-        var nodesToAdd = d.parents.concat(d.children);
-        nodesToAdd.map(function (link) {
-            add(self.formatter.createNode(link.nodeId, self.nodes.length));
+        d.children.map(function (link) {
+            node = self.formatter.createNode(link.nodeId, self.nodes.length);
+            node.color = d.color.brighter();
+            node.stroke = d.color;
+            add(node);
+        });
+        d.parents.map(function (link) {
+            node = self.formatter.createNode(link.nodeId, self.nodes.length);
+            node.color = self.util.getColor(node);
+            node.stroke = self.util.getParentColor(node, self.formatter);
+            add(node);
         });
         nodeIdToUpdate.map(function (index) {
             self.links = self.links.concat(self.formatter.createLink(index, self.nodes));
@@ -339,7 +390,7 @@ Graph.prototype = {
             var tailRec = [];
             for (var j = 0; j < self.nodes.length; j++) {
                 node = self.nodes[j];
-                if (util.getNodeInRelatedList(node.id, d.parents)) {
+                if (util.getLinkWithNodeId(node.id, d.parents)) {
                     if (!node.isExpanded) {
                         indexesToRemove.push(node.index);
                         if (node.isExpanded && d.parents.length !== 0) {
@@ -348,7 +399,7 @@ Graph.prototype = {
                         }
                     }
                 }
-                if (util.getNodeInRelatedList(node.id, d.children)) {
+                if (util.getLinkWithNodeId(node.id, d.children)) {
                     indexesToRemove.push(node.index);
                     if (node.isExpanded && d.children.length !== 0) {
                         node.isExpanded = false;
@@ -465,24 +516,72 @@ Graph.prototype = {
 
     },
 
+    mouseOverLink: function (d) {
+        var self = this;
+        var sourceClass = self.util.toLegalHtmlName(d.source.id);
+        var targetClass = self.util.toLegalHtmlName(d.target.id);
+        var linkId = sourceClass + '-' + targetClass;
+        d3.select(self.el).selectAll('#path-' + linkId)
+            .style('stroke-width', 6)
+            .style('stroke', function (d) {
+            return d.target.color.darker();
+        });
+        d3.select(self.el).selectAll('#pathText-' + linkId)
+            .style('visibility', 'visible');
+        d3.select(self.el).selectAll('#' + sourceClass)
+            .style('stroke-width', 6)
+            .style('stroke', 'red');
+
+        d3.select(self.el).selectAll('#' + targetClass)
+            .style('stroke-width', 6)
+            .style('stroke', 'red');
+
+    },
+
+    mouseOutLink: function (d) {
+        var self = this;
+        var sourceClass = self.util.toLegalHtmlName(d.source.id);
+        var targetClass = self.util.toLegalHtmlName(d.target.id);
+        var linkId = sourceClass + '-' + targetClass;
+        d3.select(self.el).selectAll('#path-' + linkId)
+            .style('stroke-width', 4)
+            .style('stroke', 'lightgrey');
+        d3.select(self.el).selectAll('#pathText-' + linkId)
+            .style('visibility', 'hidden');
+        d3.select(self.el).selectAll('#' + sourceClass)
+            .style('stroke-width', 6)
+            .style('stroke', function (d) {
+            return d.stroke;
+        });
+        d3.select(self.el).selectAll('#' + targetClass)
+            .style('stroke-width', 6)
+            .style('stroke', function (d) {
+            return d.stroke;
+        });
+    },
+
 
     mouseOver: function (id) {
         var self = this;
         var className = self.util.toLegalHtmlName(id);
         var node = self.util.getNode(id, self.nodes);
         node.children.map(function (link) {
-            d3.select(self.el).selectAll('#link-' + self.util.toLegalHtmlName(link.nodeId) + '-' + className)
+            d3.select(self.el).selectAll('#path-' + self.util.toLegalHtmlName(link.nodeId) + '-' + className)
                 .style('stroke-width', 6)
                 .style('stroke', function (d) {
                 return d.target.color.darker();
             });
+            d3.select(self.el).selectAll('#pathText-' + self.util.toLegalHtmlName(link.nodeId) + '-' + className)
+                .style('visibility', 'visible');
         });
         node.parents.map(function (link) {
-            d3.select(self.el).selectAll('#link-' + className + '-' + self.util.toLegalHtmlName(link.nodeId))
+            d3.select(self.el).selectAll('#path-' + className + '-' + self.util.toLegalHtmlName(link.nodeId))
                 .style('stroke-width', 6)
                 .style('stroke', function (d) {
                 return d.source.color.darker();
             });
+            d3.select(self.el).selectAll('#pathText-' + className + '-' + self.util.toLegalHtmlName(link.nodeId))
+                .style('visibility', 'visible');
 
         });
 
@@ -497,14 +596,19 @@ Graph.prototype = {
         var className = self.util.toLegalHtmlName(id);
         var node = self.util.getNode(id, self.nodes);
         node.children.map(function (link) {
-            d3.select(self.el).selectAll('#link-' + self.util.toLegalHtmlName(link.nodeId) + '-' + className)
+            d3.select(self.el).selectAll('#path-' + self.util.toLegalHtmlName(link.nodeId) + '-' + className)
                 .style('stroke-width', 4)
                 .style('stroke', 'lightgrey');
+
+            d3.select(self.el).selectAll('#pathText-' + self.util.toLegalHtmlName(link.nodeId) + '-' + className)
+                .style('visibility', 'hidden');
         });
         node.parents.map(function (link) {
-            d3.select(self.el).selectAll('#link-' + className + '-' + self.util.toLegalHtmlName(link.nodeId))
+            d3.select(self.el).selectAll('#path-' + className + '-' + self.util.toLegalHtmlName(link.nodeId))
                 .style('stroke-width', 4)
                 .style('stroke', 'lightgrey');
+            d3.select(self.el).selectAll('#pathText-' + className + '-' + self.util.toLegalHtmlName(link.nodeId))
+                .style('visibility', 'hidden');
         });
 
         d3.select(self.el).selectAll('#' + className)

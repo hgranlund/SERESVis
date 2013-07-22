@@ -170,7 +170,7 @@ function jsonFormatter(jsonArg) {
                     name: children[object.id]
                 });
             }
-            link = util.getNodeInRelatedList(object.id, subject.children);
+            link = util.getLinkWithNodeId(object.id, subject.children);
             if (link) {
                 links.push({
                     source: object.index,
