@@ -240,6 +240,10 @@ Tree.prototype = {
         var self = this;
         var d = self.util.getNode(id, self.nodes);
         self.focusedNode = d;
+        if (d._children) {
+            self.toggle(d);
+        }
+        self.update(d);
     },
 
 
