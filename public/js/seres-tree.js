@@ -14,8 +14,6 @@ function Tree(el, json) {
     self.w = 960;
     self.h = 5300;
     self.i = 0;
-    self.legendheight = 100;
-    self.legendwidth = 400;
     self.barHeight = 20;
     self.barWidth = self.w * 0.3;
     self.duration = 400;
@@ -45,62 +43,6 @@ Tree.prototype = {
             .attr("height", self.h)
             .append("svg:g")
             .attr("transform", 'translate(20,30)');
-
-        self.svg = d3.select('#legends')
-            .append('svg')
-            .attr('width', self.legendwidth)
-            .attr('height', self.legendheight);
-
-        self.legend = self.svg.append('g')
-            .attr('class', 'legend')
-            .attr('height', 30)
-            .attr('width', 30)
-            .attr('transform', 'translate(-20,50)');
-
-        self.legend.selectAll('rect')
-            .data(self.legends)
-            .enter()
-            .append('rect')
-            .attr('x', function (d, i) {
-                return i * 125 + 50;
-            })
-            .attr('y', 10)
-            .attr('width', 10)
-            .attr('height', 10)
-            .style('fill', function (d) {
-                var color = d.color;
-                return color;
-            });
-
-        self.legend.selectAll('text')
-            .data(self.legends)
-            .enter()
-            .append('text')
-            .attr('x', function (d, i) {
-                return i * 125 + 65;
-            })
-            .attr('y', 20)
-            .text(function (d) {
-                var text = d.text;
-                return text;
-            });
-
-
-        d3.select('#expand-all').on('click', function () {
-            function expand(d) {
-                if (d.children) {
-                    d._children = d.children;
-                    d.children = null;
-                } else {
-                    d.children = d._children;
-                    d.children.forEach(expand);
-                    d._children = null;
-                }
-            }
-
-            self.root.children.forEach(click);
-            d3.select('#expand-all').classed('active', true);
-        });
 
 
     },
