@@ -10,16 +10,21 @@ basePath = '';
 files = [
   JASMINE,
   JASMINE_ADAPTER,
-//   MOCHA,
-//   MOCHA_ADAPTER,
-//   REQUIRE,
-// REQUIRE_ADAPTER,
+  //   MOCHA,
+  //   MOCHA_ADAPTER,
+  //   REQUIRE,
+  // REQUIRE_ADAPTER,
   'public/js/vendor/d3.v3.js',
+  'public/js/vendor/jquery.js',
   'public/js/vendor/*.js',
   'public/js/*.js',
   'test/testValues.js',
-  'test/*.js',
-  {pattern: 'test/*.html', watched: true, served: true, included: false}
+  'test/*.js', {
+    pattern: 'test/*.html',
+    watched: true,
+    served: true,
+    included: false
+  }
 ];
 
 frameworks = ["jasmine"];
