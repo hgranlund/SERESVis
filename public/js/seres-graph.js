@@ -320,14 +320,15 @@ Graph.prototype = {
         }
         d.children.map(function (link) {
             node = self.formatter.createNode(link.nodeId, self.nodes.length);
-            node.color = d.color.brighter();
-            node.stroke = d.color;
+            node.color = self.util.getColor(node, d);
+            node.stroke = self.util.getStroke(node, d);
             add(node);
         });
         d.parents.map(function (link) {
             node = self.formatter.createNode(link.nodeId, self.nodes.length);
-            node.color = self.util.getColor(node);
-            node.stroke = self.util.getParentColor(node, self.formatter);
+            parent = self.util.getParent(node, self.formatter) || node;
+            node.color = self.util.getColor(node, parent);
+            node.stroke = self.util.getStroke(node, parent);
             add(node);
         });
         nodeIdToUpdate.map(function (index) {
@@ -528,6 +529,7 @@ Graph.prototype = {
             });
         d3.select(self.el).selectAll('#pathText-' + linkId)
             .style('visibility', 'visible');
+
         d3.select(self.el).selectAll('#' + sourceClass)
             .style('stroke-width', 6)
             .style('stroke', 'red');
@@ -603,6 +605,7 @@ Graph.prototype = {
             d3.select(self.el).selectAll('#pathText-' + self.util.toLegalHtmlName(link.nodeId) + '-' + className)
                 .style('visibility', 'hidden');
         });
+
         node.parents.map(function (link) {
             d3.select(self.el).selectAll('#path-' + className + '-' + self.util.toLegalHtmlName(link.nodeId))
                 .style('stroke-width', 4)
