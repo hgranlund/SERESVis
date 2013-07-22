@@ -109,22 +109,25 @@ function jsonFormatter(jsonArg) {
         var subjectObj = (json.hasOwnProperty(subject) ? json[subject] : {
             'data': {},
             'object': {}
-        });
-        var node = $.extend({}, subjectObj);
-        node.name = subject || node.data.type || node.data['xmi.lapel'] || '';
+        }),
+            type,
+            node = $.extend({}, subjectObj);
+        node.name = subject || node.object.type || node.data['xmi.lapel'] || '';
         node.size = 10;
         node.id = subject;
         node.index = index;
         node.x = 50;
         node.isIndividual = false;
         node.isExpanded = false;
+        node.isProperty = false;
         node.children = this.parentToChildMap[subject] || [];
         node.parents = populateParents(node) || [];
+        type = util.getPropertyValue('type', node.object);
         if (node.object.type === 'Class') {
             node.size = 30;
-        }
-        var type = util.getPropertyValue('type', node.object);
-        if (type && type !== 'Class') {
+        } else if (node.object.hasOwnProperty('domain') || node.object.hasOwnProperty('range')) {
+            node.isProperty = true;
+        } else {
             if (node.object.type in parentToChildMap) {
                 addIndividualAttributes(node);
             }
@@ -133,8 +136,8 @@ function jsonFormatter(jsonArg) {
     };
 
     var populateParents = function (node) {
-        var parent;
-        parents = [];
+        var parent,
+            parents = [];
         for (var link in node.object) {
             parent = node.object[link];
             if (json.hasOwnProperty(parent)) {
@@ -151,6 +154,8 @@ function jsonFormatter(jsonArg) {
         var parent;
         node.isIndividual = true;
         node.size = 5;
+        node.name = node.object.type || node.data['xmi.lapel'] || '';
+
     };
 
     var createLink = function (index, nodes) {
