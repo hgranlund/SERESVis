@@ -1,6 +1,6 @@
 function Tree(el, json) {
     var self = this;
-
+    self.el = el;
     self.w = 960;
     self.h = 5300;
     self.i = 0;
@@ -101,13 +101,16 @@ Tree.prototype = {
         self.nodeEnter.append('svg:text')
             .attr('dy', '.35em')
             .attr('dx', '11em')
+            .attr('id', function (d) {
+                return 'text-' + d.id;
+            })
             .style('text-anchor', 'start')
             .style('font-size', '24px')
             .style('pointer-events', 'all')
             .style('cursor', 'pointer')
             .on('click', click)
             .text(function (d) {
-                if (d._children || d.individuals) {
+                if (d._children) {
                     return '+';
                 } else if (d.children) {
                     return '-';
@@ -201,16 +204,6 @@ Tree.prototype = {
 
         function click(d) {
             self.toggle(d);
-            d3.select(this).text(function (d) {
-                //TODO: add icon for individuals
-                if (d._children || d.individuals) {
-                    return '+';
-                } else if (d.children) {
-                    return '-';
-                } else {
-                    return;
-                }
-            });
             self.update(d);
         }
     },
@@ -228,7 +221,8 @@ Tree.prototype = {
 
 
     toggle: function (d) {
-        var self = this;
+        var self = this,
+            id = '#text-' + d.id;
         if (d.children) {
             self.collapseNode(d);
         } else if (d._children) {
@@ -239,6 +233,17 @@ Tree.prototype = {
                 node.color = self.util.getColor(node);
             });
         }
+        debugger;
+        d3.select(this.el).select(id).text(function (d) {
+            //TODO: add icon for individuals
+            if (d._children) {
+                return '+';
+            } else if (d.children) {
+                return '-';
+            } else {
+                return;
+            }
+        });
     },
 
     toggleAll: function (d) {
