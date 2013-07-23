@@ -55,9 +55,9 @@ SideBar.prototype = {
             content = [],
             header = '';
         if (node.isIndividual) {
-            header = 'Instans av: ';
+            header = 'Instans av';
         } else if (node.isProperty) {
-            header = 'Domene egenskap:';
+            header = 'Domene egenskap';
         } else {
             header = 'Domene';
         }
