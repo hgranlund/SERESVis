@@ -34,16 +34,18 @@ describe('EventController', function () {
         el,
         controller,
         tree,
+        sidebar,
         nodeData = {
             id: 123,
-            isInduvidual: false
+            isInduvidual: false,
+            color: d3.rgb()
         };
 
     beforeEach(function () {
         el = document.createElement('div');
         graph = new Graph(el, json);
         tree = new Tree(el, json);
-        controller = new EventController(tree, graph);
+        controller = new EventController(tree, graph, window.seres.sidebar);
     });
 
     describe('fireClick', function () {
@@ -62,6 +64,8 @@ describe('EventController', function () {
         it('should fire click in both tree and graph', function (done) {
             var graphClick = spyOn(graph, 'click');
             var treeClick = spyOn(tree, 'click');
+            var hide = spyOn(controller.sidebar, 'hide').andReturn(true);
+            var show = spyOn(controller.sidebar, 'show').andReturn(true);
             controller.fireClick(nodeData);
             expect(graphClick.wasCalled).toBeTruthy();
             expect(treeClick.wasCalled).toBeTruthy();

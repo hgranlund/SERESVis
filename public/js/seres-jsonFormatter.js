@@ -109,89 +109,95 @@ function jsonFormatter(jsonArg) {
         var subjectObj = (json.hasOwnProperty(subject) ? json[subject] : {
             'data': {},
             'object': {}
-        });
-        var node = $.extend({}, subjectObj);
-        node.name = subject || node.data.type || node.data['xmi.lapel'] || '';
+        }),
+            type,
+            node = $.extend({}, subjectObj);
+        node.name = subject || node.object.type || node.data['xmi.lapel'] || '';
         node.size = 10;
         node.id = subject;
         node.index = index;
         node.x = 50;
         node.isIndividual = false;
         node.isExpanded = false;
+        node.isProperty = false;
         node.children = this.parentToChildMap[subject] || [];
         node.parents = populateParents(node) || [];
+        type = util.getPropertyValue('type', node.object);
         if (node.object.type === 'Class') {
-            node.size = 50;
-        }
-        var type = util.getPropertyValue('type', node.object);
-        if (type && type !== 'Class') {
-            if (node.object.type in parentToChildMap) {
-                addIndividualAttributes(node);
+            if (node.object.type === 'Class') {
+                node.size = 50;
+            } else if (node.object.hasOwnProperty('domain') || node.object.hasOwnProperty('range')) {
+                node.isProperty = true;
+            } else {
+                if (node.object.type in parentToChildMap) {
+                    addIndividualAttributes(node);
+                }
             }
-        }
-        return node;
-    };
+            return node;
+        };
 
-    var populateParents = function (node) {
-        var parent;
-        parents = [];
-        for (var link in node.object) {
-            parent = node.object[link];
-            if (json.hasOwnProperty(parent)) {
-                parents.push({
-                    'nodeId': parent,
-                    'link': link
-                });
+        var populateParents = function (node) {
+            var parent,
+                parents = [];
+            for (var link in node.object) {
+                parent = node.object[link];
+                if (json.hasOwnProperty(parent)) {
+                    parents.push({
+                        'nodeId': parent,
+                        'link': link
+                    });
+                }
             }
-        }
-        return parents;
-    };
+            return parents;
+        };
 
-    var addIndividualAttributes = function (node) {
-        var parent;
-        node.isIndividual = true;
-        node.size = 5;
-    };
+        var addIndividualAttributes = function (node) {
+            var parent;
+            node.isIndividual = true;
+            node.size = 5;
+            node.name = node.object.type || node.data['xmi.lapel'] || '';
 
-    var createLink = function (index, nodes) {
-        var subjectId = index,
-            subject = nodes[subjectId],
-            children = {},
-            link,
-            links = [];
-        for (link in subject.object) {
-            children[subject.object[link]] = link;
-        }
-        nodes.map(function (object) {
-            if (object.id in children) {
-                links.push({
-                    source: nodes[subjectId].index,
-                    target: object.index,
-                    name: children[object.id]
-                });
+        };
+
+        var createLink = function (index, nodes) {
+            var subjectId = index,
+                subject = nodes[subjectId],
+                children = {},
+                link,
+                links = [];
+            for (link in subject.object) {
+                children[subject.object[link]] = link;
             }
-            link = util.getLinkWithNodeId(object.id, subject.children);
-            if (link) {
-                links.push({
-                    source: object.index,
-                    target: nodes[subjectId].index,
-                    name: link.link
-                });
-            }
-        });
-        return links;
-    };
+            nodes.map(function (object) {
+                if (object.id in children) {
+                    links.push({
+                        source: nodes[subjectId].index,
+                        target: object.index,
+                        name: children[object.id]
+                    });
+                }
+                link = util.getLinkWithNodeId(object.id, subject.children);
+                if (link) {
+                    links.push({
+                        source: object.index,
+                        target: nodes[subjectId].index,
+                        name: link.link
+                    });
+                }
+            });
+            return links;
+        };
 
-    this.parentToChildMap = getParentToChildMap();
+        this.parentToChildMap = getParentToChildMap();
 
-    return {
-        'filterSparqlJson': filterSparqlJson,
-        'toGraphObject': toGraphObject,
-        'parentToChildMap': this.parentToChildMap,
-        'toTreeObject': toTreeObject,
-        'createNode': createNode,
-        'createLink': createLink,
-        'addIndividualAttributes': addIndividualAttributes,
-        'populateParents': populateParents
-    };
-}
+        return {
+            'filterSparqlJson': filterSparqlJson,
+            'toGraphObject': toGraphObject,
+            'parentToChildMap': this.parentToChildMap,
+            'toTreeObject': toTreeObject,
+            'createNode': createNode,
+            'createLink': createLink,
+            'addIndividualAttributes': addIndividualAttributes,
+            'populateParents': populateParents
+        };
+    }

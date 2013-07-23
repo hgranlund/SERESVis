@@ -4,15 +4,12 @@ rect {
 	pointer-events: all;
 }
 
-
-
 .graph-container .link {
   fill: none;
   opacity: 1;
 }
 
-.graph-container .node {
-  /*fill: blue; */
+.graph-container .node circle {
   stroke: #333;
   stroke-width: 1.5px;
   cursor:pointer;

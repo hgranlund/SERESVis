@@ -4,8 +4,6 @@ function Tree(el, json) {
     self.w = 960;
     self.h = 5300;
     self.i = 0;
-    self.legendheight = 100;
-    self.legendwidth = 1200;
     self.barHeight = 20;
     self.barWidth = self.w * 0.3;
     self.duration = 400;
@@ -35,23 +33,6 @@ Tree.prototype = {
             .attr("height", self.h)
             .append("svg:g")
             .attr("transform", 'translate(20,30)');
-
-
-        d3.select('#expand-all').on('click', function () {
-            function expand(d) {
-                if (d.children) {
-                    d._children = d.children;
-                    d.children = null;
-                } else {
-                    d.children = d._children;
-                    d.children.forEach(expand);
-                    d._children = null;
-                }
-            }
-
-            self.root.children.forEach(click);
-            d3.select('#expand-all').classed('active', true);
-        });
 
 
     },
@@ -249,6 +230,10 @@ Tree.prototype = {
         var self = this;
         var d = self.util.getNode(id, self.nodes);
         self.focusedNode = d;
+        if (d._children) {
+            self.toggle(d);
+        }
+        self.update(d);
     },
 
 
@@ -261,7 +246,7 @@ Tree.prototype = {
             d._children = null;
             d.color = self.util.getColor(d);
             d.children.map(function (node) {
-                node.color = d.color.brighter();
+                node.color = self.util.getColor(node);
             });
         }
     },
