@@ -19,22 +19,22 @@ Graph.prototype = {
             .size([self.width, self.height])
             .friction(0.9)
             .linkDistance(function (d) {
-                var dist = d.source.size * 4;
-                if (d.source.isExpanded) {
-                    dist *= 2;
-                }
-                return dist;
-            })
+            var dist = d.source.size * 4;
+            if (d.source.isExpanded) {
+                dist *= 2;
+            }
+            return dist;
+        })
             .charge(function (d) {
-                if (d.isIndividual) {
-                    return -200;
-                }
-                if (d === self.root) {
-                    return -5000;
-                } else {
-                    return -5000;
-                }
-            })
+            if (d.isIndividual) {
+                return -200;
+            }
+            if (d === self.root) {
+                return -5000;
+            } else {
+                return -5000;
+            }
+        })
             .on('tick', tick)
             .gravity(0.06)
             .start();
@@ -83,8 +83,8 @@ Graph.prototype = {
             .style('opacity', 0.5)
             .attr('class', 'link')
             .attr('id', function (d) {
-                return ('path-' + self.util.toLegalHtmlName(d.source.id) + '-' + self.util.toLegalHtmlName(d.target.id));
-            })
+            return ('path-' + self.util.toLegalHtmlName(d.source.id) + '-' + self.util.toLegalHtmlName(d.target.id));
+        })
             .on('mouseover', fireMouseOverLink)
             .on('mouseout', fireMouseOutLink);
 
@@ -92,33 +92,33 @@ Graph.prototype = {
             .append("g")
             .attr("class", "pathText")
             .attr("id", function (d) {
-                return ('pathText-' + self.util.toLegalHtmlName(d.source.id) + '-' + self.util.toLegalHtmlName(d.target.id));
-            })
+            return ('pathText-' + self.util.toLegalHtmlName(d.source.id) + '-' + self.util.toLegalHtmlName(d.target.id));
+        })
             .style('opacity', 0.7)
             .style("visibility", 'hidden')
             .style("fill", 'black')
             .on('mouseover', function (d) {
-                d3.select(this)
-                    .attr("visibility", 'visible');
-            })
+            d3.select(this)
+                .attr("visibility", 'visible');
+        })
             .on('mouseout', function (d) {
-                d3.select(this)
-                    .attr("visibility", 'hidden');
-            });
+            d3.select(this)
+                .attr("visibility", 'hidden');
+        });
 
         self.pathText.append("text")
             .style("font-size", "14px")
             .append("textPath")
             .attr("offset", 30)
             .attr("startOffset", function (d) {
-                return d.source.size + 15;
-            })
+            return d.source.size + 15;
+        })
             .attr("xlink:href", function (d) {
-                return ('#path-' + self.util.toLegalHtmlName(d.source.id) + '-' + self.util.toLegalHtmlName(d.target.id));
-            })
+            return ('#path-' + self.util.toLegalHtmlName(d.source.id) + '-' + self.util.toLegalHtmlName(d.target.id));
+        })
             .text(function (d) {
-                return d.name;
-            });
+            return d.name;
+        });
 
         self.node.enter().append('g')
             .attr('class', 'node');
@@ -129,36 +129,36 @@ Graph.prototype = {
             .on('mouseover', fireMouseOver)
             .on('mouseout', fireMouseOut)
             .style('fill', function (d) {
-                return d.color;
-            })
+            return d.color;
+        })
             .attr('id', function (d) {
-                return self.util.toLegalHtmlName(d.id);
-            })
+            return self.util.toLegalHtmlName(d.id);
+        })
             .attr('r', function (d) {
-                return d.size;
-            })
+            return d.size;
+        })
             .style('stroke-width', 6)
             .style('stroke', function (d) {
-                return d.stroke;
-            });
+            return d.stroke;
+        });
 
         self.node.append('title')
             .text(function (d) {
-                if (d.isIndividual) {
-                    return 'uuid: ' + d.data['xmi.uuid'];
-                }
-                return d.name;
-            });
+            if (d.isIndividual) {
+                return 'uuid: ' + d.data['xmi.uuid'];
+            }
+            return d.name;
+        });
 
         self.node.append('text')
             .attr('text-anchor', 'middle')
             .attr('dy', '.35em')
             .text(function (d) {
-                if (d.isIndividual) {
-                    return '';
-                }
-                return d.name;
-            });
+            if (d.isIndividual) {
+                return '';
+            }
+            return d.name;
+        });
 
 
         function fireClick(d) {
@@ -525,8 +525,8 @@ Graph.prototype = {
         d3.select(self.el).selectAll('#path-' + linkId)
             .style('stroke-width', 6)
             .style('stroke', function (d) {
-                return d.target.color.darker();
-            });
+            return d.target.color.darker();
+        });
         d3.select(self.el).selectAll('#pathText-' + linkId)
             .style('visibility', 'visible');
 
@@ -553,13 +553,13 @@ Graph.prototype = {
         d3.select(self.el).selectAll('#' + sourceClass)
             .style('stroke-width', 6)
             .style('stroke', function (d) {
-                return d.stroke;
-            });
+            return d.stroke;
+        });
         d3.select(self.el).selectAll('#' + targetClass)
             .style('stroke-width', 6)
             .style('stroke', function (d) {
-                return d.stroke;
-            });
+            return d.stroke;
+        });
     },
 
 
@@ -571,8 +571,8 @@ Graph.prototype = {
             d3.select(self.el).selectAll('#path-' + self.util.toLegalHtmlName(link.nodeId) + '-' + className)
                 .style('stroke-width', 6)
                 .style('stroke', function (d) {
-                    return d.target.color.darker();
-                });
+                return d.target.color.darker();
+            });
             d3.select(self.el).selectAll('#pathText-' + self.util.toLegalHtmlName(link.nodeId) + '-' + className)
                 .style('visibility', 'visible');
         });
@@ -580,8 +580,8 @@ Graph.prototype = {
             d3.select(self.el).selectAll('#path-' + className + '-' + self.util.toLegalHtmlName(link.nodeId))
                 .style('stroke-width', 6)
                 .style('stroke', function (d) {
-                    return d.source.color.darker();
-                });
+                return d.source.color.darker();
+            });
             d3.select(self.el).selectAll('#pathText-' + className + '-' + self.util.toLegalHtmlName(link.nodeId))
                 .style('visibility', 'visible');
 
@@ -617,8 +617,8 @@ Graph.prototype = {
         d3.select(self.el).selectAll('#' + className)
             .style('stroke-width', 6)
             .style('stroke', function (d) {
-                return d.stroke;
-            });
+            return d.stroke;
+        });
     }
 };
 
