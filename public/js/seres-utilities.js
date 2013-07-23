@@ -52,7 +52,7 @@ window.seres.utilities = function (d3) {
 
     var getParent = function (d, formatter) {
         var parentId = getPropertyValue('subClassOf', d.object) || getPropertyValue('type', d.object);
-        if (parentId !== 'Class') {
+        if (parentId && !d.isClass) {
             return formatter.createNode(parentId, 0);
         } else {
             return null;

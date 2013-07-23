@@ -126,10 +126,12 @@ function jsonFormatter(jsonArg) {
         node.isIndividual = false;
         node.isExpanded = false;
         node.isProperty = false;
+        node.isClass = false;
         node.children = this.parentToChildMap[subject] || [];
         node.parents = populateParents(node) || [];
         type = util.getPropertyValue('type', node.object);
         if (node.object.type === 'Class') {
+            node.isClass = true;
             node.size = 45;
         } else if (node.object.hasOwnProperty('domain') || node.object.hasOwnProperty('range')) {
             node.isProperty = true;
