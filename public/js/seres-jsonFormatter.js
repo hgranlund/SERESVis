@@ -121,7 +121,7 @@ function jsonFormatter(jsonArg) {
         node.children = this.parentToChildMap[subject] || [];
         node.parents = populateParents(node) || [];
         if (node.object.type === 'Class') {
-            node.size = 30;
+            node.size = 50;
         }
         var type = util.getPropertyValue('type', node.object);
         if (type && type !== 'Class') {
