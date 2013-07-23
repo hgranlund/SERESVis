@@ -215,7 +215,7 @@ Graph.prototype = {
             d = self.formatter.createNode(id, self.nodes.length);
             d.x = d.px = self.width / 2;
             d.y = d.py = self.height / 2;
-        };
+        }
         if (d && !d.isExpanded) {
             if (d.isIndividual) {
                 self.clickIndividual(d);
@@ -330,17 +330,20 @@ Graph.prototype = {
             node,
             parent,
             self = this,
-            deltaX = d.px,
-            deltaY = d.py;
+            deltaX,
+            nodeIdToUpdate,
+            deltaY;
+
         d.stroke = self.util.getParentColor(d, self.formatter);
         if (d.isIndividual) {
-            debugger;
             d.color = d.stroke;
         } else {
             d.color = self.util.getColor(d);
         }
+        deltaX = d.px;
+        deltaY = d.py;
 
-        var nodeIdToUpdate = [];
+        nodeIdToUpdate = [];
 
         function add(n) {
             n.x = n.px = deltaX;
@@ -588,9 +591,7 @@ Graph.prototype = {
 
             });
 
-            d3.select(self.el).selectAll('#' + className)
-                .style('stroke-width', 6)
-                .style('stroke', 'red');
+            self._focusNode('#' + className);
         }
     },
 
@@ -616,13 +617,34 @@ Graph.prototype = {
                     .style('visibility', 'hidden');
             });
 
-            d3.select(self.el).selectAll('#' + className)
-                .style('stroke-width', 6)
-                .style('stroke', function (d) {
-                    return d.stroke;
-                });
+            self._unFocusNode('#' + className);
         }
+    },
+
+    _focusNode: function (id) {
+        var self = this;
+        d3.select(self.el).selectAll(id)
+            .style('stroke-width', 6)
+            .style('stroke', function (d) {
+                return d.stroke.darker();
+            });
+        // .style('fill', function (d) {
+        //     return d.color.brighter();
+        // });
+    },
+
+    _unFocusNode: function (id) {
+        var self = this;
+        d3.select(self.el).selectAll(id)
+            .style('stroke-width', 6)
+        // .style('fill', function (d) {
+        //     return d.color;
+        // })
+        .style('stroke', function (d) {
+            return d.stroke;
+        });
     }
+
 };
 
 Graph.fn = Graph.prototype;

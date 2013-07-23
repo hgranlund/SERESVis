@@ -279,20 +279,37 @@ Tree.prototype = {
     mouseOver: function (id) {
         var self = this;
         var className = self.util.toLegalHtmlName(id);
-        self.vis.selectAll('#' + className)
-            .style('stroke-width', 5)
-            .style('stroke', 'red');
+        self._focusNode('#' + className);
+
     },
 
     mouseOut: function (id) {
         var self = this;
         var className = self.util.toLegalHtmlName(id);
-        self.vis.selectAll('#' + className)
-            .style('stroke-width', 1.5)
+        self._unFocusNode('#' + className);
+
+
+    },
+
+    _focusNode: function (id) {
+        var self = this;
+        self.vis.selectAll(id)
+        // .attr('width', self.barWidth + 20)
+        .style('stroke-width', 5)
             .style('stroke', function (d) {
-                return d.stroke;
+                return 'red';
             });
-    }
+    },
+
+    _unFocusNode: function (id) {
+        var self = this;
+        self.vis.selectAll(id)
+            .style('stroke-width', 1.5)
+        // .attr('width', self.barWidth)
+        .style('stroke', function (d) {
+            return d.stroke;
+        });
+    },
 
 };
 
