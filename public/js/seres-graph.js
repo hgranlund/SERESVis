@@ -138,13 +138,13 @@ Graph.prototype = {
             });
 
         self.node.enter().append('g')
-            .attr('class', 'node');
-
-        self.circle = self.node.append('circle')
             .call(self.force.drag)
             .on('click', fireClick)
             .on('mouseover', fireMouseOver)
             .on('mouseout', fireMouseOut)
+            .attr('class', 'node');
+
+        self.circle = self.node.append('circle')
             .style('fill', function (d) {
                 return d.color;
             })
