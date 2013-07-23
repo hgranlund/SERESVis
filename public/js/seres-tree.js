@@ -109,15 +109,7 @@ Tree.prototype = {
             .style('pointer-events', 'all')
             .style('cursor', 'pointer')
             .on('click', click)
-            .text(function (d) {
-                if (d._children) {
-                    return '+';
-                } else if (d.children) {
-                    return '-';
-                } else {
-                    return;
-                }
-            });
+            .text(self._getIcon);
 
         self.nodeEnter.transition()
             .duration(self.duration)
@@ -233,18 +225,21 @@ Tree.prototype = {
                 node.color = self.util.getColor(node);
             });
         }
-        debugger;
-        d3.select(this.el).select(id).text(function (d) {
-            //TODO: add icon for individuals
-            if (d._children) {
-                return '+';
-            } else if (d.children) {
-                return '-';
-            } else {
-                return;
-            }
-        });
+        d3.select(this.el).select(id).text(self._getIcon);
     },
+
+    _getIcon: function (d) {
+        if (d.individuals) {
+            return '•';
+        } else if (d._children) {
+            return '+';
+        } else if (d.children) {
+            return '-';
+        } else {
+            return '';
+        }
+    },
+
 
     toggleAll: function (d) {
         if (d.children) {
