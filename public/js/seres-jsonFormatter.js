@@ -133,71 +133,72 @@ function jsonFormatter(jsonArg) {
                     addIndividualAttributes(node);
                 }
             }
-            return node;
-        };
+        }
+        return node;
+    };
 
-        var populateParents = function (node) {
-            var parent,
-                parents = [];
-            for (var link in node.object) {
-                parent = node.object[link];
-                if (json.hasOwnProperty(parent)) {
-                    parents.push({
-                        'nodeId': parent,
-                        'link': link
-                    });
-                }
+    var populateParents = function (node) {
+        var parent,
+            parents = [];
+        for (var link in node.object) {
+            parent = node.object[link];
+            if (json.hasOwnProperty(parent)) {
+                parents.push({
+                    'nodeId': parent,
+                    'link': link
+                });
             }
-            return parents;
-        };
+        }
+        return parents;
+    };
 
-        var addIndividualAttributes = function (node) {
-            var parent;
-            node.isIndividual = true;
-            node.size = 5;
-            node.name = node.object.type || node.data['xmi.lapel'] || '';
+    var addIndividualAttributes = function (node) {
+        var parent;
+        node.isIndividual = true;
+        node.size = 5;
+        node.name = node.object.type || node.data['xmi.lapel'] || '';
 
-        };
+    };
 
-        var createLink = function (index, nodes) {
-            var subjectId = index,
-                subject = nodes[subjectId],
-                children = {},
-                link,
-                links = [];
-            for (link in subject.object) {
-                children[subject.object[link]] = link;
+    var createLink = function (index, nodes) {
+        var subjectId = index,
+            subject = nodes[subjectId],
+            children = {},
+            link,
+            links = [];
+        for (link in subject.object) {
+            children[subject.object[link]] = link;
+        }
+        nodes.map(function (object) {
+            if (object.id in children) {
+                links.push({
+                    source: nodes[subjectId].index,
+                    target: object.index,
+                    name: children[object.id]
+                });
             }
-            nodes.map(function (object) {
-                if (object.id in children) {
-                    links.push({
-                        source: nodes[subjectId].index,
-                        target: object.index,
-                        name: children[object.id]
-                    });
-                }
-                link = util.getLinkWithNodeId(object.id, subject.children);
-                if (link) {
-                    links.push({
-                        source: object.index,
-                        target: nodes[subjectId].index,
-                        name: link.link
-                    });
-                }
-            });
-            return links;
-        };
+            link = util.getLinkWithNodeId(object.id, subject.children);
+            if (link) {
+                links.push({
+                    source: object.index,
+                    target: nodes[subjectId].index,
+                    name: link.link
+                });
+            }
+        });
+        return links;
+    };
 
-        this.parentToChildMap = getParentToChildMap();
+    this.parentToChildMap = getParentToChildMap();
 
-        return {
-            'filterSparqlJson': filterSparqlJson,
-            'toGraphObject': toGraphObject,
-            'parentToChildMap': this.parentToChildMap,
-            'toTreeObject': toTreeObject,
-            'createNode': createNode,
-            'createLink': createLink,
-            'addIndividualAttributes': addIndividualAttributes,
-            'populateParents': populateParents
-        };
-    }
+    return {
+        'filterSparqlJson': filterSparqlJson,
+        'toGraphObject': toGraphObject,
+        'parentToChildMap': this.parentToChildMap,
+        'toTreeObject': toTreeObject,
+        'createNode': createNode,
+        'createLink': createLink,
+        'addIndividualAttributes': addIndividualAttributes,
+        'populateParents': populateParents
+    };
+}
