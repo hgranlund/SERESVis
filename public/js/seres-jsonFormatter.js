@@ -124,14 +124,12 @@ function jsonFormatter(jsonArg) {
         node.parents = populateParents(node) || [];
         type = util.getPropertyValue('type', node.object);
         if (node.object.type === 'Class') {
-            if (node.object.type === 'Class') {
-                node.size = 50;
-            } else if (node.object.hasOwnProperty('domain') || node.object.hasOwnProperty('range')) {
-                node.isProperty = true;
-            } else {
-                if (node.object.type in parentToChildMap) {
-                    addIndividualAttributes(node);
-                }
+            node.size = 50;
+        } else if (node.object.hasOwnProperty('domain') || node.object.hasOwnProperty('range')) {
+            node.isProperty = true;
+        } else {
+            if (node.object.type in parentToChildMap) {
+                addIndividualAttributes(node);
             }
         }
         return node;
@@ -153,7 +151,6 @@ function jsonFormatter(jsonArg) {
     };
 
     var addIndividualAttributes = function (node) {
-        var parent;
         node.isIndividual = true;
         node.size = 5;
         node.name = node.object.type || node.data['xmi.lapel'] || '';
