@@ -19,4 +19,43 @@ rect {
   /*fill: #44444;*/
   font: 14px sans-serif;
   pointer-events: none;
+  font-weight: bold;
+}
+
+
+#topbar {
+  text-align: center;
+}
+
+#indented_tree {
+  text-align: left;
+}
+
+#graph-container {
+  text-align: center;
+}
+
+
+div#topbar h1{
+  font: 32px;
+  position:absolute;
+  padding-right:50%;
+}
+
+
+div#treeHeader {
+
+}
+
+div#topbar .image {
+  float: left
+}
+
+div#treeHeader {
+  background-color: lightgrey;
+  font: 24px;
+  font-weight: bold;
+  text-align: center;
+  vertical-align: middle; 
+  display: table-cell;
 }
