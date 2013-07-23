@@ -81,11 +81,11 @@ Graph.prototype = {
         self.pathText = self.pathText.data(self.force.links());
 
 
-        self.link.exit().transition().duration(300).attr('d', function (d) {
+        self.link.exit().transition().duration(200).attr('d', function (d) {
             var dx = d.target.x - d.source.x,
                 dy = d.target.y - d.source.y,
                 dr = Math.sqrt(dx * dx + dy * dy);
-            return 'M' + d.source.x + ',' + d.source.y + 'A' + dr + ',' + dr + ' 0 0,1 ' + d.source.x + ',' + d.source.y;
+            return 'M' + self.root.x + ',' + self.root.y + 'A' + dr + ',' + dr + ' 0 0,1 ' + self.root.x + ',' + self.root.y;
         }).remove();
 
         self.node.exit().transition().duration(300).attr('transform', function (d) {
