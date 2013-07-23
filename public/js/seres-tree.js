@@ -25,8 +25,8 @@ Tree.prototype = {
 
         self.diagonal = d3.svg.diagonal()
             .projection(function (d) {
-            return [d.y, d.x];
-        });
+                return [d.y, d.x];
+            });
 
         self.vis = d3.select(el).append('svg:svg')
             .attr("width", self.w)
@@ -62,31 +62,28 @@ Tree.prototype = {
         var self = this;
         self.nodes = self.tree.nodes(self.root);
 
-        // Compute the 'layout'.
         self.nodes.forEach(function (n, i) {
             n.x = i * self.barHeight;
         });
 
-        // Update the nodes…
         var node = self.vis.selectAll('g.node')
             .data(self.nodes, function (d) {
-            return d.id || (d.id = ++self.i);
-        });
+                return d.id || (d.id = ++self.i);
+            });
 
         self.nodeEnter = node.enter().append('svg:g')
             .attr('class', 'node')
             .attr('transform', function (d) {
-            return 'translate(' + source.y0 + ',' + source.x0 + ')';
-        })
+                return 'translate(' + source.y0 + ',' + source.x0 + ')';
+            })
             .style('opacity', 1e-6);
 
-        // Enter any new nodes at the parent's previous position.
         self.nodeEnter.append('svg:rect')
             .attr('y', -self.barHeight / 2)
             .attr('height', self.barHeight)
             .attr('id', function (d) {
-            return self.util.toLegalHtmlName(d.id);
-        })
+                return self.util.toLegalHtmlName(d.id);
+            })
             .attr('width', self.barWidth)
             .style('fill', self.color)
             .on('click', fireClick)
@@ -98,8 +95,8 @@ Tree.prototype = {
             .attr('dy', 3.5)
             .attr('dx', 5.5)
             .text(function (d) {
-            return d.name;
-        });
+                return d.name;
+            });
 
         self.nodeEnter.append('svg:text')
             .attr('dy', '.35em')
@@ -110,88 +107,81 @@ Tree.prototype = {
             .style('cursor', 'pointer')
             .on('click', click)
             .text(function (d) {
-            if (d._children || d.individuals) {
-                return '+';
-            } else if (d.children) {
-                return '-';
-            } else {
-                return;
-            }
-        });
+                if (d._children || d.individuals) {
+                    return '+';
+                } else if (d.children) {
+                    return '-';
+                } else {
+                    return;
+                }
+            });
 
-        // Transition nodes to their new position.
         self.nodeEnter.transition()
             .duration(self.duration)
             .attr('transform', function (d) {
-            return 'translate(' + d.y + ',' + d.x + ')';
-        })
+                return 'translate(' + d.y + ',' + d.x + ')';
+            })
             .style('opacity', 1);
 
         node.transition()
             .duration(self.duration)
             .attr('transform', function (d) {
-            return 'translate(' + d.y + ',' + d.x + ')';
-        })
+                return 'translate(' + d.y + ',' + d.x + ')';
+            })
             .style('opacity', 1)
             .select('rect')
             .attr('rx', '10')
             .style('fill', function (d) {
-            return d.color;
-        });
+                return d.color;
+            });
 
-        // Transition exiting nodes to the parent's new position.
         node.exit().transition()
             .duration(self.duration)
             .attr('transform', function (d) {
-            return 'translate(' + source.y + ',' + source.x + ')';
-        })
+                return 'translate(' + source.y + ',' + source.x + ')';
+            })
             .style('opacity', 1e-6)
             .remove();
 
-        // Update the links…
         var link = self.vis.selectAll('path.link')
             .data(self.tree.links(self.nodes), function (d) {
-            return d.target.id;
-        });
+                return d.target.id;
+            });
 
-        // Enter any new links at the parent's previous position.
         link.enter().append('svg:path', 'g')
             .attr('class', 'link')
             .attr('d', function (d) {
-            var o = {
-                x: source.x0,
-                y: source.y0
-            };
-            return self.diagonal({
-                source: o,
-                target: o
-            });
-        })
+                var o = {
+                    x: source.x0,
+                    y: source.y0
+                };
+                return self.diagonal({
+                    source: o,
+                    target: o
+                });
+            })
             .transition()
             .duration(self.duration)
             .attr('d', self.diagonal);
 
-        // Transition links to their new position.
         link.transition()
             .duration(self.duration)
             .attr('d', self.diagonal);
 
-        // Transition exiting nodes to the parent's new position.
         link.exit().transition()
             .duration(self.duration)
             .attr('d', function (d) {
-            var o = {
-                x: source.x,
-                y: source.y
-            };
-            return self.diagonal({
-                source: o,
-                target: o
-            });
-        })
+                var o = {
+                    x: source.x,
+                    y: source.y
+                };
+                return self.diagonal({
+                    source: o,
+                    target: o
+                });
+            })
             .remove();
 
-        // Stash the old positions for transition.
         self.nodes.forEach(function (d) {
             d.x0 = d.x;
             d.y0 = d.y;
@@ -300,8 +290,8 @@ Tree.prototype = {
         self.vis.selectAll('#' + className)
             .style('stroke-width', 1.5)
             .style('stroke', function (d) {
-            return d.stroke;
-        });
+                return d.stroke;
+            });
     }
 
 };
