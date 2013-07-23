@@ -52,6 +52,7 @@ Tree.prototype = {
                 d.children = null;
             }
         });
+        self.inFocus = self.root;
         self.resetTree();
         self.update(self.root);
     },
@@ -182,6 +183,9 @@ Tree.prototype = {
             d.y0 = d.y;
         });
 
+        self._focusNode(self.inFocus.id);
+
+
         function fireClick(d) {
             window.seres.eventController.fireClick(d);
         }
@@ -204,7 +208,10 @@ Tree.prototype = {
     click: function (id) {
         var self = this;
         var d = self.util.getNode(id, self.nodes);
-        self.focusedNode = d;
+        self._unFocusNode(self.inFocus.id);
+        self.inFocus = d;
+        self._focusNode(self.inFocus.id);
+
         if (d._children) {
             self.toggle(d);
         }
@@ -278,22 +285,21 @@ Tree.prototype = {
 
     mouseOver: function (id) {
         var self = this;
-        var className = self.util.toLegalHtmlName(id);
-        self._focusNode('#' + className);
+        self._focusNode(id);
 
     },
 
     mouseOut: function (id) {
         var self = this;
-        var className = self.util.toLegalHtmlName(id);
-        self._unFocusNode('#' + className);
-
-
+        if (self.inFocus.id !== id) {
+            self._unFocusNode(id);
+        }
     },
 
     _focusNode: function (id) {
-        var self = this;
-        self.vis.selectAll(id)
+        var self = this,
+            id = self.util.toLegalHtmlName(id);
+        self.vis.selectAll('#' + id)
         // .attr('width', self.barWidth + 20)
         .style('stroke-width', 5)
             .style('stroke', function (d) {
@@ -303,7 +309,8 @@ Tree.prototype = {
 
     _unFocusNode: function (id) {
         var self = this;
-        self.vis.selectAll(id)
+        id = self.util.toLegalHtmlName(id);
+        self.vis.selectAll('#' + id)
             .style('stroke-width', 1.5)
         // .attr('width', self.barWidth)
         .style('stroke', function (d) {

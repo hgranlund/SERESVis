@@ -183,9 +183,14 @@ Graph.prototype = {
             return 'M' + d.source.px + ',' + d.source.py + 'A' + dr + ',' + dr + ' 0 0,1 ' + d.target.px + ',' + d.target.py;
         });
 
+        // self.nodes.forEach(function (d) {
+        //     d.x0 = d.x;
+        //     d.y0 = d.y;
+        // });
         this.node.attr('transform', function (d) {
             return 'translate(' + d.px + ',' + d.py + ')';
         });
+
 
         function fireClick(d) {
             window.seres.eventController.fireClick(d);
