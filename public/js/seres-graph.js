@@ -200,11 +200,11 @@ Graph.prototype = {
         }
 
         function fireMouseOverLink(d) {
-            self.mouseOverLink(d);
+            window.seres.eventController.fireMouseOverLink(d);
         }
 
         function fireMouseOutLink(d) {
-            self.mouseOutLink(d);
+            window.seres.eventController.fireMouseOutLink(d);
         }
     },
 

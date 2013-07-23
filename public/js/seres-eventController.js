@@ -26,6 +26,17 @@ EventController.prototype = {
         self.tree.mouseOut(d.id);
         self.graph.mouseOut(d.id);
     },
+
+    fireMouseOverLink: function (d) {
+        var self = this;
+        self.sidebar.show(d);
+        self.graph.mouseOverLink(d);
+    },
+
+    fireMouseOutLink: function (d) {
+        var self = this;
+        self.graph.mouseOutLink(d);
+    }
 };
 
 EventController.fn = EventController.prototype;
