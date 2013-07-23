@@ -210,7 +210,12 @@ Graph.prototype = {
 
     click: function (id) {
         var self = this;
-        var d = self.util.getNode(id, self.nodes) || self.formatter.createNode(id, self.nodes.length);
+        var d = self.util.getNode(id, self.nodes);
+        if (!d) {
+            d = self.formatter.createNode(id, self.nodes.length);
+            d.x = d.px = self.width / 2;
+            d.y = d.py = self.height / 2;
+        };
         if (d && !d.isExpanded) {
             if (d.isIndividual) {
                 self.clickIndividual(d);
