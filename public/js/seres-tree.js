@@ -1,17 +1,5 @@
 function Tree(el, json) {
     var self = this;
-    // self.legends = [{
-    //         'text': '+ Klassen kan ekspanderes'
-    //     }, {
-    //         'text': '- Klassen er ekspandert'
-    //     }, {
-    //         'text': 'Instanser av en klasse'
-    //     }, {
-    //         'text': 'Klasse-objekt'
-    //     }, {
-    //         'text': 'Data/Objekt-egenskap'
-    //     }
-    // ];
 
     self.w = 960;
     self.h = 5300;
@@ -47,45 +35,6 @@ Tree.prototype = {
             .attr("height", self.h)
             .append("svg:g")
             .attr("transform", 'translate(20,30)');
-
-        // self.svg = d3.select('#legends')
-        //     .append('svg')
-        //     .attr('width', self.legendwidth)
-        //     .attr('height', self.legendheight);
-
-        // self.legend = self.svg.append('g')
-        //     .attr('class', 'legend')
-        //     .attr('height', 30)
-        //     .attr('width', 30)
-        //     .attr('transform', 'translate(-20,50)');
-
-        // self.legend.selectAll('rect')
-        //     .data(self.legends)
-        //     .enter()
-        //     .append('rect')
-        //     .attr('x', function (d, i) {
-        //     return i * 200 + 50;
-        // })
-        //     .attr('y', 10)
-        //     .attr('width', 10)
-        //     .attr('height', 10)
-        //     .style('fill', function (d) {
-        //     var color = d.color;
-        //     return color;
-        // });
-
-        // self.legend.selectAll('text')
-        //     .data(self.legends)
-        //     .enter()
-        //     .append('text')
-        //     .attr('x', function (d, i) {
-        //     return i * 200 + 65;
-        // })
-        //     .attr('y', 20)
-        //     .text(function (d) {
-        //     var text = d.text;
-        //     return text;
-        // });
 
 
         d3.select('#expand-all').on('click', function () {
