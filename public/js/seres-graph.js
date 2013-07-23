@@ -19,15 +19,20 @@ Graph.prototype = {
             .size([self.width, self.height])
             .friction(0.9)
             .linkDistance(function (d) {
-                var dist = d.source.size * 4;
-                if (d.source.isExpanded) {
+                var dist = d.source.size;
+                if (d.source.isIndividual) {
+                    dist *= 4;
+                } else if (d.source.isProperty) {
+                    dist *= 4;
+                } else {
                     dist *= 2;
                 }
+                dist += d.source.size;
                 return dist;
             })
             .charge(function (d) {
                 if (d.isIndividual) {
-                    return -200;
+                    return -500;
                 }
                 if (d === self.root) {
                     return -5000;
@@ -57,7 +62,7 @@ Graph.prototype = {
                 return;
             } else if (e.alpha > 0.05) {
                 self.updateNodeAndLinkPositions();
-                self.updatePositions(e.alpha);
+                // self.updatePositions(e.alpha);
             } else {
                 self.center(self.root);
                 self.force.alpha(0);
@@ -171,8 +176,16 @@ Graph.prototype = {
                 }
                 return d.name;
             });
+        this.link.attr('d', function (d) {
+            var dx = d.target.x - d.source.x,
+                dy = d.target.y - d.source.y,
+                dr = Math.sqrt(dx * dx + dy * dy);
+            return 'M' + d.source.px + ',' + d.source.py + 'A' + dr + ',' + dr + ' 0 0,1 ' + d.target.px + ',' + d.target.py;
+        });
 
-        self.updateNodeAndLinkPositions(200);
+        this.node.attr('transform', function (d) {
+            return 'translate(' + d.px + ',' + d.py + ')';
+        });
 
         function fireClick(d) {
             window.seres.eventController.fireClick(d);
@@ -302,8 +315,6 @@ Graph.prototype = {
         });
 
         this.node.transition().duration(duration).attr('transform', function (d) {
-            // d.x = Math.max(d.size, Math.min(self.width - d.size, d.x));
-            // d.y = Math.max(d.size, Math.min(self.height - d.size, d.y));
             return 'translate(' + d.x + ',' + d.y + ')';
         });
     },
@@ -314,16 +325,16 @@ Graph.prototype = {
             node,
             parent,
             self = this,
-            deltaX = d.x,
-            deltaY = d.y;
+            deltaX = d.px,
+            deltaY = d.py;
         d.color = self.util.getColor(d);
         d.stroke = self.util.getParentColor(d, self.formatter);
 
         var nodeIdToUpdate = [];
 
         function add(n) {
-            n.x = deltaX;
-            n.y = deltaY;
+            n.x = n.px = deltaX;
+            n.y = n.py = deltaY;
             if (self.util.addNodeToNodes(n, self.nodes)) {
                 nodeIdToUpdate.push(n.index);
                 if (d.isIndividual) {
@@ -347,8 +358,7 @@ Graph.prototype = {
         nodeIdToUpdate.map(function (index) {
             self.links = self.links.concat(self.formatter.createLink(index, self.nodes));
         });
-        self.root.x = self.width / 2;
-        self.root.y = self.height / 2;
+
         self.updateNodeAndLinkPositions(0);
         self.force.stop();
         for (var i = 0; i < d.children.length; ++i) {
@@ -421,11 +431,11 @@ Graph.prototype = {
                         tailRec.push(node);
                     }
                 }
-            };
+            }
             tailRec.map(function (node) {
                 getIndexesOfExpandedChildren(node);
             });
-        };
+        }
     },
 
     removeIndexesFromGraph: function (indexesToRemove) {
@@ -465,45 +475,6 @@ Graph.prototype = {
     },
 
 
-    updatePositions: function (alpha) {
-        var self = this;
-        var k = 0.05 * alpha;
-        self.nodes.map(function (d, i) {
-            self.cluster(10 * alpha * alpha)(d);
-        });
-    },
-
-    cluster: function (alpha) {
-        var self = this;
-        var nameToNodeMap = {};
-
-        self.nodes.map(function (d) {
-            nameToNodeMap[d.name] = d;
-        });
-        return function (d) {
-            var parent = d.object.subClassOf;
-            var node = nameToNodeMap[parent],
-                h,
-                ballR,
-                delatX,
-                deltaY;
-
-            if (node == d || typeof (node) === 'undefined') return;
-
-            deltaX = d.x - node.x;
-            deltaY = d.y - node.y;
-            h = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
-            ballR = d.size + node.size * 2;
-            ballR = (d.isExpanded ? ballR * 2 : ballR);
-            if (h != ballR) {
-                h = (h - ballR) / h * alpha;
-                d.x -= deltaX *= h;
-                d.y -= deltaY *= h;
-                node.x += deltaX;
-                node.y += deltaY;
-            }
-        };
-    },
 
     makeRoot: function (d) {
         if (this.root === d) {
@@ -517,20 +488,23 @@ Graph.prototype = {
     center: function (nodeToCenter) {
         var deltaX = this.width / 2 - nodeToCenter.x,
             deltaY = this.height / 2 - nodeToCenter.y,
-            self = this;
+            self = this,
+            h,
+            ballR;
 
+        h = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+        ballR = nodeToCenter.size;
+        if (h > ballR) {
 
-        self.nodes.map(function (d) {
-            d.x += deltaX;
-            d.y += deltaY;
-            d.x = Math.max(d.size, Math.min(self.width - d.size, d.x));
-            d.y = Math.max(d.size, Math.min(self.height - d.size, d.y));
-        });
-        self.update();
-        self.force.stop();
-        self.updateNodeAndLinkPositions(400);
-        self.force.start();
-
+            self.nodes.map(function (d) {
+                d.x += deltaX;
+                d.y += deltaY;
+            });
+            self.update();
+            self.force.stop();
+            self.updateNodeAndLinkPositions(400);
+            self.force.start();
+        }
     },
 
     mouseOverLink: function (d) {

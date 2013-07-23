@@ -124,7 +124,7 @@ function jsonFormatter(jsonArg) {
         node.parents = populateParents(node) || [];
         type = util.getPropertyValue('type', node.object);
         if (node.object.type === 'Class') {
-            node.size = 50;
+            node.size = 45;
         } else if (node.object.hasOwnProperty('domain') || node.object.hasOwnProperty('range')) {
             node.isProperty = true;
         } else {
