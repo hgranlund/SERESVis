@@ -327,8 +327,13 @@ Graph.prototype = {
             self = this,
             deltaX = d.px,
             deltaY = d.py;
-        d.color = self.util.getColor(d);
         d.stroke = self.util.getParentColor(d, self.formatter);
+        if (d.isIndividual) {
+            debugger;
+            d.color = d.stroke;
+        } else {
+            d.color = self.util.getColor(d);
+        }
 
         var nodeIdToUpdate = [];
 

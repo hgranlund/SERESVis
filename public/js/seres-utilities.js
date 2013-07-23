@@ -41,10 +41,9 @@ window.seres.utilities = function (d3) {
     };
 
     var getParentColor = function (d, formatter) {
-        var parentId = getPropertyValue('subClassOf', d.object);
-        if (parentId) {
-            var parentNode = formatter.createNode(parentId, 0);
-            return _getColor(parentNode);
+        var parent = getParent(d, formatter);
+        if (parent) {
+            return _getColor(parent);
         } else {
             return getColor(d);
         }
