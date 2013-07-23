@@ -1,6 +1,12 @@
 function jsonFormatter(jsonArg) {
     var json = jsonArg,
         parentToChildMap,
+        engToNor = {
+            type: 'instans av',
+            subClassOf: 'subdomene av',
+            domain: 'domene',
+            range: 'rekkevidde'
+        },
         autoId = 0;
     util = window.seres.utilities;
 
@@ -171,7 +177,7 @@ function jsonFormatter(jsonArg) {
                 links.push({
                     source: nodes[subjectId].index,
                     target: object.index,
-                    name: children[object.id]
+                    name: _engToNor(children[object.id])
                 });
             }
             link = util.getLinkWithNodeId(object.id, subject.children);
@@ -179,13 +185,20 @@ function jsonFormatter(jsonArg) {
                 links.push({
                     source: object.index,
                     target: nodes[subjectId].index,
-                    name: link.link
+                    name: _engToNor(link.link)
                 });
             }
         });
         return links;
     };
 
+    function _engToNor(word) {
+        if (word in engToNor) {
+            return engToNor[word];
+        } else {
+            return word;
+        }
+    };
     this.parentToChildMap = getParentToChildMap();
 
     return {

@@ -248,11 +248,11 @@ describe('seres-jsonformatter:', function () {
       links = links.concat(formatter.createLink(2, nodes));
       expect(links[0].source).toEqual(1);
       expect(links[0].target).toEqual(0);
-      expect(links[0].name).toEqual('subClassOf');
+      expect(links[0].name).toEqual('subdomene av');
 
       expect(links[1].source).toEqual(2);
       expect(links[1].target).toEqual(0);
-      expect(links[1].name).toEqual('subClassOf');
+      expect(links[1].name).toEqual('subdomene av');
     });
 
 
@@ -270,7 +270,7 @@ describe('seres-jsonformatter:', function () {
 
       expect(links[2].source).toEqual(0);
       expect(links[2].target).toEqual(2);
-      expect(links[2].name).toEqual('type');
+      expect(links[2].name).toEqual('instans av');
 
     });
   });

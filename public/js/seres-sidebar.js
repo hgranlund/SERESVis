@@ -1,4 +1,5 @@
 function SideBar(util) {
+
     this._node = {};
     this._createElement();
 }
@@ -17,7 +18,6 @@ SideBar.prototype = {
             this.el.class = this.className;
             this.el.id = this.elementId;
             this.el.className = this.elementClass;
-            // this.el.style.display = "none";
             document.body.appendChild(this.el);
         } else {
             this.el = found;
