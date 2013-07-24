@@ -49,13 +49,4 @@ div#treeHeader {
 
 div#topbar .image {
   float: left
-}
 
-div#treeHeader {
-  background-color: lightgrey;
-  font: 24px;
-  font-weight: bold;
-  text-align: center;
-  vertical-align: middle; 
-  display: table-cell;
-}
