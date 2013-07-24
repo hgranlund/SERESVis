@@ -368,7 +368,19 @@ Tree.prototype = {
         self.toggle(self.root);
     },
 
-
+    expandNode: function (id) {
+        var self = this,
+            d,
+            path;
+        path = self.util.pathFromRootWithFormatter(id, self.formatter);
+        for (var i = 0; i < path.length; i++) {
+            var node = self.util.getNode(path[i], self.nodes);
+            if (node._children) {
+                self.toggle(node);
+                self.update(node);
+            };
+        };
+    },
     collapseNode: function (d) {
         var self = this;
         self.mapNodes(d, function (d) {

@@ -123,6 +123,18 @@ window.seres.utilities = function (d3) {
         return path.reverse();
     };
 
+    var pathFromRootWithFormatter = function (id, formatter) {
+        var path = [id],
+            node = formatter.json[id],
+            parentId = util.getPropertyValue('subClassOf', node.object);
+
+        while (parentId) {
+            node = formatter.json[parentId];
+            path.push(parentId);
+            parentId = util.getPropertyValue('subClassOf', node.object);
+        }
+        return path.reverse();
+    };
 
     return {
         getColor: getColor,
@@ -134,8 +146,8 @@ window.seres.utilities = function (d3) {
         getLinkWithNodeId: getLinkWithNodeId,
         isEmpty: isEmpty,
         getParent: getParent,
-        pathFromRoot: pathFromRoot
-
+        pathFromRoot: pathFromRoot,
+        pathFromRootWithFormatter: pathFromRootWithFormatter
     };
 
 
