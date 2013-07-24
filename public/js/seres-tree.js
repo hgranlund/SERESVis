@@ -1,9 +1,13 @@
 function Tree(el, json) {
     var self = this;
+    self.screenWidth = window.screen.width;
+    self.screenHeigth = window.screen.heigth;
     self.el = el;
     self.w = 960;
     self.h = 5300;
     self.i = 0;
+    self.pathHeigth = 60;
+    self.pathWidth = self.w * 0.18;
     self.barHeight = 20;
     self.barWidth = self.w * 0.3;
     self.duration = 400;
@@ -28,6 +32,13 @@ Tree.prototype = {
                 return [d.y, d.x];
             });
 
+        self.path = d3.select(el).append('svg:svg')
+            .attr("width", self.screenWidth)
+            .attr("height", self.pathHeigth)
+            .append("svg:g")
+            .attr("transform", 'translate(20,0)');
+
+
         self.vis = d3.select(el).append('svg:svg')
             .attr("width", self.w)
             .attr("height", self.h)
@@ -46,6 +57,7 @@ Tree.prototype = {
         self.root.color = self.util.getColor(self.root);
         self.text = '';
         self.nodes = self.root;
+        self.pathFromRoot = [self.root];
         self.focusedNode = self.root;
         self.mapNodes(function (d) {
             if (d.children.length === 0) {
@@ -62,10 +74,76 @@ Tree.prototype = {
     update: function (source) {
         var self = this;
         self.nodes = self.tree.nodes(self.root);
+        self.pathFromRoot = self.util.pathFromRoot(self.inFocus, self.nodes);
 
         self.nodes.forEach(function (n, i) {
-            n.x = i * self.barHeight;
+            n.x = i * self.barHeight * 1.2;
         });
+
+        self.pathFromRoot.forEach(function (n, i) {
+            n.px0 = i * self.pathWidth * 1.1;
+        });
+        var path = self.path.selectAll('g.pathFromRoot')
+            .data(self.pathFromRoot, function (d) {
+                return d.id;
+            });
+
+
+        self.pathEnter = path.enter().append('svg:g')
+            .style('opacity', 1e-6)
+            .attr('class', 'pathFromRoot');
+
+
+        self.pathEnter.append('svg:polygon')
+            .attr('fill', function (d) {
+                return d.color;
+            })
+            .attr("opacity", 0.7)
+            .attr('points', function (d) {
+                var points = [];
+                points.push("0,0 ");
+                points.push(self.pathWidth, ',0 ');
+                points.push(self.pathWidth * 1.2, ',', (self.pathHeigth / 2));
+                points.push(self.pathWidth, ',', self.pathHeigth);
+                points.push(' 0,', self.pathHeigth);
+                if (d.px0 !== 0) {
+                    points.push(self.pathWidth * 0.2, ',', (self.pathHeigth / 2));
+                }
+                return points.join(' ');
+            });
+
+
+        self.pathEnter.append('svg:text')
+            .attr('dy', self.pathHeigth * 0.6)
+            .attr('dx', function (d) {
+                if (d.px0 !== 0) {
+                    return self.pathWidth * 0.25;
+                } else {
+                    return self.pathWidth * 0.15;
+                }
+            })
+            .attr("fill", "white")
+            .text(function (d) {
+                return d.name;
+            });
+
+        path.transition()
+            .duration(200)
+            .attr('transform', function (d) {
+                return 'translate(' + d.px0 + ',' + 0 + ')';
+            })
+            .style('opacity', 1)
+            .style('fill', function (d) {
+                return d.color;
+            });
+
+        path.exit().transition()
+            .attr('transform', function (d) {
+                return 'translate(' + d.y - self.pathWidth + ',' + 0 + ')';
+            })
+            .style('opacity', 1e-6)
+            .remove();
+
 
         var node = self.vis.selectAll('g.node')
             .data(self.nodes, function (d) {
@@ -208,14 +286,16 @@ Tree.prototype = {
     click: function (id) {
         var self = this;
         var d = self.util.getNode(id, self.nodes);
-        self._unFocusNode(self.inFocus.id);
-        self.inFocus = d;
-        self._focusNode(self.inFocus.id);
-
-        if (d._children) {
-            self.toggle(d);
-        }
-        self.update(d);
+        //TODO expand node if it dont exist in tree
+        if (d) {
+            self._unFocusNode(self.inFocus.id);
+            self.inFocus = d;
+            self._focusNode(self.inFocus.id);
+            if (d._children) {
+                self.toggle(d);
+            }
+            self.update(d);
+        };
     },
 
 
@@ -297,13 +377,12 @@ Tree.prototype = {
     },
 
     _focusNode: function (id) {
-        var self = this,
-            id = self.util.toLegalHtmlName(id);
+        var self = this;
+        id = self.util.toLegalHtmlName(id);
         self.vis.selectAll('#' + id)
-        // .attr('width', self.barWidth + 20)
-        .style('stroke-width', 5)
+            .style('stroke-width', 5)
             .style('stroke', function (d) {
-                return 'red';
+                return d.color.darker();
             });
     },
 
@@ -312,11 +391,10 @@ Tree.prototype = {
         id = self.util.toLegalHtmlName(id);
         self.vis.selectAll('#' + id)
             .style('stroke-width', 1.5)
-        // .attr('width', self.barWidth)
-        .style('stroke', function (d) {
-            return d.stroke;
-        });
-    },
+            .style('stroke', function (d) {
+                return d.stroke;
+            });
+    }
 
 };
 

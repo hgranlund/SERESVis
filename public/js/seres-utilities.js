@@ -127,7 +127,19 @@ window.seres.utilities = function (d3) {
             if (hasOwnProperty.call(obj, key)) return false;
         }
         return true;
-    }
+    };
+
+    var pathFromRoot = function (node, nodes) {
+        var path = [node],
+            parentId = getPropertyValue('subClassOf', node.object);
+
+        while (parentId) {
+            node = getNode(parentId, nodes);
+            path.push(node);
+            parentId = getPropertyValue('subClassOf', node.object);
+        }
+        return path.reverse();
+    };
 
 
     return {
@@ -140,7 +152,8 @@ window.seres.utilities = function (d3) {
         getParentColor: getParentColor,
         getLinkWithNodeId: getLinkWithNodeId,
         isEmpty: isEmpty,
-        getParent: getParent
+        getParent: getParent,
+        pathFromRoot: pathFromRoot
 
     };
 

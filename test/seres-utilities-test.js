@@ -101,4 +101,35 @@ describe('seres-utilities', function () {
     });
   });
 
+  describe("pathFromRoot", function () {
+    var nodes = [{
+      object: {
+        subClassOf: 'b'
+      },
+      id: 'c'
+    }, {
+      object: {
+        subClassOf: 'a'
+      },
+      id: 'b'
+    }, {
+      id: 'a'
+    }];
+
+
+    it("should return a list with nodes to the root", function () {
+      var path = util.pathFromRoot(nodes[0], nodes);
+      expect(path[0]).toMatch(nodes.reverse()[0]);
+      expect(path[1]).toMatch(nodes.reverse()[1]);
+      expect(path[2]).toMatch(nodes.reverse()[2]);
+    });
+
+
+    it("should return root if root is passed", function () {
+      var path = util.pathFromRoot(nodes[2], nodes);
+      expect(path[0]).toMatch(nodes[2]);
+    });
+
+  });
+
 });

@@ -633,21 +633,15 @@ Graph.prototype = {
             .style('stroke', function (d) {
                 return d.stroke.darker();
             });
-        // .style('fill', function (d) {
-        //     return d.color.brighter();
-        // });
     },
 
     _unFocusNode: function (id) {
         var self = this;
         d3.select(self.el).selectAll(id)
             .style('stroke-width', 6)
-        // .style('fill', function (d) {
-        //     return d.color;
-        // })
-        .style('stroke', function (d) {
-            return d.stroke;
-        });
+            .style('stroke', function (d) {
+                return d.stroke;
+            });
     }
 
 };
