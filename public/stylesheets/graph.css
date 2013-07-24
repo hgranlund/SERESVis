@@ -21,3 +21,32 @@ rect {
   pointer-events: none;
   font-weight: bold;
 }
+
+
+#topbar {
+  text-align: center;
+}
+
+#indented_tree {
+  text-align: left;
+}
+
+#graph-container {
+  text-align: center;
+}
+
+
+div#topbar h1{
+  font: 32px;
+  position:absolute;
+  padding-right:50%;
+}
+
+
+div#treeHeader {
+
+}
+
+div#topbar .image {
+  float: left
+
