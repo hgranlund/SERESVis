@@ -9,6 +9,8 @@ window.seres.utilities = function (d3) {
     var getColor = function (d, nodes) {
         if (d.isIndividual) {
             d = getParentFromNodes(d, nodes) || d;
+        } else if (d.isProperty) {
+            return d3.rgb('#6e7f80');
         };
         return _color(d.colorDepth);
 
