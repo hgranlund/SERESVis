@@ -32,7 +32,7 @@ Graph.prototype = {
             })
             .charge(function (d) {
                 if (d.isIndividual) {
-                    return -500;
+                    return -1000;
                 }
                 if (d === self.root) {
                     return -5000;
@@ -62,7 +62,6 @@ Graph.prototype = {
                 return;
             } else if (e.alpha > 0.05) {
                 self.updateNodeAndLinkPositions();
-                // self.updatePositions(e.alpha);
             } else {
                 self.center(self.root);
                 self.force.alpha(0);
@@ -77,7 +76,9 @@ Graph.prototype = {
             .start();
 
         self.link = self.link.data(self.force.links());
-        self.node = self.node.data(self.force.nodes());
+        self.node = self.node.data(self.force.nodes(), function (d) {
+            return d.id;
+        });
         self.pathText = self.pathText.data(self.force.links());
 
 
@@ -145,6 +146,7 @@ Graph.prototype = {
             .attr('class', 'node');
 
         self.circle = self.node.append('circle')
+            .on('click', fireClick)
             .style('fill', function (d) {
                 return d.color;
             })
@@ -183,10 +185,6 @@ Graph.prototype = {
             return 'M' + d.source.px + ',' + d.source.py + 'A' + dr + ',' + dr + ' 0 0,1 ' + d.target.px + ',' + d.target.py;
         });
 
-        // self.nodes.forEach(function (d) {
-        //     d.x0 = d.x;
-        //     d.y0 = d.y;
-        // });
         this.node.attr('transform', function (d) {
             return 'translate(' + d.px + ',' + d.py + ')';
         });
@@ -538,13 +536,9 @@ Graph.prototype = {
         d3.select(self.el).selectAll('#pathText-' + linkId)
             .style('visibility', 'visible');
 
-        d3.select(self.el).selectAll('#' + sourceClass)
-            .style('stroke-width', 6)
-            .style('stroke', 'red');
+        self._focusNode('#' + targetClass);
+        self._focusNode('#' + sourceClass);
 
-        d3.select(self.el).selectAll('#' + targetClass)
-            .style('stroke-width', 6)
-            .style('stroke', 'red');
 
     },
 
@@ -558,16 +552,9 @@ Graph.prototype = {
             .style('stroke', 'lightgrey');
         d3.select(self.el).selectAll('#pathText-' + linkId)
             .style('visibility', 'hidden');
-        d3.select(self.el).selectAll('#' + sourceClass)
-            .style('stroke-width', 6)
-            .style('stroke', function (d) {
-                return d.stroke;
-            });
-        d3.select(self.el).selectAll('#' + targetClass)
-            .style('stroke-width', 6)
-            .style('stroke', function (d) {
-                return d.stroke;
-            });
+
+        self._unFocusNode('#' + targetClass);
+        self._unFocusNode('#' + sourceClass);
     },
 
 
