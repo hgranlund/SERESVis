@@ -1,5 +1,4 @@
 function Graph(el, json) {
-    'use strict';
     this.width = 1250;
     this.height = 900;
     this.root = {};
@@ -32,7 +31,7 @@ Graph.prototype = {
             })
             .charge(function (d) {
                 if (d.isIndividual) {
-                    return -500;
+                    return -1000;
                 }
                 if (d === self.root) {
                     return -5000;
@@ -62,7 +61,6 @@ Graph.prototype = {
                 return;
             } else if (e.alpha > 0.05) {
                 self.updateNodeAndLinkPositions();
-                // self.updatePositions(e.alpha);
             } else {
                 self.center(self.root);
                 self.force.alpha(0);
@@ -77,7 +75,9 @@ Graph.prototype = {
             .start();
 
         self.link = self.link.data(self.force.links());
-        self.node = self.node.data(self.force.nodes());
+        self.node = self.node.data(self.force.nodes(), function (d) {
+            return d.id;
+        });
         self.pathText = self.pathText.data(self.force.links());
 
 
@@ -145,6 +145,7 @@ Graph.prototype = {
             .attr('class', 'node');
 
         self.circle = self.node.append('circle')
+            .on('click', fireClick)
             .style('fill', function (d) {
                 return d.color;
             })
@@ -183,10 +184,6 @@ Graph.prototype = {
             return 'M' + d.source.px + ',' + d.source.py + 'A' + dr + ',' + dr + ' 0 0,1 ' + d.target.px + ',' + d.target.py;
         });
 
-        // self.nodes.forEach(function (d) {
-        //     d.x0 = d.x;
-        //     d.y0 = d.y;
-        // });
         this.node.attr('transform', function (d) {
             return 'translate(' + d.px + ',' + d.py + ')';
         });
@@ -271,8 +268,8 @@ Graph.prototype = {
         self.nodes = [self.root];
         self.root.x = self.width / 2;
         self.root.y = self.height / 2;
-        self.root.color = self.util.getColor(self.root);
-        self.root.stroke = self.util.getColor(self.root);
+        self.root.color = self.util.getColor(self.root, self.nodes);
+        self.root.stroke = self.root.color;
         self.force.nodes(self.nodes);
         self.force.links(self.links);
         self.expandNode(self.root);
@@ -339,11 +336,11 @@ Graph.prototype = {
             nodeIdToUpdate,
             deltaY;
 
-        d.stroke = self.util.getParentColor(d, self.formatter);
+        d.stroke = self.util.getStroke(d, self.nodes);
         if (d.isIndividual) {
             d.color = d.stroke;
         } else {
-            d.color = self.util.getColor(d);
+            d.color = self.util.getColor(d, self.nodes);
         }
         deltaX = d.px;
         deltaY = d.py;
@@ -362,15 +359,15 @@ Graph.prototype = {
         }
         d.children.map(function (link) {
             node = self.formatter.createNode(link.nodeId, self.nodes.length);
-            node.color = self.util.getColor(node, d);
-            node.stroke = self.util.getStroke(node, d);
+            node.color = self.util.getColor(node, self.nodes);
+            node.stroke = self.util.getStroke(node, self.nodes);
             add(node);
         });
         d.parents.map(function (link) {
             node = self.formatter.createNode(link.nodeId, self.nodes.length);
             parent = self.util.getParent(node, self.formatter) || node;
-            node.color = self.util.getColor(node, parent);
-            node.stroke = self.util.getStroke(node, parent);
+            node.color = self.util.getColor(node, self.nodes);
+            node.stroke = self.util.getStroke(node, self.nodes);
             add(node);
         });
         nodeIdToUpdate.map(function (index) {
@@ -395,11 +392,11 @@ Graph.prototype = {
             var n = self.formatter.createNode(parentClass, self.nodes.length);
             n.x = d.x;
             n.y = d.y;
-            n.color = self.util.getColor(n);
-            n.stroke = self.util.getColor(n);
+            n.color = self.util.getColor(n, self.nodes);
+            n.stroke = self.util.getColor(n, self.nodes);
             var parent = self.util.getPropertyValue('subClassOf', n.object);
             if (parent) {
-                n.stroke = self.util.getColor((self.formatter.createNode(parent, 0)));
+                n.stroke = self.util.getColor(self.formatter.createNode(parent, 0), self.nodes);
             }
             if (self.util.addNodeToNodes(n, self.nodes)) {
                 d.color = n.color.brighter();
@@ -426,7 +423,7 @@ Graph.prototype = {
         var indexesToRemove = [];
         getIndexesOfExpandedChildren(d);
         self.removeIndexesFromGraph(indexesToRemove);
-        d.color = d.stroke.brighter() || self.util.getColor(d);
+        d.color = d.stroke.brighter() || self.util.getColor(d, self.nodes);
         d.isExpanded = false;
 
         function getIndexesOfExpandedChildren(d) {
@@ -538,13 +535,9 @@ Graph.prototype = {
         d3.select(self.el).selectAll('#pathText-' + linkId)
             .style('visibility', 'visible');
 
-        d3.select(self.el).selectAll('#' + sourceClass)
-            .style('stroke-width', 6)
-            .style('stroke', 'red');
+        self._focusNode('#' + targetClass);
+        self._focusNode('#' + sourceClass);
 
-        d3.select(self.el).selectAll('#' + targetClass)
-            .style('stroke-width', 6)
-            .style('stroke', 'red');
 
     },
 
@@ -558,16 +551,9 @@ Graph.prototype = {
             .style('stroke', 'lightgrey');
         d3.select(self.el).selectAll('#pathText-' + linkId)
             .style('visibility', 'hidden');
-        d3.select(self.el).selectAll('#' + sourceClass)
-            .style('stroke-width', 6)
-            .style('stroke', function (d) {
-                return d.stroke;
-            });
-        d3.select(self.el).selectAll('#' + targetClass)
-            .style('stroke-width', 6)
-            .style('stroke', function (d) {
-                return d.stroke;
-            });
+
+        self._unFocusNode('#' + targetClass);
+        self._unFocusNode('#' + sourceClass);
     },
 
 

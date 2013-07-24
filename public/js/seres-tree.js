@@ -54,9 +54,9 @@ Tree.prototype = {
         self.root = self.formatter.toTreeObject()[0];
         self.root.x0 = 0;
         self.root.y0 = 0;
-        self.root.color = self.util.getColor(self.root);
+        self.root.color = self.util.getColor(self.root, self.nodes);
         self.text = '';
-        self.nodes = self.root;
+        self.nodes = self.tree.nodes(self.root);
         self.pathFromRoot = [self.root];
         self.focusedNode = self.root;
         self.mapNodes(function (d) {
@@ -277,8 +277,32 @@ Tree.prototype = {
         }
 
         function click(d) {
-            self.toggle(d);
-            self.update(d);
+            var path,
+                parent,
+                childInFocus = false;
+            if (d.children) {
+                self.mapNodes(d, function (node) {
+                    if (node.id === self.inFocus.id) {
+                        childInFocus = true;
+                    }
+                });
+                if (childInFocus) {
+                    parent = self.util.getPropertyValue('subClassOf', d.object);
+                    if (parent) {
+                        self._setFocus(self.util.getNode(parent, self.nodes));
+                    } else {
+                        self._setFocus(d);
+                    };
+                    self.toggle(d);
+                    fireClick(self.inFocus);
+                } else {
+                    self.toggle(d);
+                    self.update(d);
+                }
+            } else {
+                self.toggle(d);
+                self.update(d);
+            }
         }
     },
 
@@ -286,18 +310,21 @@ Tree.prototype = {
     click: function (id) {
         var self = this;
         var d = self.util.getNode(id, self.nodes);
-        //TODO expand node if it dont exist in tree
         if (d) {
-            self._unFocusNode(self.inFocus.id);
-            self.inFocus = d;
-            self._focusNode(self.inFocus.id);
+            self._setFocus(d);
             if (d._children) {
                 self.toggle(d);
             }
             self.update(d);
-        };
+        }
     },
 
+    _setFocus: function (node) {
+        var self = this;
+        self._unFocusNode(self.inFocus.id);
+        self.inFocus = node;
+        self._focusNode(self.inFocus.id);
+    },
 
     toggle: function (d) {
         var self = this,
@@ -307,9 +334,9 @@ Tree.prototype = {
         } else if (d._children) {
             d.children = d._children;
             d._children = null;
-            d.color = self.util.getColor(d);
+            d.color = self.util.getColor(d, self.nodes);
             d.children.map(function (node) {
-                node.color = self.util.getColor(node);
+                node.color = self.util.getColor(node, self.nodes);
             });
         }
         d3.select(this.el).select(id).text(self._getIcon);

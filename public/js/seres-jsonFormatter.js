@@ -110,7 +110,6 @@ function jsonFormatter(jsonArg) {
     };
 
 
-
     var createNode = function (subject, index) {
         var subjectObj = (json.hasOwnProperty(subject) ? json[subject] : {
             'data': {},
@@ -123,6 +122,7 @@ function jsonFormatter(jsonArg) {
         node.id = subject;
         node.index = index;
         node.x = 50;
+        node.colorDepth = 0;
         node.isIndividual = false;
         node.isExpanded = false;
         node.isProperty = false;
@@ -131,6 +131,7 @@ function jsonFormatter(jsonArg) {
         node.parents = populateParents(node) || [];
         type = util.getPropertyValue('type', node.object);
         if (node.object.type === 'Class') {
+            node.colorDepth = getDepth(node.id);
             node.isClass = true;
             node.size = 45;
         } else if (node.object.hasOwnProperty('domain') || node.object.hasOwnProperty('range')) {
@@ -141,6 +142,19 @@ function jsonFormatter(jsonArg) {
             }
         }
         return node;
+    };
+
+    var getDepth = function (id) {
+        var path = [id],
+            node = json[id],
+            parentId = util.getPropertyValue('subClassOf', node.object);
+
+        while (parentId) {
+            node = json[parentId];
+            path.push(node);
+            parentId = util.getPropertyValue('subClassOf', node.object);
+        }
+        return path.length;
     };
 
     var populateParents = function (node) {
@@ -200,7 +214,8 @@ function jsonFormatter(jsonArg) {
         } else {
             return word;
         }
-    };
+    }
+
     this.parentToChildMap = getParentToChildMap();
 
     return {
