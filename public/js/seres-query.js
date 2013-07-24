@@ -27,14 +27,14 @@ window.seres.query = function () {
                 'output': output,
                 'stylesheet': stylesheet
             },
-            url: 'http://localhost:3030/ds/query?',
+            url: host,
             async: false,
             success: function (fusekiJson) {
                 data = fusekiJson;
             },
             error: function (e) {
-                new Error('Error connecting to endpoint');
-                alert('Error connecting to endpoint: ' + host + '\n with query: ' + queryString);
+                alert('Error connecting to endpoint: ' + host + '\n with query: "' + queryString + '"');
+                throw new Error('Error connecting to endpoint');
             }
         });
 
