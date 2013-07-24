@@ -208,14 +208,16 @@ Tree.prototype = {
     click: function (id) {
         var self = this;
         var d = self.util.getNode(id, self.nodes);
-        self._unFocusNode(self.inFocus.id);
-        self.inFocus = d;
-        self._focusNode(self.inFocus.id);
-
-        if (d._children) {
-            self.toggle(d);
-        }
-        self.update(d);
+        //TODO expand node if it dont exist in tree
+        if (d) {
+            self._unFocusNode(self.inFocus.id);
+            self.inFocus = d;
+            self._focusNode(self.inFocus.id);
+            if (d._children) {
+                self.toggle(d);
+            }
+            self.update(d);
+        };
     },
 
 
@@ -302,7 +304,7 @@ Tree.prototype = {
         self.vis.selectAll('#' + id)
             .style('stroke-width', 5)
             .style('stroke', function (d) {
-            return d.color.darker();
+                return d.color.darker();
             });
     },
 
