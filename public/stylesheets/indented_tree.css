@@ -2,8 +2,6 @@
     cursor: pointer;
     fill: #fff;
     fill-opacity: .6;
-    stroke: #3c3c3c;
-    stroke-width: 1.5px;
   }
 
  .node text {

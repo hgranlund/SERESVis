@@ -83,24 +83,7 @@ SideBar.prototype = {
             content.push(node.data[data_key]);
             content.push('</div>');
         }
-        // for (data_key in node) {
-        //     content.push('<div>');
-        //     content.push('<span class="name">' + data_key + ': </span>');
-        //     content.push(node[data_key]);
-        //     content.push('</div>');
-        // }
-        // for (data_key in node.object) {
-        //     content.push('<div>');
-        //     content.push('<span class="name">' + data_key + ': </span>');
-        //     content.push(node.object[data_key]);
-        //     content.push('</div>');
-        // }
-        // for (data_key in node.parents) {
-        //     content.push('<div>');
-        //     content.push('<span class="name">' + data_key + ': </span>');
-        //     content.push(node.parents[data_key]);
-        //     content.push('</div>');
-        // }
+
         return content.join('');
     },
 
@@ -117,7 +100,6 @@ SideBar.prototype = {
     },
 
     show: function (node) {
-        // offset && this.setOffset(offset);
         if (node) {
             this.setNode(node);
         }

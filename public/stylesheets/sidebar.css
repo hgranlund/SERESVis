@@ -1,9 +1,5 @@
 .sidebar {
-  border-radius : 11px;
-  border-color: black;
-  border-style: solid;
   float:right;
-  border-width:1px;
   padding: 5px;
   opacity:.8;
   right: 0;
