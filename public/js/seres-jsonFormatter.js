@@ -1,6 +1,12 @@
 function jsonFormatter(jsonArg) {
     var json = jsonArg,
         parentToChildMap,
+        engToNor = {
+            type: 'instans av',
+            subClassOf: 'subdomene av',
+            domain: 'domene',
+            range: 'rekkevidde'
+        },
         autoId = 0;
     util = window.seres.utilities;
 
@@ -120,11 +126,13 @@ function jsonFormatter(jsonArg) {
         node.isIndividual = false;
         node.isExpanded = false;
         node.isProperty = false;
+        node.isClass = false;
         node.children = this.parentToChildMap[subject] || [];
         node.parents = populateParents(node) || [];
         type = util.getPropertyValue('type', node.object);
         if (node.object.type === 'Class') {
-            node.size = 50;
+            node.isClass = true;
+            node.size = 45;
         } else if (node.object.hasOwnProperty('domain') || node.object.hasOwnProperty('range')) {
             node.isProperty = true;
         } else {
@@ -171,7 +179,7 @@ function jsonFormatter(jsonArg) {
                 links.push({
                     source: nodes[subjectId].index,
                     target: object.index,
-                    name: children[object.id]
+                    name: _engToNor(children[object.id])
                 });
             }
             link = util.getLinkWithNodeId(object.id, subject.children);
@@ -179,13 +187,20 @@ function jsonFormatter(jsonArg) {
                 links.push({
                     source: object.index,
                     target: nodes[subjectId].index,
-                    name: link.link
+                    name: _engToNor(link.link)
                 });
             }
         });
         return links;
     };
 
+    function _engToNor(word) {
+        if (word in engToNor) {
+            return engToNor[word];
+        } else {
+            return word;
+        }
+    };
     this.parentToChildMap = getParentToChildMap();
 
     return {

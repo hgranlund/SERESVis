@@ -226,7 +226,7 @@ window.seres.testValues = function () {
         },
         "c": {
           "type": "uri",
-          "value": "http://www.semanticweb.org/shgx/ontologies/2013/5/untitled-ontology-2#Bergepsnivå"
+          "value": "http://www.semanticweb.org/shgx/ontologies/2013/5/untitled-ontology-2#Begrepsnivå"
         }
       }, {
         "a": {
@@ -296,7 +296,7 @@ window.seres.testValues = function () {
       }, {
         "a": {
           "type": "uri",
-          "value": "http://www.semanticweb.org/shgx/ontologies/2013/5/untitled-ontology-2#Bergepsnivå"
+          "value": "http://www.semanticweb.org/shgx/ontologies/2013/5/untitled-ontology-2#Begrepsnivå"
         },
         "b": {
           "type": "uri",
@@ -309,7 +309,7 @@ window.seres.testValues = function () {
       }, {
         "a": {
           "type": "uri",
-          "value": "http://www.semanticweb.org/shgx/ontologies/2013/5/untitled-ontology-2#Bergepsnivå"
+          "value": "http://www.semanticweb.org/shgx/ontologies/2013/5/untitled-ontology-2#Begrepsnivå"
         },
         "b": {
           "type": "uri",
@@ -447,7 +447,7 @@ window.seres.testValues = function () {
         },
         "c": {
           "type": "uri",
-          "value": "http://www.semanticweb.org/shgx/ontologies/2013/5/untitled-ontology-2#Bergepsnivå"
+          "value": "http://www.semanticweb.org/shgx/ontologies/2013/5/untitled-ontology-2#Begrepsnivå"
         }
       }, {
         "a": {
@@ -2189,7 +2189,7 @@ window.seres.testValues = function () {
         },
         "c": {
           "type": "uri",
-          "value": "http://www.semanticweb.org/shgx/ontologies/2013/5/untitled-ontology-2#Bergepsnivå"
+          "value": "http://www.semanticweb.org/shgx/ontologies/2013/5/untitled-ontology-2#Begrepsnivå"
         }
       }, {
         "a": {
@@ -2748,7 +2748,7 @@ window.seres.testValues = function () {
         },
         "c": {
           "type": "uri",
-          "value": "http://www.semanticweb.org/shgx/ontologies/2013/5/untitled-ontology-2#Bergepsnivå"
+          "value": "http://www.semanticweb.org/shgx/ontologies/2013/5/untitled-ontology-2#Begrepsnivå"
         }
       }, {
         "a": {
@@ -5737,7 +5737,7 @@ window.seres.testValues = function () {
         "value": "http://www.semanticweb.org/shgx/ontologies/2013/5/untitled-ontology-2#Implementasjonselement"
       }]
     },
-    "http://www.semanticweb.org/shgx/ontologies/2013/5/untitled-ontology-2#Bergepsnivå": {
+    "http://www.semanticweb.org/shgx/ontologies/2013/5/untitled-ontology-2#Begrepsnivå": {
       "http://www.w3.org/2000/01/rdf-schema#subClassOf": [{
         "type": "uri",
         "value": "http://www.semanticweb.org/shgx/ontologies/2013/5/untitled-ontology-2#Nivå"
@@ -6130,7 +6130,7 @@ window.seres.testValues = function () {
         'subClassOf': 'Implementasjonselement'
       }
     },
-    'Bergepsnivå': {
+    'Begrepsnivå': {
       'data': {},
       'object': {
         'subClassOf': 'Nivå'

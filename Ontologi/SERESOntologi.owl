@@ -19,9 +19,9 @@
 ###  http://www.semanticweb.org/shgx/ontologies/2013/5/untitled-ontology-2#annontering
 
 :annontering rdf:type owl:ObjectProperty ;
-             
+
              rdfs:range :Begrep ;
-             
+
              rdfs:domain :Begrepskategori ,
                          :Begrepsmodell .
 
@@ -30,9 +30,9 @@
 ###  http://www.semanticweb.org/shgx/ontologies/2013/5/untitled-ontology-2#begrep
 
 :begrep rdf:type owl:ObjectProperty ;
-        
+
         rdfs:range :Begrep ;
-        
+
         rdfs:domain :Begrepskategori ,
                     :Begrepsmodell .
 
@@ -41,11 +41,11 @@
 ###  http://www.semanticweb.org/shgx/ontologies/2013/5/untitled-ontology-2#begrepskategori
 
 :begrepskategori rdf:type owl:ObjectProperty ;
-                 
+
                  rdfs:domain :Begrep ;
-                 
+
                  rdfs:range :Begrepskategori ;
-                 
+
                  rdfs:domain :Begrepsmodell .
 
 
@@ -53,36 +53,36 @@
 ###  http://www.semanticweb.org/shgx/ontologies/2013/5/untitled-ontology-2#begrepsmodell
 
 :begrepsmodell rdf:type owl:ObjectProperty ;
-               
+
                rdfs:domain :Begrep ,
                            :Begrepskategori ;
-               
+
                rdfs:range :Begrepsmodell ;
-               
+
                rdfs:domain :Begrepsrelasjon ,
-                           :Bergepsnivå .
+                           :Begrepsnivå .
 
 
 
 ###  http://www.semanticweb.org/shgx/ontologies/2013/5/untitled-ontology-2#begrepsnivå
 
 :begrepsnivå rdf:type owl:ObjectProperty ;
-             
+
              rdfs:domain :Begrepsmodell ,
                          :Begrepsrelasjonstype ;
-             
-             rdfs:range :Bergepsnivå .
+
+             rdfs:range :Begrepsnivå .
 
 
 
 ###  http://www.semanticweb.org/shgx/ontologies/2013/5/untitled-ontology-2#begrepsrelasjon
 
 :begrepsrelasjon rdf:type owl:ObjectProperty ;
-                 
+
                  rdfs:range :Begrepsrelasjon ;
-                 
+
                  rdfs:domain :Begrepsrelasjonstype ;
-                 
+
                  rdfs:subPropertyOf owl:topObjectProperty .
 
 
@@ -90,19 +90,19 @@
 ###  http://www.semanticweb.org/shgx/ontologies/2013/5/untitled-ontology-2#begrepsrelasjonstype
 
 :begrepsrelasjonstype rdf:type owl:ObjectProperty ;
-                      
+
                       rdfs:range :Begrepsrelasjonstype ;
-                      
-                      rdfs:domain :Bergepsnivå .
+
+                      rdfs:domain :Begrepsnivå .
 
 
 
 ###  http://www.semanticweb.org/shgx/ontologies/2013/5/untitled-ontology-2#dokumentasjon
 
 :dokumentasjon rdf:type owl:ObjectProperty ;
-               
+
                rdfs:range :Dokumentasjon ;
-               
+
                rdfs:domain :SERESelement .
 
 
@@ -110,11 +110,11 @@
 ###  http://www.semanticweb.org/shgx/ontologies/2013/5/untitled-ontology-2#erSluttFor
 
 :erSluttFor rdf:type owl:ObjectProperty ;
-            
+
             rdfs:domain :Begrep ;
-            
+
             rdfs:range :Begrepsrelasjon ;
-            
+
             owl:inverseOf :til .
 
 
@@ -122,11 +122,11 @@
 ###  http://www.semanticweb.org/shgx/ontologies/2013/5/untitled-ontology-2#erStartFor
 
 :erStartFor rdf:type owl:ObjectProperty ;
-            
+
             rdfs:domain :Begrep ;
-            
+
             rdfs:range :Begrepsrelasjon ;
-            
+
             owl:inverseOf :fra .
 
 
@@ -134,9 +134,9 @@
 ###  http://www.semanticweb.org/shgx/ontologies/2013/5/untitled-ontology-2#forrigeversjon
 
 :forrigeversjon rdf:type owl:ObjectProperty ;
-                
+
                 rdfs:domain :SERESelement ;
-                
+
                 rdfs:range :SERESelement .
 
 
@@ -144,11 +144,11 @@
 ###  http://www.semanticweb.org/shgx/ontologies/2013/5/untitled-ontology-2#forvaltingselement
 
 :forvaltingselement rdf:type owl:ObjectProperty ;
-                    
+
                     rdfs:range :Forvaltingselement ;
-                    
+
                     rdfs:domain :SERESelement ;
-                    
+
                     rdfs:subPropertyOf owl:topObjectProperty .
 
 
@@ -156,9 +156,9 @@
 ###  http://www.semanticweb.org/shgx/ontologies/2013/5/untitled-ontology-2#fra
 
 :fra rdf:type owl:ObjectProperty ;
-     
+
      rdfs:range :Begrep ;
-     
+
      rdfs:domain :Begrepsrelasjon .
 
 
@@ -166,9 +166,9 @@
 ###  http://www.semanticweb.org/shgx/ontologies/2013/5/untitled-ontology-2#nesteversjon
 
 :nesteversjon rdf:type owl:ObjectProperty ;
-              
+
               rdfs:range :SERESelement ;
-              
+
               rdfs:domain :SERESelement .
 
 
@@ -176,9 +176,9 @@
 ###  http://www.semanticweb.org/shgx/ontologies/2013/5/untitled-ontology-2#sereselement
 
 :sereselement rdf:type owl:ObjectProperty ;
-              
+
               rdfs:domain :Dokumentasjon ;
-              
+
               rdfs:range :SERESelement .
 
 
@@ -186,9 +186,9 @@
 ###  http://www.semanticweb.org/shgx/ontologies/2013/5/untitled-ontology-2#seresmodell
 
 :seresmodell rdf:type owl:ObjectProperty ;
-             
-             rdfs:domain :Bergepsnivå ;
-             
+
+             rdfs:domain :Begrepsnivå ;
+
              rdfs:range :SERESmodell .
 
 
@@ -196,9 +196,9 @@
 ###  http://www.semanticweb.org/shgx/ontologies/2013/5/untitled-ontology-2#til
 
 :til rdf:type owl:ObjectProperty ;
-     
+
      rdfs:range :Begrep ;
-     
+
      rdfs:domain :Begrepsrelasjon .
 
 
@@ -206,9 +206,9 @@
 ###  http://www.semanticweb.org/shgx/ontologies/2013/5/untitled-ontology-2#type
 
 :type rdf:type owl:ObjectProperty ;
-      
+
       rdfs:domain :Begrepsrelasjon ;
-      
+
       rdfs:range :Begrepsrelasjonstype .
 
 
@@ -225,11 +225,11 @@
 ###  http://www.semanticweb.org/shgx/ontologies/2013/5/untitled-ontology-2#definisjon
 
 :definisjon rdf:type owl:DatatypeProperty ;
-            
+
             rdfs:domain :Begrep ,
                         :Begrepskategori ,
                         :Begrepsrelasjonstype ;
-            
+
             rdfs:range xsd:string .
 
 
@@ -237,9 +237,9 @@
 ###  http://www.semanticweb.org/shgx/ontologies/2013/5/untitled-ontology-2#guid
 
 :guid rdf:type owl:DatatypeProperty ;
-      
+
       rdfs:domain :SERESelement ;
-      
+
       rdfs:range xsd:string .
 
 
@@ -247,9 +247,9 @@
 ###  http://www.semanticweb.org/shgx/ontologies/2013/5/untitled-ontology-2#gyldigFra
 
 :gyldigFra rdf:type owl:DatatypeProperty ;
-           
+
            rdfs:domain :SERESelement ;
-           
+
            rdfs:range xsd:dateTime .
 
 
@@ -257,9 +257,9 @@
 ###  http://www.semanticweb.org/shgx/ontologies/2013/5/untitled-ontology-2#gyldigTil
 
 :gyldigTil rdf:type owl:DatatypeProperty ;
-           
+
            rdfs:domain :SERESelement ;
-           
+
            rdfs:range xsd:dateTime .
 
 
@@ -267,7 +267,7 @@
 ###  http://www.semanticweb.org/shgx/ontologies/2013/5/untitled-ontology-2#id
 
 :id rdf:type owl:DatatypeProperty ;
-    
+
     rdfs:range xsd:string .
 
 
@@ -275,9 +275,9 @@
 ###  http://www.semanticweb.org/shgx/ontologies/2013/5/untitled-ontology-2#konfid
 
 :konfid rdf:type owl:DatatypeProperty ;
-        
+
         rdfs:domain :SERESelement ;
-        
+
         rdfs:range xsd:string .
 
 
@@ -285,9 +285,9 @@
 ###  http://www.semanticweb.org/shgx/ontologies/2013/5/untitled-ontology-2#navn
 
 :navn rdf:type owl:DatatypeProperty ;
-      
+
       rdfs:domain :SERESelement ;
-      
+
       rdfs:range xsd:string .
 
 
@@ -295,9 +295,9 @@
 ###  http://www.semanticweb.org/shgx/ontologies/2013/5/untitled-ontology-2#språk
 
 :språk rdf:type owl:DatatypeProperty ;
-       
+
        rdfs:domain :Dokumentasjon ;
-       
+
        rdfs:range xsd:string .
 
 
@@ -305,9 +305,9 @@
 ###  http://www.semanticweb.org/shgx/ontologies/2013/5/untitled-ontology-2#tekst
 
 :tekst rdf:type owl:DatatypeProperty ;
-       
+
        rdfs:domain :Dokumentasjon ;
-       
+
        rdfs:range xsd:string .
 
 
@@ -315,9 +315,9 @@
 ###  http://www.semanticweb.org/shgx/ontologies/2013/5/untitled-ontology-2#uuid
 
 :uuid rdf:type owl:DatatypeProperty ;
-      
+
       rdfs:domain :SERESelement ;
-      
+
       rdfs:range xsd:string .
 
 
@@ -334,7 +334,7 @@
 ###  http://www.semanticweb.org/shgx/ontologies/2013/5/untitled-ontology-2#Assisiasjonsende
 
 :Assisiasjonsende rdf:type owl:Class ;
-                  
+
                   rdfs:subClassOf :Strukturmodellelement .
 
 
@@ -342,7 +342,7 @@
 ###  http://www.semanticweb.org/shgx/ontologies/2013/5/untitled-ontology-2#Assosiasjon
 
 :Assosiasjon rdf:type owl:Class ;
-             
+
              rdfs:subClassOf :Strukturmodellelement .
 
 
@@ -350,7 +350,7 @@
 ###  http://www.semanticweb.org/shgx/ontologies/2013/5/untitled-ontology-2#Begrep
 
 :Begrep rdf:type owl:Class ;
-        
+
         rdfs:subClassOf :Semantikkelement .
 
 
@@ -358,7 +358,7 @@
 ###  http://www.semanticweb.org/shgx/ontologies/2013/5/untitled-ontology-2#Begrepskategori
 
 :Begrepskategori rdf:type owl:Class ;
-                 
+
                  rdfs:subClassOf :Semantikkelement .
 
 
@@ -366,7 +366,7 @@
 ###  http://www.semanticweb.org/shgx/ontologies/2013/5/untitled-ontology-2#Begrepsmodell
 
 :Begrepsmodell rdf:type owl:Class ;
-               
+
                rdfs:subClassOf :Semantikkelement .
 
 
@@ -374,7 +374,7 @@
 ###  http://www.semanticweb.org/shgx/ontologies/2013/5/untitled-ontology-2#Begrepsrelasjon
 
 :Begrepsrelasjon rdf:type owl:Class ;
-                 
+
                  rdfs:subClassOf :Semantikkelement .
 
 
@@ -382,15 +382,15 @@
 ###  http://www.semanticweb.org/shgx/ontologies/2013/5/untitled-ontology-2#Begrepsrelasjonstype
 
 :Begrepsrelasjonstype rdf:type owl:Class ;
-                      
+
                       rdfs:subClassOf :Semantikkelement .
 
 
 
-###  http://www.semanticweb.org/shgx/ontologies/2013/5/untitled-ontology-2#Bergepsnivå
+###  http://www.semanticweb.org/shgx/ontologies/2013/5/untitled-ontology-2#Begrepsnivå
 
-:Bergepsnivå rdf:type owl:Class ;
-             
+:Begrepsnivå rdf:type owl:Class ;
+
              rdfs:subClassOf :Nivå .
 
 
@@ -398,7 +398,7 @@
 ###  http://www.semanticweb.org/shgx/ontologies/2013/5/untitled-ontology-2#DataTypeegenskap
 
 :DataTypeegenskap rdf:type owl:Class ;
-                  
+
                   rdfs:subClassOf :Implementasjonselement .
 
 
@@ -406,7 +406,7 @@
 ###  http://www.semanticweb.org/shgx/ontologies/2013/5/untitled-ontology-2#Dataegenskap
 
 :Dataegenskap rdf:type owl:Class ;
-              
+
               rdfs:subClassOf :Dataobjektegenskap .
 
 
@@ -414,7 +414,7 @@
 ###  http://www.semanticweb.org/shgx/ontologies/2013/5/untitled-ontology-2#Dataegenskapstype
 
 :Dataegenskapstype rdf:type owl:Class ;
-                   
+
                    rdfs:subClassOf :Implementasjonselement .
 
 
@@ -422,7 +422,7 @@
 ###  http://www.semanticweb.org/shgx/ontologies/2013/5/untitled-ontology-2#Dataenkeltype
 
 :Dataenkeltype rdf:type owl:Class ;
-               
+
                rdfs:subClassOf :Datasimpeltype .
 
 
@@ -430,7 +430,7 @@
 ###  http://www.semanticweb.org/shgx/ontologies/2013/5/untitled-ontology-2#Datakodeelement
 
 :Datakodeelement rdf:type owl:Class ;
-                 
+
                  rdfs:subClassOf :Implementasjonselement .
 
 
@@ -438,7 +438,7 @@
 ###  http://www.semanticweb.org/shgx/ontologies/2013/5/untitled-ontology-2#Datakodeliste
 
 :Datakodeliste rdf:type owl:Class ;
-               
+
                rdfs:subClassOf :Datasimpeltype .
 
 
@@ -446,7 +446,7 @@
 ###  http://www.semanticweb.org/shgx/ontologies/2013/5/untitled-ontology-2#Datakomplekstype
 
 :Datakomplekstype rdf:type owl:Class ;
-                  
+
                   rdfs:subClassOf :Dataegenskapstype .
 
 
@@ -454,7 +454,7 @@
 ###  http://www.semanticweb.org/shgx/ontologies/2013/5/untitled-ontology-2#Datamodell
 
 :Datamodell rdf:type owl:Class ;
-            
+
             rdfs:subClassOf :Implementasjonselement .
 
 
@@ -462,7 +462,7 @@
 ###  http://www.semanticweb.org/shgx/ontologies/2013/5/untitled-ontology-2#Dataobjektegenskap
 
 :Dataobjektegenskap rdf:type owl:Class ;
-                    
+
                     rdfs:subClassOf :Implementasjonselement .
 
 
@@ -470,7 +470,7 @@
 ###  http://www.semanticweb.org/shgx/ontologies/2013/5/untitled-ontology-2#Dataobjekttype
 
 :Dataobjekttype rdf:type owl:Class ;
-                
+
                 rdfs:subClassOf :Implementasjonselement .
 
 
@@ -478,7 +478,7 @@
 ###  http://www.semanticweb.org/shgx/ontologies/2013/5/untitled-ontology-2#Datasimpeltype
 
 :Datasimpeltype rdf:type owl:Class ;
-                
+
                 rdfs:subClassOf :Dataegenskapstype .
 
 
@@ -486,7 +486,7 @@
 ###  http://www.semanticweb.org/shgx/ontologies/2013/5/untitled-ontology-2#Dokumentasjon
 
 :Dokumentasjon rdf:type owl:Class ;
-               
+
                rdfs:subClassOf :Seres .
 
 
@@ -494,7 +494,7 @@
 ###  http://www.semanticweb.org/shgx/ontologies/2013/5/untitled-ontology-2#Domene
 
 :Domene rdf:type owl:Class ;
-        
+
         rdfs:subClassOf :SERESmodell .
 
 
@@ -502,7 +502,7 @@
 ###  http://www.semanticweb.org/shgx/ontologies/2013/5/untitled-ontology-2#Egenskap
 
 :Egenskap rdf:type owl:Class ;
-          
+
           rdfs:subClassOf :Modellelement .
 
 
@@ -510,7 +510,7 @@
 ###  http://www.semanticweb.org/shgx/ontologies/2013/5/untitled-ontology-2#Egenskapstype
 
 :Egenskapstype rdf:type owl:Class ;
-               
+
                rdfs:subClassOf :Type .
 
 
@@ -518,7 +518,7 @@
 ###  http://www.semanticweb.org/shgx/ontologies/2013/5/untitled-ontology-2#EksternKodeliste
 
 :EksternKodeliste rdf:type owl:Class ;
-                  
+
                   rdfs:subClassOf :Dataegenskapstype .
 
 
@@ -526,7 +526,7 @@
 ###  http://www.semanticweb.org/shgx/ontologies/2013/5/untitled-ontology-2#Enkeltype
 
 :Enkeltype rdf:type owl:Class ;
-           
+
            rdfs:subClassOf :Egenskapstype .
 
 
@@ -534,7 +534,7 @@
 ###  http://www.semanticweb.org/shgx/ontologies/2013/5/untitled-ontology-2#Forvaltingselement
 
 :Forvaltingselement rdf:type owl:Class ;
-                    
+
                     rdfs:subClassOf :Seres .
 
 
@@ -542,7 +542,7 @@
 ###  http://www.semanticweb.org/shgx/ontologies/2013/5/untitled-ontology-2#Implementasjonselement
 
 :Implementasjonselement rdf:type owl:Class ;
-                        
+
                         rdfs:subClassOf :SERESelement .
 
 
@@ -550,7 +550,7 @@
 ###  http://www.semanticweb.org/shgx/ontologies/2013/5/untitled-ontology-2#Implementasjonsnivå
 
 :Implementasjonsnivå rdf:type owl:Class ;
-                     
+
                      rdfs:subClassOf :Nivå .
 
 
@@ -558,7 +558,7 @@
 ###  http://www.semanticweb.org/shgx/ontologies/2013/5/untitled-ontology-2#ImplementasjonsnivåDomene
 
 :ImplementasjonsnivåDomene rdf:type owl:Class ;
-                           
+
                            rdfs:subClassOf :Implementasjonsnivå .
 
 
@@ -566,7 +566,7 @@
 ###  http://www.semanticweb.org/shgx/ontologies/2013/5/untitled-ontology-2#ImplementasjonsnivåKjerne
 
 :ImplementasjonsnivåKjerne rdf:type owl:Class ;
-                           
+
                            rdfs:subClassOf :Implementasjonsnivå .
 
 
@@ -574,7 +574,7 @@
 ###  http://www.semanticweb.org/shgx/ontologies/2013/5/untitled-ontology-2#Kjerne
 
 :Kjerne rdf:type owl:Class ;
-        
+
         rdfs:subClassOf :SERESmodell .
 
 
@@ -582,7 +582,7 @@
 ###  http://www.semanticweb.org/shgx/ontologies/2013/5/untitled-ontology-2#Kodeliste
 
 :Kodeliste rdf:type owl:Class ;
-           
+
            rdfs:subClassOf :Egenskapstype .
 
 
@@ -590,7 +590,7 @@
 ###  http://www.semanticweb.org/shgx/ontologies/2013/5/untitled-ontology-2#Kodelisteelement
 
 :Kodelisteelement rdf:type owl:Class ;
-                  
+
                   rdfs:subClassOf :Strukturelement .
 
 
@@ -598,7 +598,7 @@
 ###  http://www.semanticweb.org/shgx/ontologies/2013/5/untitled-ontology-2#Komplekstype
 
 :Komplekstype rdf:type owl:Class ;
-              
+
               rdfs:subClassOf :Egenskapstype .
 
 
@@ -606,7 +606,7 @@
 ###  http://www.semanticweb.org/shgx/ontologies/2013/5/untitled-ontology-2#Meldingsdel
 
 :Meldingsdel rdf:type owl:Class ;
-             
+
              rdfs:subClassOf :Dataobjekttype .
 
 
@@ -614,7 +614,7 @@
 ###  http://www.semanticweb.org/shgx/ontologies/2013/5/untitled-ontology-2#Meldingsmodell
 
 :Meldingsmodell rdf:type owl:Class ;
-                
+
                 rdfs:subClassOf :Implementasjonselement .
 
 
@@ -622,7 +622,7 @@
 ###  http://www.semanticweb.org/shgx/ontologies/2013/5/untitled-ontology-2#Modellelement
 
 :Modellelement rdf:type owl:Class ;
-               
+
                rdfs:subClassOf :Strukturelement .
 
 
@@ -630,7 +630,7 @@
 ###  http://www.semanticweb.org/shgx/ontologies/2013/5/untitled-ontology-2#Nivå
 
 :Nivå rdf:type owl:Class ;
-      
+
       rdfs:subClassOf :SERESelement .
 
 
@@ -638,7 +638,7 @@
 ###  http://www.semanticweb.org/shgx/ontologies/2013/5/untitled-ontology-2#ORDataeneltype
 
 :ORDataeneltype rdf:type owl:Class ;
-                
+
                 rdfs:subClassOf :Dataenkeltype .
 
 
@@ -646,7 +646,7 @@
 ###  http://www.semanticweb.org/shgx/ontologies/2013/5/untitled-ontology-2#ORDatakodeliste
 
 :ORDatakodeliste rdf:type owl:Class ;
-                 
+
                  rdfs:subClassOf :Datakodeliste .
 
 
@@ -654,7 +654,7 @@
 ###  http://www.semanticweb.org/shgx/ontologies/2013/5/untitled-ontology-2#Objekttype
 
 :Objekttype rdf:type owl:Class ;
-            
+
             rdfs:subClassOf :Type .
 
 
@@ -662,7 +662,7 @@
 ###  http://www.semanticweb.org/shgx/ontologies/2013/5/untitled-ontology-2#Plattform
 
 :Plattform rdf:type owl:Class ;
-           
+
            rdfs:subClassOf :Implementasjonselement .
 
 
@@ -670,7 +670,7 @@
 ###  http://www.semanticweb.org/shgx/ontologies/2013/5/untitled-ontology-2#Presentasjonsdel
 
 :Presentasjonsdel rdf:type owl:Class ;
-                  
+
                   rdfs:subClassOf :Presentasjonselement .
 
 
@@ -678,7 +678,7 @@
 ###  http://www.semanticweb.org/shgx/ontologies/2013/5/untitled-ontology-2#Presentasjonselement
 
 :Presentasjonselement rdf:type owl:Class ;
-                      
+
                       rdfs:subClassOf :Implementasjonselement .
 
 
@@ -686,7 +686,7 @@
 ###  http://www.semanticweb.org/shgx/ontologies/2013/5/untitled-ontology-2#Presentasjonsfelt
 
 :Presentasjonsfelt rdf:type owl:Class ;
-                   
+
                    rdfs:subClassOf :Presentasjonselement .
 
 
@@ -694,7 +694,7 @@
 ###  http://www.semanticweb.org/shgx/ontologies/2013/5/untitled-ontology-2#Presentasjonsmodell
 
 :Presentasjonsmodell rdf:type owl:Class ;
-                     
+
                      rdfs:subClassOf :Presentasjonselement .
 
 
@@ -702,7 +702,7 @@
 ###  http://www.semanticweb.org/shgx/ontologies/2013/5/untitled-ontology-2#Primetivtype
 
 :Primetivtype rdf:type owl:Class ;
-              
+
               rdfs:subClassOf :Implementasjonselement .
 
 
@@ -710,7 +710,7 @@
 ###  http://www.semanticweb.org/shgx/ontologies/2013/5/untitled-ontology-2#Relasjonsegenskap
 
 :Relasjonsegenskap rdf:type owl:Class ;
-                   
+
                    rdfs:subClassOf :Dataobjektegenskap .
 
 
@@ -718,7 +718,7 @@
 ###  http://www.semanticweb.org/shgx/ontologies/2013/5/untitled-ontology-2#SERESelement
 
 :SERESelement rdf:type owl:Class ;
-              
+
               rdfs:subClassOf :Seres .
 
 
@@ -726,7 +726,7 @@
 ###  http://www.semanticweb.org/shgx/ontologies/2013/5/untitled-ontology-2#SERESmodell
 
 :SERESmodell rdf:type owl:Class ;
-             
+
              rdfs:subClassOf :SERESelement .
 
 
@@ -734,7 +734,7 @@
 ###  http://www.semanticweb.org/shgx/ontologies/2013/5/untitled-ontology-2#Semantikkelement
 
 :Semantikkelement rdf:type owl:Class ;
-                  
+
                   rdfs:subClassOf :SERESelement .
 
 
@@ -748,7 +748,7 @@
 ###  http://www.semanticweb.org/shgx/ontologies/2013/5/untitled-ontology-2#Strukturelement
 
 :Strukturelement rdf:type owl:Class ;
-                 
+
                  rdfs:subClassOf :SERESelement .
 
 
@@ -756,7 +756,7 @@
 ###  http://www.semanticweb.org/shgx/ontologies/2013/5/untitled-ontology-2#Strukturmodell
 
 :Strukturmodell rdf:type owl:Class ;
-                
+
                 rdfs:subClassOf :Strukturelement .
 
 
@@ -764,7 +764,7 @@
 ###  http://www.semanticweb.org/shgx/ontologies/2013/5/untitled-ontology-2#Strukturmodellelement
 
 :Strukturmodellelement rdf:type owl:Class ;
-                       
+
                        rdfs:subClassOf :Modellelement .
 
 
@@ -772,7 +772,7 @@
 ###  http://www.semanticweb.org/shgx/ontologies/2013/5/untitled-ontology-2#Stukturnivå
 
 :Stukturnivå rdf:type owl:Class ;
-             
+
              rdfs:subClassOf :Nivå .
 
 
@@ -780,7 +780,7 @@
 ###  http://www.semanticweb.org/shgx/ontologies/2013/5/untitled-ontology-2#Tallresktriksjon
 
 :Tallresktriksjon rdf:type owl:Class ;
-                  
+
                   rdfs:subClassOf :Verdirestriksjon .
 
 
@@ -788,7 +788,7 @@
 ###  http://www.semanticweb.org/shgx/ontologies/2013/5/untitled-ontology-2#Tegnrestriksjon
 
 :Tegnrestriksjon rdf:type owl:Class ;
-                 
+
                  rdfs:subClassOf :Verdirestriksjon .
 
 
@@ -796,7 +796,7 @@
 ###  http://www.semanticweb.org/shgx/ontologies/2013/5/untitled-ontology-2#Tjenestemodell
 
 :Tjenestemodell rdf:type owl:Class ;
-                
+
                 rdfs:subClassOf :Implementasjonselement .
 
 
@@ -804,7 +804,7 @@
 ###  http://www.semanticweb.org/shgx/ontologies/2013/5/untitled-ontology-2#Tjenestemodellkategori
 
 :Tjenestemodellkategori rdf:type owl:Class ;
-                        
+
                         rdfs:subClassOf :Implementasjonselement .
 
 
@@ -812,7 +812,7 @@
 ###  http://www.semanticweb.org/shgx/ontologies/2013/5/untitled-ontology-2#Type
 
 :Type rdf:type owl:Class ;
-      
+
       rdfs:subClassOf :Strukturmodellelement .
 
 
@@ -820,7 +820,7 @@
 ###  http://www.semanticweb.org/shgx/ontologies/2013/5/untitled-ontology-2#Typeegenskap
 
 :Typeegenskap rdf:type owl:Class ;
-              
+
               rdfs:subClassOf :Strukturelement .
 
 
@@ -828,7 +828,7 @@
 ###  http://www.semanticweb.org/shgx/ontologies/2013/5/untitled-ontology-2#Typekategori
 
 :Typekategori rdf:type owl:Class ;
-              
+
               rdfs:subClassOf :Strukturelement .
 
 
@@ -836,7 +836,7 @@
 ###  http://www.semanticweb.org/shgx/ontologies/2013/5/untitled-ontology-2#Verdiområde
 
 :Verdiområde rdf:type owl:Class ;
-             
+
              rdfs:subClassOf :Implementasjonselement .
 
 
@@ -844,7 +844,7 @@
 ###  http://www.semanticweb.org/shgx/ontologies/2013/5/untitled-ontology-2#Verdirestriksjon
 
 :Verdirestriksjon rdf:type owl:Class ;
-                  
+
                   rdfs:subClassOf :Implementasjonselement .
 
 

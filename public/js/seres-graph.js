@@ -19,22 +19,27 @@ Graph.prototype = {
             .size([self.width, self.height])
             .friction(0.9)
             .linkDistance(function (d) {
-            var dist = d.source.size * 4;
-            if (d.source.isExpanded) {
-                dist *= 2;
-            }
-            return dist;
-        })
+                var dist = d.source.size;
+                if (d.source.isIndividual) {
+                    dist *= 4;
+                } else if (d.source.isProperty) {
+                    dist *= 4;
+                } else {
+                    dist *= 2;
+                }
+                dist += d.source.size;
+                return dist;
+            })
             .charge(function (d) {
-            if (d.isIndividual) {
-                return -200;
-            }
-            if (d === self.root) {
-                return -5000;
-            } else {
-                return -5000;
-            }
-        })
+                if (d.isIndividual) {
+                    return -500;
+                }
+                if (d === self.root) {
+                    return -5000;
+                } else {
+                    return -5000;
+                }
+            })
             .on('tick', tick)
             .gravity(0.06)
             .start();
@@ -53,9 +58,11 @@ Graph.prototype = {
         self.pathText = self.svg.selectAll('.pathText');
 
         function tick(e) {
-            if (e.alpha > 0.05) {
+            if (e.alpha > 0.9) {
+                return;
+            } else if (e.alpha > 0.05) {
                 self.updateNodeAndLinkPositions();
-                self.updatePositions(e.alpha);
+                // self.updatePositions(e.alpha);
             } else {
                 self.center(self.root);
                 self.force.alpha(0);
@@ -73,8 +80,18 @@ Graph.prototype = {
         self.node = self.node.data(self.force.nodes());
         self.pathText = self.pathText.data(self.force.links());
 
-        self.link.exit().remove();
-        self.node.exit().remove();
+
+        self.link.exit().transition().duration(200).attr('d', function (d) {
+            var dx = d.target.x - d.source.x,
+                dy = d.target.y - d.source.y,
+                dr = Math.sqrt(dx * dx + dy * dy);
+            return 'M' + self.root.x + ',' + self.root.y + 'A' + dr + ',' + dr + ' 0 0,1 ' + self.root.x + ',' + self.root.y;
+        }).remove();
+
+        self.node.exit().transition().duration(300).attr('transform', function (d) {
+            return 'translate(' + self.root.x + ',' + self.root.y + ')';
+        }).remove();
+
         self.pathText.exit().remove();
 
         self.link.enter().append('svg:path')
@@ -83,8 +100,8 @@ Graph.prototype = {
             .style('opacity', 0.5)
             .attr('class', 'link')
             .attr('id', function (d) {
-            return ('path-' + self.util.toLegalHtmlName(d.source.id) + '-' + self.util.toLegalHtmlName(d.target.id));
-        })
+                return ('path-' + self.util.toLegalHtmlName(d.source.id) + '-' + self.util.toLegalHtmlName(d.target.id));
+            })
             .on('mouseover', fireMouseOverLink)
             .on('mouseout', fireMouseOutLink);
 
@@ -92,72 +109,86 @@ Graph.prototype = {
             .append("g")
             .attr("class", "pathText")
             .attr("id", function (d) {
-            return ('pathText-' + self.util.toLegalHtmlName(d.source.id) + '-' + self.util.toLegalHtmlName(d.target.id));
-        })
+                return ('pathText-' + self.util.toLegalHtmlName(d.source.id) + '-' + self.util.toLegalHtmlName(d.target.id));
+            })
             .style('opacity', 0.7)
             .style("visibility", 'hidden')
             .style("fill", 'black')
             .on('mouseover', function (d) {
-            d3.select(this)
-                .attr("visibility", 'visible');
-        })
+                d3.select(this)
+                    .attr("visibility", 'visible');
+            })
             .on('mouseout', function (d) {
-            d3.select(this)
-                .attr("visibility", 'hidden');
-        });
+                d3.select(this)
+                    .attr("visibility", 'hidden');
+            });
 
         self.pathText.append("text")
             .style("font-size", "14px")
             .append("textPath")
             .attr("offset", 30)
             .attr("startOffset", function (d) {
-            return d.source.size + 15;
-        })
+                return d.source.size + 15;
+            })
             .attr("xlink:href", function (d) {
-            return ('#path-' + self.util.toLegalHtmlName(d.source.id) + '-' + self.util.toLegalHtmlName(d.target.id));
-        })
+                return ('#path-' + self.util.toLegalHtmlName(d.source.id) + '-' + self.util.toLegalHtmlName(d.target.id));
+            })
             .text(function (d) {
-            return d.name;
-        });
+                return d.name;
+            });
 
         self.node.enter().append('g')
-            .attr('class', 'node');
-
-        self.circle = self.node.append('circle')
             .call(self.force.drag)
             .on('click', fireClick)
             .on('mouseover', fireMouseOver)
             .on('mouseout', fireMouseOut)
+            .attr('class', 'node');
+
+        self.circle = self.node.append('circle')
             .style('fill', function (d) {
-            return d.color;
-        })
+                return d.color;
+            })
             .attr('id', function (d) {
-            return self.util.toLegalHtmlName(d.id);
-        })
+                return self.util.toLegalHtmlName(d.id);
+            })
             .attr('r', function (d) {
-            return d.size;
-        })
+                return d.size;
+            })
             .style('stroke-width', 6)
             .style('stroke', function (d) {
-            return d.stroke;
-        });
+                return d.stroke;
+            });
 
         self.node.append('title')
             .text(function (d) {
-            if (d.isIndividual) {
-                return 'uuid: ' + d.data['xmi.uuid'];
-            }
-            return d.name;
-        });
+                if (d.isIndividual) {
+                    return 'uuid: ' + d.data['xmi.uuid'];
+                }
+                return d.name;
+            });
 
         self.node.append('text')
             .attr('text-anchor', 'middle')
             .attr('dy', '.35em')
             .text(function (d) {
-            if (d.isIndividual) {
-                return '';
-            }
-            return d.name;
+                if (d.isIndividual) {
+                    return '';
+                }
+                return d.name;
+            });
+        this.link.attr('d', function (d) {
+            var dx = d.target.x - d.source.x,
+                dy = d.target.y - d.source.y,
+                dr = Math.sqrt(dx * dx + dy * dy);
+            return 'M' + d.source.px + ',' + d.source.py + 'A' + dr + ',' + dr + ' 0 0,1 ' + d.target.px + ',' + d.target.py;
+        });
+
+        // self.nodes.forEach(function (d) {
+        //     d.x0 = d.x;
+        //     d.y0 = d.y;
+        // });
+        this.node.attr('transform', function (d) {
+            return 'translate(' + d.px + ',' + d.py + ')';
         });
 
 
@@ -174,17 +205,22 @@ Graph.prototype = {
         }
 
         function fireMouseOverLink(d) {
-            self.mouseOverLink(d);
+            window.seres.eventController.fireMouseOverLink(d);
         }
 
         function fireMouseOutLink(d) {
-            self.mouseOutLink(d);
+            window.seres.eventController.fireMouseOutLink(d);
         }
     },
 
     click: function (id) {
         var self = this;
-        var d = self.util.getNode(id, self.nodes) || self.formatter.createNode(id, self.nodes.length);
+        var d = self.util.getNode(id, self.nodes);
+        if (!d) {
+            d = self.formatter.createNode(id, self.nodes.length);
+            d.x = d.px = self.width / 2;
+            d.y = d.py = self.height / 2;
+        }
         if (d && !d.isExpanded) {
             if (d.isIndividual) {
                 self.clickIndividual(d);
@@ -275,7 +311,7 @@ Graph.prototype = {
             len = this.nodes.length;
 
         while (++i < len) {
-            q.visit(this.collide(this.nodes[i], 10));
+            q.visit(this.collide(this.nodes[i], 30));
         }
     },
 
@@ -289,8 +325,6 @@ Graph.prototype = {
         });
 
         this.node.transition().duration(duration).attr('transform', function (d) {
-            // d.x = Math.max(d.size, Math.min(self.width - d.size, d.x));
-            // d.y = Math.max(d.size, Math.min(self.height - d.size, d.y));
             return 'translate(' + d.x + ',' + d.y + ')';
         });
     },
@@ -301,16 +335,24 @@ Graph.prototype = {
             node,
             parent,
             self = this,
-            deltaX = d.x + 75,
-            deltaY = d.y + 75;
-        d.color = self.util.getColor(d);
-        d.stroke = self.util.getParentColor(d, self.formatter);
+            deltaX,
+            nodeIdToUpdate,
+            deltaY;
 
-        var nodeIdToUpdate = [];
+        d.stroke = self.util.getParentColor(d, self.formatter);
+        if (d.isIndividual) {
+            d.color = d.stroke;
+        } else {
+            d.color = self.util.getColor(d);
+        }
+        deltaX = d.px;
+        deltaY = d.py;
+
+        nodeIdToUpdate = [];
 
         function add(n) {
-            n.x = deltaX;
-            n.y = deltaY;
+            n.x = n.px = deltaX;
+            n.y = n.py = deltaY;
             if (self.util.addNodeToNodes(n, self.nodes)) {
                 nodeIdToUpdate.push(n.index);
                 if (d.isIndividual) {
@@ -341,7 +383,7 @@ Graph.prototype = {
             self.handleCollisions();
             self.force.tick();
         }
-        self.updateNodeAndLinkPositions();
+        self.updateNodeAndLinkPositions(200);
         self.force.start();
         d.isExpanded = true;
     },
@@ -407,11 +449,11 @@ Graph.prototype = {
                         tailRec.push(node);
                     }
                 }
-            };
+            }
             tailRec.map(function (node) {
                 getIndexesOfExpandedChildren(node);
             });
-        };
+        }
     },
 
     removeIndexesFromGraph: function (indexesToRemove) {
@@ -451,45 +493,6 @@ Graph.prototype = {
     },
 
 
-    updatePositions: function (alpha) {
-        var self = this;
-        var k = 0.05 * alpha;
-        self.nodes.map(function (d, i) {
-            self.cluster(10 * alpha * alpha)(d);
-        });
-    },
-
-    cluster: function (alpha) {
-        var self = this;
-        var nameToNodeMap = {};
-
-        self.nodes.map(function (d) {
-            nameToNodeMap[d.name] = d;
-        });
-        return function (d) {
-            var parent = d.object.subClassOf;
-            var node = nameToNodeMap[parent],
-                h,
-                ballR,
-                delatX,
-                deltaY;
-
-            if (node == d || typeof (node) === 'undefined') return;
-
-            deltaX = d.x - node.x;
-            deltaY = d.y - node.y;
-            h = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
-            ballR = d.size + node.size * 2;
-            ballR = (d.isExpanded ? ballR * 2 : ballR);
-            if (h != ballR) {
-                h = (h - ballR) / h * alpha;
-                d.x -= deltaX *= h;
-                d.y -= deltaY *= h;
-                node.x += deltaX;
-                node.y += deltaY;
-            }
-        };
-    },
 
     makeRoot: function (d) {
         if (this.root === d) {
@@ -503,18 +506,23 @@ Graph.prototype = {
     center: function (nodeToCenter) {
         var deltaX = this.width / 2 - nodeToCenter.x,
             deltaY = this.height / 2 - nodeToCenter.y,
-            self = this;
+            self = this,
+            h,
+            ballR;
 
+        h = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+        ballR = nodeToCenter.size;
+        if (h > ballR) {
 
-        self.nodes.map(function (d) {
-            d.x += deltaX;
-            d.y += deltaY;
-        });
-        self.update();
-        self.force.stop();
-        self.updateNodeAndLinkPositions(400);
-        self.force.start();
-
+            self.nodes.map(function (d) {
+                d.x += deltaX;
+                d.y += deltaY;
+            });
+            self.update();
+            self.force.stop();
+            self.updateNodeAndLinkPositions(400);
+            self.force.start();
+        }
     },
 
     mouseOverLink: function (d) {
@@ -525,8 +533,8 @@ Graph.prototype = {
         d3.select(self.el).selectAll('#path-' + linkId)
             .style('stroke-width', 6)
             .style('stroke', function (d) {
-            return d.target.color.darker();
-        });
+                return d.target.color.darker();
+            });
         d3.select(self.el).selectAll('#pathText-' + linkId)
             .style('visibility', 'visible');
 
@@ -553,13 +561,13 @@ Graph.prototype = {
         d3.select(self.el).selectAll('#' + sourceClass)
             .style('stroke-width', 6)
             .style('stroke', function (d) {
-            return d.stroke;
-        });
+                return d.stroke;
+            });
         d3.select(self.el).selectAll('#' + targetClass)
             .style('stroke-width', 6)
             .style('stroke', function (d) {
-            return d.stroke;
-        });
+                return d.stroke;
+            });
     },
 
 
@@ -567,59 +575,81 @@ Graph.prototype = {
         var self = this;
         var className = self.util.toLegalHtmlName(id);
         var node = self.util.getNode(id, self.nodes);
-        node.children.map(function (link) {
-            d3.select(self.el).selectAll('#path-' + self.util.toLegalHtmlName(link.nodeId) + '-' + className)
-                .style('stroke-width', 6)
-                .style('stroke', function (d) {
-                return d.target.color.darker();
+        if (node) {
+            node.children.map(function (link) {
+                d3.select(self.el).selectAll('#path-' + self.util.toLegalHtmlName(link.nodeId) + '-' + className)
+                    .style('stroke-width', 6)
+                    .style('stroke', function (d) {
+                        return d.target.color.darker();
+                    });
+                d3.select(self.el).selectAll('#pathText-' + self.util.toLegalHtmlName(link.nodeId) + '-' + className)
+                    .style('visibility', 'visible');
             });
-            d3.select(self.el).selectAll('#pathText-' + self.util.toLegalHtmlName(link.nodeId) + '-' + className)
-                .style('visibility', 'visible');
-        });
-        node.parents.map(function (link) {
-            d3.select(self.el).selectAll('#path-' + className + '-' + self.util.toLegalHtmlName(link.nodeId))
-                .style('stroke-width', 6)
-                .style('stroke', function (d) {
-                return d.source.color.darker();
+            node.parents.map(function (link) {
+                d3.select(self.el).selectAll('#path-' + className + '-' + self.util.toLegalHtmlName(link.nodeId))
+                    .style('stroke-width', 6)
+                    .style('stroke', function (d) {
+                        return d.source.color.darker();
+                    });
+                d3.select(self.el).selectAll('#pathText-' + className + '-' + self.util.toLegalHtmlName(link.nodeId))
+                    .style('visibility', 'visible');
+
             });
-            d3.select(self.el).selectAll('#pathText-' + className + '-' + self.util.toLegalHtmlName(link.nodeId))
-                .style('visibility', 'visible');
 
-        });
-
-        d3.select(self.el).selectAll('#' + className)
-            .style('stroke-width', 6)
-            .style('stroke', 'red');
-
+            self._focusNode('#' + className);
+        }
     },
 
     mouseOut: function (id) {
         var self = this;
         var className = self.util.toLegalHtmlName(id);
         var node = self.util.getNode(id, self.nodes);
-        node.children.map(function (link) {
-            d3.select(self.el).selectAll('#path-' + self.util.toLegalHtmlName(link.nodeId) + '-' + className)
-                .style('stroke-width', 4)
-                .style('stroke', 'lightgrey');
+        if (node) {
+            node.children.map(function (link) {
+                d3.select(self.el).selectAll('#path-' + self.util.toLegalHtmlName(link.nodeId) + '-' + className)
+                    .style('stroke-width', 4)
+                    .style('stroke', 'lightgrey');
 
-            d3.select(self.el).selectAll('#pathText-' + self.util.toLegalHtmlName(link.nodeId) + '-' + className)
-                .style('visibility', 'hidden');
-        });
+                d3.select(self.el).selectAll('#pathText-' + self.util.toLegalHtmlName(link.nodeId) + '-' + className)
+                    .style('visibility', 'hidden');
+            });
 
-        node.parents.map(function (link) {
-            d3.select(self.el).selectAll('#path-' + className + '-' + self.util.toLegalHtmlName(link.nodeId))
-                .style('stroke-width', 4)
-                .style('stroke', 'lightgrey');
-            d3.select(self.el).selectAll('#pathText-' + className + '-' + self.util.toLegalHtmlName(link.nodeId))
-                .style('visibility', 'hidden');
-        });
+            node.parents.map(function (link) {
+                d3.select(self.el).selectAll('#path-' + className + '-' + self.util.toLegalHtmlName(link.nodeId))
+                    .style('stroke-width', 4)
+                    .style('stroke', 'lightgrey');
+                d3.select(self.el).selectAll('#pathText-' + className + '-' + self.util.toLegalHtmlName(link.nodeId))
+                    .style('visibility', 'hidden');
+            });
 
-        d3.select(self.el).selectAll('#' + className)
+            self._unFocusNode('#' + className);
+        }
+    },
+
+    _focusNode: function (id) {
+        var self = this;
+        d3.select(self.el).selectAll(id)
             .style('stroke-width', 6)
             .style('stroke', function (d) {
+                return d.stroke.darker();
+            });
+        // .style('fill', function (d) {
+        //     return d.color.brighter();
+        // });
+    },
+
+    _unFocusNode: function (id) {
+        var self = this;
+        d3.select(self.el).selectAll(id)
+            .style('stroke-width', 6)
+        // .style('fill', function (d) {
+        //     return d.color;
+        // })
+        .style('stroke', function (d) {
             return d.stroke;
         });
     }
+
 };
 
 Graph.fn = Graph.prototype;
