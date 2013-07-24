@@ -10,7 +10,7 @@ window.seres.utilities = function (d3) {
         if (d.isIndividual) {
             d = getParentFromNodes(d, nodes) || d;
         };
-        return _color(d.depth);
+        return _color(d.colorDepth);
 
     };
 

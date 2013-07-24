@@ -122,7 +122,7 @@ function jsonFormatter(jsonArg) {
         node.id = subject;
         node.index = index;
         node.x = 50;
-        node.depth = 0;
+        node.colorDepth = 0;
         node.isIndividual = false;
         node.isExpanded = false;
         node.isProperty = false;
@@ -131,7 +131,7 @@ function jsonFormatter(jsonArg) {
         node.parents = populateParents(node) || [];
         type = util.getPropertyValue('type', node.object);
         if (node.object.type === 'Class') {
-            node.depth = getDepth(node.id);
+            node.colorDepth = getDepth(node.id);
             node.isClass = true;
             node.size = 45;
         } else if (node.object.hasOwnProperty('domain') || node.object.hasOwnProperty('range')) {
