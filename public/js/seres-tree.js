@@ -297,13 +297,12 @@ Tree.prototype = {
     },
 
     _focusNode: function (id) {
-        var self = this,
-            id = self.util.toLegalHtmlName(id);
+        var self = this;
+        id = self.util.toLegalHtmlName(id);
         self.vis.selectAll('#' + id)
-        // .attr('width', self.barWidth + 20)
-        .style('stroke-width', 5)
+            .style('stroke-width', 5)
             .style('stroke', function (d) {
-                return 'red';
+            return d.color.darker();
             });
     },
 
@@ -312,11 +311,10 @@ Tree.prototype = {
         id = self.util.toLegalHtmlName(id);
         self.vis.selectAll('#' + id)
             .style('stroke-width', 1.5)
-        // .attr('width', self.barWidth)
-        .style('stroke', function (d) {
-            return d.stroke;
-        });
-    },
+            .style('stroke', function (d) {
+                return d.stroke;
+            });
+    }
 
 };
 
