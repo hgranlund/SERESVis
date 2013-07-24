@@ -6,48 +6,19 @@ window.seres.utilities = function (d3) {
         return d3.rgb(color(number));
     };
 
-    var _getColor = function (d) {
-        var colorNum = d.name.split('').length * 2,
-            parent,
-            name = d.name;
+    var getColor = function (d, nodes) {
+        if (d.isIndividual) {
+            d = getParentFromNodes(d, nodes) || d;
+        };
+        return _color(d.depth);
 
-        parent = getPropertyValue('subClassOf', d.object) || getPropertyValue('type', d.object);
-        if (parent) {
-            name += parent;
-        }
-        for (var i = 0; i < name.length; i++) {
-            colorNum += name.charCodeAt(i);
-        }
-        colorNum += 14;
-        colorNum = colorNum % 20;
-        return _color(colorNum);
     };
 
-    var getColor = function (d, parent) {
-        if (d.isIndividual || d.isProperty) {
-            if (parent) {
-                return _getColor(parent);
-            } else {
-                return _getColor(d);
-            }
-            return _getColor(d);
-        } else {
-            return _getColor(d);
-        }
+    var getStroke = function (d, nodes) {
+        var parent = getParentFromNodes(d, nodes) || d;
+        return getColor(parent, nodes);
     };
 
-    var getStroke = function (d, parent) {
-        return _getColor(parent);
-    };
-
-    var getParentColor = function (d, formatter) {
-        var parent = getParent(d, formatter);
-        if (parent) {
-            return _getColor(parent);
-        } else {
-            return getColor(d);
-        }
-    };
 
     var getParent = function (d, formatter) {
         var parentId = getPropertyValue('subClassOf', d.object) || getPropertyValue('type', d.object);
@@ -56,6 +27,15 @@ window.seres.utilities = function (d3) {
         } else {
             return null;
         }
+    };
+
+    var getParentFromNodes = function (d, nodes) {
+        var parentId = getPropertyValue('subClassOf', d.object) || getPropertyValue('type', d.object);
+        for (var i = 0; i < nodes.length; i++) {
+            if (nodes[i].id === parentId) {
+                return nodes[i];
+            }
+        };
     };
 
     var toLegalHtmlName = function (className) {
@@ -149,7 +129,6 @@ window.seres.utilities = function (d3) {
         getPropertyValue: getPropertyValue,
         addNodeToNodes: addNodeToNodes,
         getNode: getNode,
-        getParentColor: getParentColor,
         getLinkWithNodeId: getLinkWithNodeId,
         isEmpty: isEmpty,
         getParent: getParent,

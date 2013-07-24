@@ -1,5 +1,4 @@
 function Graph(el, json) {
-    'use strict';
     this.width = 1250;
     this.height = 900;
     this.root = {};
@@ -269,8 +268,8 @@ Graph.prototype = {
         self.nodes = [self.root];
         self.root.x = self.width / 2;
         self.root.y = self.height / 2;
-        self.root.color = self.util.getColor(self.root);
-        self.root.stroke = self.util.getColor(self.root);
+        self.root.color = self.util.getColor(self.root, self.nodes);
+        self.root.stroke = self.root.color;
         self.force.nodes(self.nodes);
         self.force.links(self.links);
         self.expandNode(self.root);
@@ -337,11 +336,11 @@ Graph.prototype = {
             nodeIdToUpdate,
             deltaY;
 
-        d.stroke = self.util.getParentColor(d, self.formatter);
+        d.stroke = self.util.getStroke(d, self.nodes);
         if (d.isIndividual) {
             d.color = d.stroke;
         } else {
-            d.color = self.util.getColor(d);
+            d.color = self.util.getColor(d, self.nodes);
         }
         deltaX = d.px;
         deltaY = d.py;
@@ -360,15 +359,15 @@ Graph.prototype = {
         }
         d.children.map(function (link) {
             node = self.formatter.createNode(link.nodeId, self.nodes.length);
-            node.color = self.util.getColor(node, d);
-            node.stroke = self.util.getStroke(node, d);
+            node.color = self.util.getColor(node, self.nodes);
+            node.stroke = self.util.getStroke(node, self.nodes);
             add(node);
         });
         d.parents.map(function (link) {
             node = self.formatter.createNode(link.nodeId, self.nodes.length);
             parent = self.util.getParent(node, self.formatter) || node;
-            node.color = self.util.getColor(node, parent);
-            node.stroke = self.util.getStroke(node, parent);
+            node.color = self.util.getColor(node, self.nodes);
+            node.stroke = self.util.getStroke(node, self.nodes);
             add(node);
         });
         nodeIdToUpdate.map(function (index) {
@@ -393,11 +392,11 @@ Graph.prototype = {
             var n = self.formatter.createNode(parentClass, self.nodes.length);
             n.x = d.x;
             n.y = d.y;
-            n.color = self.util.getColor(n);
-            n.stroke = self.util.getColor(n);
+            n.color = self.util.getColor(n, self.nodes);
+            n.stroke = self.util.getColor(n, self.nodes);
             var parent = self.util.getPropertyValue('subClassOf', n.object);
             if (parent) {
-                n.stroke = self.util.getColor((self.formatter.createNode(parent, 0)));
+                n.stroke = self.util.getColor(self.formatter.createNode(parent, 0), self.nodes);
             }
             if (self.util.addNodeToNodes(n, self.nodes)) {
                 d.color = n.color.brighter();
@@ -424,7 +423,7 @@ Graph.prototype = {
         var indexesToRemove = [];
         getIndexesOfExpandedChildren(d);
         self.removeIndexesFromGraph(indexesToRemove);
-        d.color = d.stroke.brighter() || self.util.getColor(d);
+        d.color = d.stroke.brighter() || self.util.getColor(d, self.nodes);
         d.isExpanded = false;
 
         function getIndexesOfExpandedChildren(d) {

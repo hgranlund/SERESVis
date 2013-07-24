@@ -54,9 +54,9 @@ Tree.prototype = {
         self.root = self.formatter.toTreeObject()[0];
         self.root.x0 = 0;
         self.root.y0 = 0;
-        self.root.color = self.util.getColor(self.root);
+        self.root.color = self.util.getColor(self.root, self.nodes);
         self.text = '';
-        self.nodes = self.root;
+        self.nodes = self.tree.nodes(self.root);
         self.pathFromRoot = [self.root];
         self.focusedNode = self.root;
         self.mapNodes(function (d) {
@@ -334,9 +334,9 @@ Tree.prototype = {
         } else if (d._children) {
             d.children = d._children;
             d._children = null;
-            d.color = self.util.getColor(d);
+            d.color = self.util.getColor(d, self.nodes);
             d.children.map(function (node) {
-                node.color = self.util.getColor(node);
+                node.color = self.util.getColor(node, self.nodes);
             });
         }
         d3.select(this.el).select(id).text(self._getIcon);
