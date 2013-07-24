@@ -19,4 +19,5 @@ rect {
   /*fill: #44444;*/
   font: 14px sans-serif;
   pointer-events: none;
+  font-weight: bold;
 }
