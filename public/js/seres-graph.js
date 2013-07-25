@@ -355,19 +355,16 @@ Graph.prototype = {
                 if (d.isIndividual) {
                     self.expandClassToIndividual(n);
                 }
+                node.color = self.util.getColor(node, self.nodes);
+                node.stroke = self.util.getStroke(node, self.nodes);
             }
         }
         d.children.map(function (link) {
             node = self.formatter.createNode(link.nodeId, self.nodes.length);
-            node.color = self.util.getColor(node, self.nodes);
-            node.stroke = self.util.getStroke(node, self.nodes);
             add(node);
         });
         d.parents.map(function (link) {
             node = self.formatter.createNode(link.nodeId, self.nodes.length);
-            parent = self.util.getParent(node, self.formatter) || node;
-            node.color = self.util.getColor(node, self.nodes);
-            node.stroke = self.util.getStroke(node, self.nodes);
             add(node);
         });
         nodeIdToUpdate.map(function (index) {
