@@ -54,9 +54,9 @@ SideBar.prototype = {
         } else {
             header = link.source.name + ' er ' + link.name + ' ' + link.target.name;
         }
-        content.push('<h4>');
+        content.push('<h3>');
         content.push(header);
-        content.push('</h4>');
+        content.push('</h3>');
         return content.join('');
     },
 
