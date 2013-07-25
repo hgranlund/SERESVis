@@ -108,31 +108,31 @@ Graph.prototype = {
             .on('mouseout', fireMouseOutLink);
 
         self.pathText.enter()
-            .append("g")
-            .attr("class", "pathText")
-            .attr("id", function (d) {
+            .append('g')
+            .attr('class', 'pathText')
+            .attr('id', function (d) {
                 return ('pathText-' + self.util.toLegalHtmlName(d.source.id) + '-' + self.util.toLegalHtmlName(d.target.id));
             })
             .style('opacity', 0.7)
-            .style("visibility", 'hidden')
-            .style("fill", 'black')
+            .style('visibility', 'hidden')
+            .style('fill', 'black')
             .on('mouseover', function (d) {
                 d3.select(this)
-                    .attr("visibility", 'visible');
+                    .attr('visibility', 'visible');
             })
             .on('mouseout', function (d) {
                 d3.select(this)
-                    .attr("visibility", 'hidden');
+                    .attr('visibility', 'hidden');
             });
 
-        self.pathText.append("text")
-            .style("font-size", "14px")
-            .append("textPath")
-            .attr("offset", 30)
-            .attr("startOffset", function (d) {
+        self.pathText.append('text')
+            .style('font-size', '14px')
+            .append('textPath')
+            .attr('offset', 30)
+            .attr('startOffset', function (d) {
                 return d.source.size + 15;
             })
-            .attr("xlink:href", function (d) {
+            .attr('xlink:href', function (d) {
                 return ('#path-' + self.util.toLegalHtmlName(d.source.id) + '-' + self.util.toLegalHtmlName(d.target.id));
             })
             .text(function (d) {
@@ -206,8 +206,8 @@ Graph.prototype = {
     },
 
     click: function (id) {
-        var self = this;
-        var d = self.util.getNode(id, self.nodes);
+        var self = this,
+            d = self.util.getNode(id, self.nodes);
         if (!d) {
             d = self.formatter.createNode(id, self.nodes.length);
             d.x = d.px = self.centerX;
@@ -423,7 +423,7 @@ Graph.prototype = {
             var tailRec = [];
             for (var j = 0; j < self.nodes.length; j++) {
                 node = self.nodes[j];
-                if (util.getLinkWithNodeId(node.id, d.parents)) {
+                if (self.util.getLinkWithNodeId(node.id, d.parents)) {
                     if (!node.isExpanded) {
                         indexesToRemove.push(node.index);
                         if (node.isExpanded && d.parents.length !== 0) {
@@ -432,7 +432,7 @@ Graph.prototype = {
                         }
                     }
                 }
-                if (util.getLinkWithNodeId(node.id, d.children)) {
+                if (self.util.getLinkWithNodeId(node.id, d.children)) {
                     indexesToRemove.push(node.index);
                     if (node.isExpanded && d.children.length !== 0) {
                         node.isExpanded = false;
@@ -516,10 +516,10 @@ Graph.prototype = {
     },
 
     mouseOverLink: function (d) {
-        var self = this;
-        var sourceClass = self.util.toLegalHtmlName(d.source.id);
-        var targetClass = self.util.toLegalHtmlName(d.target.id);
-        var linkId = sourceClass + '-' + targetClass;
+        var self = this,
+            sourceClass = self.util.toLegalHtmlName(d.source.id),
+            targetClass = self.util.toLegalHtmlName(d.target.id),
+            linkId = sourceClass + '-' + targetClass;
         d3.select(self.el).selectAll('#path-' + linkId)
             .style('stroke-width', 6)
             .style('stroke', function (d) {

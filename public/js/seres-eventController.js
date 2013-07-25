@@ -47,8 +47,6 @@ EventController.prototype = {
     showInfo: function (d) {
         self.sidebar.show(d);
     }
-
-
 };
 
 EventController.fn = EventController.prototype;

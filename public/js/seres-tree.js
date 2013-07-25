@@ -38,17 +38,17 @@ Tree.prototype = {
 
 
         self.path = d3.select(el).append('svg:svg')
-            .attr("width", self.screenWidth)
-            .attr("height", self.pathHeigth)
-            .append("svg:g")
-            .attr("transform", 'translate(20,0)');
+            .attr('width', self.screenWidth)
+            .attr('height', self.pathHeigth)
+            .append('svg:g')
+            .attr('transform', 'translate(20,0)');
 
 
         self.vis = d3.select(el).append('svg:svg')
-            .attr("width", self.w)
-            .attr("height", self.h)
-            .append("svg:g")
-            .attr("transform", 'translate(20,30)');
+            .attr('width', self.w)
+            .attr('height', self.h)
+            .append('svg:g')
+            .attr('transform', 'translate(20,30)');
 
 
     },
@@ -103,10 +103,10 @@ Tree.prototype = {
             .attr('fill', function (d) {
                 return d.color;
             })
-            .attr("opacity", 0.7)
+            .attr('opacity', 0.7)
             .attr('points', function (d) {
                 var points = [];
-                points.push("0,0 ");
+                points.push('0,0 ');
                 points.push(self.pathWidth, ',0 ');
                 points.push(self.pathWidth * 1.2, ',', (self.pathHeigth / 2));
                 points.push(self.pathWidth, ',', self.pathHeigth);
@@ -127,7 +127,7 @@ Tree.prototype = {
                     return self.pathWidth * 0.15;
                 }
             })
-            .attr("fill", "white")
+            .attr('fill', 'white')
             .text(function (d) {
                 return d.name;
             });
@@ -313,7 +313,7 @@ Tree.prototype = {
                         self._setFocus(self.util.getNode(parent, self.nodes));
                     } else {
                         self._setFocus(d);
-                    };
+                    }
                     self.toggle(d);
                     fireClick(self.inFocus);
                 } else {
@@ -391,7 +391,6 @@ Tree.prototype = {
 
     expandNode: function (id) {
         var self = this,
-            d,
             path;
         path = self.util.pathFromRootWithFormatter(id, self.formatter);
         for (var i = 0; i < path.length; i++) {
@@ -399,8 +398,8 @@ Tree.prototype = {
             if (node._children) {
                 self.toggle(node);
                 self.update(node);
-            };
-        };
+            }
+        }
     },
     collapseNode: function (d) {
         var self = this;
