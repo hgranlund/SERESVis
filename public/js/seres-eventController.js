@@ -3,6 +3,7 @@ function EventController(tree, graph, sidebar) {
     self.tree = tree;
     self.graph = graph;
     self.sidebar = sidebar;
+    self.sidebar.show(graph.root);
 }
 
 EventController.prototype = {
@@ -41,6 +42,10 @@ EventController.prototype = {
     toggleNode: function (id) {
         var self = this;
         self.tree.expandNode(id);
+    },
+
+    showInfo: function (d) {
+        self.sidebar.show(d);
     }
 
 
