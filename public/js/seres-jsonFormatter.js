@@ -226,6 +226,7 @@ function jsonFormatter(jsonArg) {
         'createNode': createNode,
         'createLink': createLink,
         'addIndividualAttributes': addIndividualAttributes,
-        'populateParents': populateParents
+        'populateParents': populateParents,
+        'json': json
     };
 }

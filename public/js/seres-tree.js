@@ -204,10 +204,10 @@ Tree.prototype = {
             })
             .style('opacity', 1)
             .select('rect')
-            .attr('rx', '10')
-            .style('fill', function (d) {
-                return d.color;
-            });
+        // .attr('rx', '10')
+        .style('fill', function (d) {
+            return d.color;
+        });
 
         node.exit().transition()
             .duration(self.duration)
@@ -368,6 +368,19 @@ Tree.prototype = {
         self.toggle(self.root);
     },
 
+    expandNode: function (id) {
+        var self = this,
+            d,
+            path;
+        path = self.util.pathFromRootWithFormatter(id, self.formatter);
+        for (var i = 0; i < path.length; i++) {
+            var node = self.util.getNode(path[i], self.nodes);
+            if (node._children) {
+                self.toggle(node);
+                self.update(node);
+            };
+        };
+    },
     collapseNode: function (d) {
         var self = this;
         self.mapNodes(d, function (d) {
@@ -407,7 +420,7 @@ Tree.prototype = {
         var self = this;
         id = self.util.toLegalHtmlName(id);
         self.vis.selectAll('#' + id)
-            .style('stroke-width', 5)
+            .style('stroke-width', 3)
             .style('stroke', function (d) {
                 return d.color.darker();
             });
@@ -417,10 +430,7 @@ Tree.prototype = {
         var self = this;
         id = self.util.toLegalHtmlName(id);
         self.vis.selectAll('#' + id)
-            .style('stroke-width', 1.5)
-            .style('stroke', function (d) {
-                return d.stroke;
-            });
+            .style('stroke-width', 0);
     }
 
 };

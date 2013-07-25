@@ -376,7 +376,7 @@ Graph.prototype = {
 
         self.updateNodeAndLinkPositions(0);
         self.force.stop();
-        for (var i = 0; i < d.children.length; ++i) {
+        for (var i = 0; i < d.children.length * 10; ++i) {
             self.handleCollisions();
             self.force.tick();
         }
@@ -399,6 +399,7 @@ Graph.prototype = {
                 n.stroke = self.util.getColor(self.formatter.createNode(parent, 0), self.nodes);
             }
             if (self.util.addNodeToNodes(n, self.nodes)) {
+                window.seres.eventController.toggleNode(n.id);
                 d.color = n.color.brighter();
                 self.formatter.createLink(n.index, self.nodes);
                 self.links.push({

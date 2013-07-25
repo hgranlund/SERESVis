@@ -36,7 +36,14 @@ EventController.prototype = {
     fireMouseOutLink: function (d) {
         var self = this;
         self.graph.mouseOutLink(d);
+    },
+
+    toggleNode: function (id) {
+        var self = this;
+        self.tree.expandNode(id);
     }
+
+
 };
 
 EventController.fn = EventController.prototype;
