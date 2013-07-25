@@ -2,7 +2,7 @@ function Graph(el, json) {
     this.width = window.screen.width;
     this.height = window.screen.height;
     this.centerX = 450;
-    this.centerY = 625;
+    this.centerY = 500;
     this.root = {};
     this.init(el);
     this.compute(json);
@@ -42,7 +42,7 @@ Graph.prototype = {
                 }
             })
             .on('tick', tick)
-            .gravity(0.06)
+            .gravity(0.01)
             .start();
 
 
