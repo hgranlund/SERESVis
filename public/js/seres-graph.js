@@ -373,13 +373,13 @@ Graph.prototype = {
             self.links = self.links.concat(self.formatter.createLink(index, self.nodes));
         });
 
-        self.updateNodeAndLinkPositions(0);
         self.force.stop();
+        self.updateNodeAndLinkPositions();
         for (var i = 0; i < d.children.length * 10; ++i) {
             self.handleCollisions();
             self.force.tick();
         }
-        self.updateNodeAndLinkPositions(200);
+        self.updateNodeAndLinkPositions(0);
         self.force.start();
         d.isExpanded = true;
     },
