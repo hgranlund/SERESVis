@@ -33,11 +33,12 @@ window.seres.query = function () {
                 data = fusekiJson;
             },
             error: function (e) {
-                alert('Error connecting to endpoint: ' + host + '\n with query: "' + queryString + '"');
-                throw new Error('Error connecting to endpoint');
+                alert('Error connecting to endpoint: ' + host + '\n with query: "' + queryString + '"' + "\n\n\n Going to load example file");
+                // throw new Error('Error connecting to endpoint');
+                // TODO ups her settes test data
+                data = window.seres.testData;
             }
         });
-
         return data;
     };
 
