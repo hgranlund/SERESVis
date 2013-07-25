@@ -162,13 +162,6 @@ Graph.prototype = {
                 return d.stroke;
             });
 
-        self.node.append('title')
-            .text(function (d) {
-                if (d.isIndividual) {
-                    return 'uuid: ' + d.data['xmi.uuid'];
-                }
-                return d.name;
-            });
 
         self.node.append('text')
             .attr('text-anchor', 'middle')
