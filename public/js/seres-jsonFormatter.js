@@ -3,7 +3,7 @@ function jsonFormatter(jsonArg) {
         parentToChildMap,
         engToNor = {
             type: 'instans av',
-            subClassOf: 'subdomene av',
+            subClassOf: 'subelement av',
             domain: 'domene',
             range: 'rekkevidde'
         },

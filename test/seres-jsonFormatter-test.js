@@ -248,11 +248,11 @@ describe('seres-jsonformatter:', function () {
       links = links.concat(formatter.createLink(2, nodes));
       expect(links[0].source).toEqual(1);
       expect(links[0].target).toEqual(0);
-      expect(links[0].name).toEqual('subdomene av');
+      expect(links[0].name).toEqual('subelement av');
 
       expect(links[1].source).toEqual(2);
       expect(links[1].target).toEqual(0);
-      expect(links[1].name).toEqual('subdomene av');
+      expect(links[1].name).toEqual('subelement av');
     });
 
 
