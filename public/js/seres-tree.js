@@ -27,10 +27,15 @@ Tree.prototype = {
         self.tree = d3.layout.tree()
             .size([self.h, 100]);
 
-        self.diagonal = d3.svg.diagonal()
-            .projection(function (d) {
-                return [d.y, d.x];
+
+        self.diagonal = d3.svg.line().interpolate('step-before')
+            .x(function (d) {
+                return d.x + 1;
+            })
+            .y(function (d) {
+                return d.y;
             });
+
 
         self.path = d3.select(el).append('svg:svg')
             .attr("width", self.screenWidth)
@@ -128,7 +133,7 @@ Tree.prototype = {
             });
 
         path.transition()
-            .duration(200)
+            .duration(self.duration)
             .attr('transform', function (d) {
                 return 'translate(' + d.px0 + ',' + 0 + ')';
             })
@@ -204,10 +209,9 @@ Tree.prototype = {
             })
             .style('opacity', 1)
             .select('rect')
-        // .attr('rx', '10')
-        .style('fill', function (d) {
-            return d.color;
-        });
+            .style('fill', function (d) {
+                return d.color;
+            });
 
         node.exit().transition()
             .duration(self.duration)
@@ -224,35 +228,51 @@ Tree.prototype = {
 
         link.enter().append('svg:path', 'g')
             .attr('class', 'link')
+            .style('stroke-width', 4)
             .attr('d', function (d) {
-                var o = {
-                    x: source.x0,
-                    y: source.y0
-                };
-                return self.diagonal({
-                    source: o,
-                    target: o
-                });
+                debugger;
+                return self.diagonal([{
+                    y: source.x0,
+                    x: source.y0
+                }, {
+                    y: source.x0,
+                    x: source.y0
+                }]);
             })
             .transition()
             .duration(self.duration)
-            .attr('d', self.diagonal);
+            .attr('d', function (d) {
+                return self.diagonal([{
+                    y: (d.source.x + (self.barHeight / 2)),
+                    x: d.source.y
+                }, {
+                    y: d.target.x,
+                    x: d.target.y
+                }]);
+            });
 
         link.transition()
             .duration(self.duration)
-            .attr('d', self.diagonal);
+            .attr('d', function (d) {
+                return self.diagonal([{
+                    y: (d.source.x + (self.barHeight / 2)),
+                    x: d.source.y
+                }, {
+                    y: d.target.x,
+                    x: d.target.y
+                }]);
+            });
 
         link.exit().transition()
             .duration(self.duration)
             .attr('d', function (d) {
-                var o = {
-                    x: source.x,
-                    y: source.y
-                };
-                return self.diagonal({
-                    source: o,
-                    target: o
-                });
+                return self.diagonal([{
+                    y: source.x,
+                    x: source.y
+                }, {
+                    y: source.x,
+                    x: source.y
+                }]);
             })
             .remove();
 

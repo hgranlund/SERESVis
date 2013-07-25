@@ -12,9 +12,8 @@
 
   path.link {
     fill: none;
-    stroke: #3c3c3c;
+    stroke: #6e7f80;
     stroke-width: 1.5px;
-    opacity: 0.3;
   }
 
   .indented_tree .link {
