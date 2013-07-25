@@ -3,13 +3,13 @@ function Tree(el, json) {
     self.screenWidth = window.screen.width;
     self.screenHeigth = window.screen.heigth;
     self.el = el;
-    self.w = 960;
+    self.w = self.screenWidth * 0.35;
     self.h = 5300;
     self.i = 0;
     self.pathHeigth = 60;
-    self.pathWidth = self.w * 0.18;
+    self.pathWidth = 175;
     self.barHeight = 20;
-    self.barWidth = self.w * 0.3;
+    self.barWidth = 265;
     self.duration = 400;
 
     self.init(el);
@@ -184,11 +184,13 @@ Tree.prototype = {
 
         self.nodeEnter.append('svg:text')
             .attr('dy', '.35em')
-            .attr('dx', '11em')
+            .attr('dx', function (d) {
+                return self.barWidth * 0.95;
+            })
             .attr('id', function (d) {
                 return 'text-' + d.id;
             })
-            .style('text-anchor', 'start')
+            .style('text-anchor', 'middle')
             .style('font-size', '24px')
             .style('pointer-events', 'all')
             .style('cursor', 'pointer')

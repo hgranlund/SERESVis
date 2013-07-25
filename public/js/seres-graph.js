@@ -1,6 +1,8 @@
 function Graph(el, json) {
-    this.width = 1250;
-    this.height = 900;
+    this.width = window.screen.width;
+    this.height = window.screen.height;
+    this.centerX = 450;
+    this.centerY = 625;
     this.root = {};
     this.init(el);
     this.compute(json);
@@ -215,8 +217,8 @@ Graph.prototype = {
         var d = self.util.getNode(id, self.nodes);
         if (!d) {
             d = self.formatter.createNode(id, self.nodes.length);
-            d.x = d.px = self.width / 2;
-            d.y = d.py = self.height / 2;
+            d.x = d.px = self.centerX;
+            d.y = d.py = self.centerY;
         }
         if (d && !d.isExpanded) {
             if (d.isIndividual) {
@@ -266,8 +268,8 @@ Graph.prototype = {
         self.makeRoot(self.formatter.createNode('Seres', self.nodes.length));
         self.links = [];
         self.nodes = [self.root];
-        self.root.x = self.width / 2;
-        self.root.y = self.height / 2;
+        self.root.x = self.centerX;
+        self.root.y = self.centerY;
         self.root.color = self.util.getColor(self.root, self.nodes);
         self.root.stroke = self.root.color;
         self.force.nodes(self.nodes);
@@ -499,8 +501,8 @@ Graph.prototype = {
     },
 
     center: function (nodeToCenter) {
-        var deltaX = this.width / 2 - nodeToCenter.x,
-            deltaY = this.height / 2 - nodeToCenter.y,
+        var deltaX = this.centerX - nodeToCenter.x,
+            deltaY = this.centerY - nodeToCenter.y,
             self = this,
             h,
             ballR;
