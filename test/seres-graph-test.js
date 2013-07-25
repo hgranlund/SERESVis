@@ -216,6 +216,14 @@ describe('graph', function () {
 
     describe('expandClassToIndividual', function () {
 
+
+        beforeEach(function () {
+            window.seres.eventController = {}
+            window.seres.eventController.toggleNode = function (int) {
+                return;
+            }
+        });
+
         it('should add the class corresponding to the induvidual', function () {
             var indi = individual;
             indi.object['type'] = 'Nivå';
@@ -225,6 +233,18 @@ describe('graph', function () {
             seresElement = graph.nodes.pop();
             expect(seresElement).toBeTruthy('Nivå was not expanded');
             expect(seresElement.id).toEqual(indi.object['type'], 'The documentation node was not correct ');
+        });
+
+        it('should toogleNode expantion in tree graph', function () {
+            var indi = individual;
+            var toggleNode = spyOn(window.seres.eventController, "toggleNode").andReturn(true);
+            indi.object['type'] = 'Nivå';
+            indi.index = graph.nodes.length;
+            graph.nodes.push(indi);
+            graph.expandClassToIndividual(indi);
+            seresElement = graph.nodes.pop();
+            expect(toggleNode).wasCalled();
+            expect(toggleNode).wasCalledWith(indi.object['type']);
         });
 
 
