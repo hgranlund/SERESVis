@@ -1,5 +1,5 @@
 var startSeres = function (query) {
-  var json = query.execute('construct where {?a ?s ?b}');
+  var json = query.execute('construct where {?a ?s ?b}', 'http://localhost:3030/ds/query?');
   $(document).ready(function () {
     var elGraph = document.getElementById('graph-container');
     var elTree = document.getElementById('indented_tree');
@@ -8,19 +8,3 @@ var startSeres = function (query) {
     window.seres.eventController = new EventController(tree, graph, window.seres.sidebar);
   });
 }(window.seres.query);
-
-
-
-// var ex = []
-// for (f in json ){
-// 	ex.push(f);
-// }
-// self.formatter = jsonFormatter(json);
-// var data = self.formatter.toGraphObject(ex);
-//           options = {
-//             width: screen.width,
-//             height: screen.height,
-//             defaultColors: { '7': "blue" }
-//           };
-
-//       graph = new Insights(el, data.nodes, data.links, options).render();
