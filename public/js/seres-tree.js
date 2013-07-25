@@ -7,7 +7,7 @@ function Tree(el, json) {
     self.h = 5300;
     self.i = 0;
     self.pathHeigth = 60;
-    self.pathWidth = 175;
+    self.pathWidth = 195;
     self.barHeight = 20;
     self.barWidth = 265;
     self.duration = 400;
