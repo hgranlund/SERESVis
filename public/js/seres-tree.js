@@ -230,7 +230,6 @@ Tree.prototype = {
             .attr('class', 'link')
             .style('stroke-width', 4)
             .attr('d', function (d) {
-                debugger;
                 return self.diagonal([{
                     y: source.x0,
                     x: source.y0
