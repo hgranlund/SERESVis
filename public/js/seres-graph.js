@@ -392,7 +392,7 @@ Graph.prototype = {
             }
             if (self.util.addNodeToNodes(n, self.nodes)) {
                 window.seres.eventController.toggleNode(n.id);
-                d.color = n.color.brighter();
+                d.color = self.util.getColor(d, self.nodes);
                 self.formatter.createLink(n.index, self.nodes);
                 self.links.push({
                     source: d.index,
@@ -416,7 +416,7 @@ Graph.prototype = {
         var indexesToRemove = [];
         getIndexesOfExpandedChildren(d);
         self.removeIndexesFromGraph(indexesToRemove);
-        d.color = d.stroke.brighter() || self.util.getColor(d, self.nodes);
+        d.color = self.util.getColor(d, self.nodes);
         d.isExpanded = false;
 
         function getIndexesOfExpandedChildren(d) {
