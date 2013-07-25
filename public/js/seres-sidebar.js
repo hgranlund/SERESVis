@@ -66,15 +66,13 @@ SideBar.prototype = {
             header = '';
 
         if (node.isIndividual) {
-            header = 'Instans av';
+            header = 'Instans av ';
         } else if (node.isProperty) {
-            header = 'Partisjonsegenskap';
-        } else {
-            header = 'Partisjon';
+            header = 'Egenskap til ';
         }
         content.push('<h3>');
         content.push(header);
-        content.push(': ' + node.name);
+        content.push(node.name);
         content.push('</h3>');
 
         for (data_key in node.data) {
