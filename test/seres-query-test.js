@@ -85,7 +85,7 @@ describe('parseSelectJson', function () {
         var fusekiJsonNotTriple = testValues.fusekiJsonNotTriple;
         expect(function () {
             query.parseSelectJson(fusekiJsonNotTriple);
-        }).toThrow(new Error('Should contain tripels'));
+        }).toThrow('Should contain tripels');
     });
 });
 

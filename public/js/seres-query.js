@@ -67,7 +67,7 @@ window.seres.query = function () {
         }
         var vars = fusekiJson.head.vars;
         if (vars.length < 3) {
-            throw new Error('Should contain triples');
+            throw new Error('Should contain tripels');
         }
 
         function getValue(index, triple) {
