@@ -214,7 +214,6 @@ Tree.prototype = {
             .style('fill', function (d) {
                 return d.color;
             });
-
         node.exit().transition()
             .duration(self.duration)
             .attr('transform', function (d) {
